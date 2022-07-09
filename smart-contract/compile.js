@@ -1,5 +1,5 @@
 const path = require("path");
-const solc = require("solc"); // Solidity compiler
+const solc = require("solc");
 const fs = require("fs-extra");
 
 const buildPath = path.resolve(__dirname, "build");
@@ -12,5 +12,8 @@ const output = solc.compile(source, 1).contracts;
 fs.ensureDirSync(buildPath); // create a build folder if that folder doesn't exists
 
 for (let contract in output) {
-  fs.outputJSONSync(path.resolve(buildPath, contract.replace(":", "").concat(".json")), output[contract]);
+  fs.outputJSONSync(
+    path.resolve(buildPath, contract.replace(":", "").concat(".json")),
+    output[contract]
+  );
 }
