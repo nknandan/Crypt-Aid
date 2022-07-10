@@ -84,18 +84,18 @@ export default function NewCampaign() {
   return (
     <div>
       <Head>
-        <title>New Campaign</title>
+        <title>CryptAid | Create Campaign</title>
         <meta name="description" content="Create New Campaign" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main>
         <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
-          <Text fontSize={"lg"} color={"teal.400"}>
+          <Text fontSize={"lg"} color={"#1CB5E0"}>
             <ArrowBackIcon mr={2} />
             <NextLink href="/"> Back to Home</NextLink>
           </Text>
           <Stack>
-            <Heading fontSize={"4xl"}>Create a New Campaign 📢</Heading>
+            <Heading fontSize={"4xl"}>Create a campaign</Heading>
           </Stack>
           <Box
             rounded={"lg"}

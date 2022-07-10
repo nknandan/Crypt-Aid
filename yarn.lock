@@ -1100,6 +1100,11 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/strings" "^5.6.1"
 
+"@fontsource/rozha-one@^4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@fontsource/rozha-one/-/rozha-one-4.5.9.tgz#f9122d0b3cb9592016af2174ddeadcb2e120d65e"
+  integrity sha512-disKUUmJpKQz18VTqb2C19UhCy3B9GRIf6e8EMIprwCNRFNfz2SfuzHylGUx+CCDOggrhanjJnyhisi/K2koBQ==
+
 "@fontsource/space-grotesk@^4.5.8":
   version "4.5.8"
   resolved "https://registry.yarnpkg.com/@fontsource/space-grotesk/-/space-grotesk-4.5.8.tgz#4f3c6a80bbd556e73338eadf2f19f214657580b5"

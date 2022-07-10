@@ -229,7 +229,7 @@ function CampaignCardNew({
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
-            objectFit="fill"
+            objectFit="cover"
             w="full"
             h="full"
             display="block"
@@ -257,7 +257,7 @@ function CampaignCardNew({
             >
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
-                  c/ReliefFunds
+                  c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
                   6 hours ago by {creatorId} ✅ 
