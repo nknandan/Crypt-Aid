@@ -53,7 +53,7 @@ export default function NavBar() {
           <Flex flex={{ base: 1 }} justify="start" ml={{ base: -2, md: 0 }}>
             <Heading
               textAlign="left"
-              fontFamily={"heading"}
+              // fontFamily={"heading"}
               color={useColorModeValue("red", "white")}
               as="h2"
               size="lg"

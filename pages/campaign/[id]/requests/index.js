@@ -343,7 +343,7 @@ export default function Requests({
               <Box py="2" pr="2">
                 <Heading
                   textAlign={useBreakpointValue({ base: "left" })}
-                  fontFamily={"heading"}
+                  // fontFamily={"heading"}
                   color={useColorModeValue("gray.800", "white")}
                   as="h3"
                   isTruncated

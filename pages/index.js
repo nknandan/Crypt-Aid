@@ -229,7 +229,7 @@ function CampaignCardNew({
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
-            objectFit="fill"
+            objectFit="cover"
             w="full"
             h="full"
             display="block"
@@ -257,7 +257,7 @@ function CampaignCardNew({
             >
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
-                  c/ReliefFunds
+                  c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
                   6 hours ago by {creatorId} ✅
@@ -372,7 +372,6 @@ export default function Home({ campaigns }) {
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
-            fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
             as="h1"
             py={4}
@@ -381,7 +380,7 @@ export default function Home({ campaigns }) {
           </Heading>
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
-            fontFamily={"heading"}
+            // fontFamily={"heading"}
             fontSize={"24px"}
             fontWeight={"200"}
             color={useColorModeValue("gray.800", "white")}
@@ -457,10 +456,10 @@ export default function Home({ campaigns }) {
                 })}
             </SimpleGrid>
           ) : (
-            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} py={8}>
-              <Skeleton height="25rem" />
-              <Skeleton height="25rem" />
-              <Skeleton height="25rem" />
+            <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+              <Skeleton height="15rem" />
+              <Skeleton height="15rem" />
+              <Skeleton height="15rem" />
             </SimpleGrid>
           )}
         </Container>

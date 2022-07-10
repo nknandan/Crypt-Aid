@@ -55,7 +55,7 @@ export default function Footer() {
       >
         <Heading
           textAlign={useBreakpointValue({ base: "center", md: "left" })}
-          fontFamily={"heading"}
+          // fontFamily={"heading"}
           color={useColorModeValue("teal.800", "white")}
           as="h2"
           size="lg"
