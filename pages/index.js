@@ -198,6 +198,134 @@ function CampaignCard({
   );
 }
 
+function CampaignCardNew({
+  name,
+  description,
+  creatorId,
+  imageURL,
+  id,
+  balance,
+  target,
+  ethPrice,
+}) {
+  return (
+    <NextLink href={`/campaign/${id}`}>
+      <Box
+        h={"25vh"}
+        w={"65vw"}
+        display={"flex"}
+        flexDirection={"row"}
+        position="relative"
+        cursor="pointer"
+        bgColor={"#ffffff"}
+        borderRadius={"20"}
+        transition={"transform 0.3s ease"}
+        _hover={{
+          transform: "translateX(8px)",
+        }}
+      >
+        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+          <Img
+            src={imageURL}
+            alt={`Picture of ${name}`}
+            fallbackSrc="https://i.pinimg.com/originals/19/1e/f9/191ef9c2e0445fd469a8450e58808021.jpg"
+            objectFit="fill"
+            w="full"
+            h="full"
+            display="block"
+            borderRadius={"20"}
+            borderRightRadius={"0"}
+          />
+        </Box>
+        <Box
+          h={"100%"}
+          w={"75%"}
+          borderRadius={"20"}
+          borderLeftRadius={"0"}
+          padding={"1rem"}
+          px={"2rem"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"space-between"}
+          pb={"1.5rem"}
+        >
+          <Box>
+            <Box
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+            >
+              <Box display={"flex"} flexDirection={"row"}>
+                <Box fontWeight={"600"} fontSize={"16px"} marginRight={"10px"}>
+                  c/ReliefFunds
+                </Box>{" "}
+                <Box color={"gray.600"} fontSize={"16px"}>
+                  6 hours ago by {creatorId} ✅
+                </Box>
+              </Box>
+              <Box display={"flex"} flexDirection={"row"}>
+                <Text fontWeight={"bold"} paddingRight={"5px"}>
+                  19
+                </Text>
+                <Text>days left</Text>
+              </Box>
+            </Box>
+
+            <Box
+              fontSize="3xl"
+              fontWeight="semibold"
+              as="h4"
+              lineHeight="tight"
+              isTruncated
+            >
+              {name}
+            </Box>
+            <Box isTruncated maxW={"75%"}>
+              <Text noOfLines={3}>{description}</Text>
+            </Box>
+          </Box>
+          <Box>
+            <Flex direction={"row"} justifyContent={"space-between"}>
+              <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
+                <Text as="span">
+                  {balance > 0
+                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
+                    : "Raised : 0"}
+                </Text>
+                <Text as="span" pr={2} fontWeight={"bold"}>
+                  {" "}
+                  ETH
+                </Text>
+                <Text
+                  as="span"
+                  fontSize="lg"
+                  display={balance > 0 ? "inline" : "none"}
+                  fontWeight={"normal"}
+                  color={useColorModeValue("gray.500", "gray.200")}
+                >
+                  (${getWEIPriceInUSD(ethPrice, balance)})
+                </Text>
+              </Box>
+              <Text fontSize={"md"} fontWeight="normal">
+                target of {web3.utils.fromWei(target, "ether")} ETH ($
+                {getWEIPriceInUSD(ethPrice, target)})
+              </Text>
+            </Flex>
+            <Progress
+              colorScheme="blue"
+              size="sm"
+              // value={web3.utils.fromWei(balance, "ether")}
+              value={50}
+              max={web3.utils.fromWei(target, "ether")}
+              mt="2"
+            />
+          </Box>
+        </Box>
+      </Box>
+    </NextLink>
+  );
+}
+
 export default function Home({ campaigns }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
@@ -285,7 +413,7 @@ export default function Home({ campaigns }) {
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={'black'}    
+              color={"black"}
               pt={"20px"}
             >
               <NextLink href="/">View all ➡️</NextLink>
@@ -293,25 +421,27 @@ export default function Home({ campaigns }) {
           </HStack>
 
           <Divider marginTop="4" />
-
           {campaignList.length > 0 ? (
-            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} py={8}>
-              {campaignList.map((el, i) => {
-                return (
-                  <div key={i}>
-                    <CampaignCard
-                      name={el[5]}
-                      description={el[6]}
-                      creatorId={el[4]}
-                      imageURL={el[7]}
-                      id={campaigns[i]}
-                      target={el[8]}
-                      balance={el[1]}
-                      ethPrice={ethPrice}
-                    />
-                  </div>
-                );
-              })}
+            <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+              {campaignList
+                .slice(0)
+                .reverse()
+                .map((el, i) => {
+                  return (
+                    <div key={i}>
+                      <CampaignCardNew
+                        name={el[5]}
+                        description={el[6]}
+                        creatorId={el[4]}
+                        imageURL={el[7]}
+                        id={campaigns[campaignList.length - 1 - i]}
+                        target={el[8]}
+                        balance={el[1]}
+                        ethPrice={ethPrice}
+                      />
+                    </div>
+                  );
+                })}
             </SimpleGrid>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} py={8}>
@@ -355,11 +485,12 @@ export default function Home({ campaigns }) {
         </Container>
         <Container
           w={"100%"}
-          h={"200px"}
+          h={"250px"}
           bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
           borderRadius={"30"}
           my={"80px"}
           py={"20px"}
+          position={"relative"}
         >
           <Text
             color={"white"}
@@ -371,10 +502,30 @@ export default function Home({ campaigns }) {
             Feeling Inspired ?
           </Text>
           <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-            Let's make a difference together. You can raise money or <br /> make
+            Let`s make a difference together. You can raise money or <br /> make
             a donation, and our platform will let you do that <br />{" "}
             effortlessly anywhere in the world.
           </Text>
+          <NextLink href="/campaign/new">
+            <Button
+              display={{ sm: "inline-flex" }}
+              position={"absolute"}
+              right={"10"}
+              bottom={"10"}
+              w={"200px"}
+              fontSize={"md"}
+              fontWeight={600}
+              color={"black"}
+              borderRadius={"20"}
+              bg={"#97C5E0"}
+              _hover={{
+                bg: "#000000",
+                color: "#ffffff",
+              }}
+            >
+              Create Campaign
+            </Button>
+          </NextLink>
         </Container>
       </main>
     </div>
