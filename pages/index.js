@@ -211,7 +211,7 @@ function CampaignCardNew({
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
-        h={"25vh"}
+        h={"40vh"}
         w={"65vw"}
         display={"flex"}
         flexDirection={"row"}
@@ -220,7 +220,7 @@ function CampaignCardNew({
         bgColor={"#ffffff"}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
-        boxShadow='sm'
+        boxShadow="sm"
         _hover={{
           transform: "translateX(8px)",
         }}
@@ -260,7 +260,7 @@ function CampaignCardNew({
                   c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {creatorId} ✅ 
+                  6 hours ago by {creatorId} ✅
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
