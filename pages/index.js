@@ -220,6 +220,7 @@ function CampaignCardNew({
         bgColor={"#ffffff"}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
+        boxShadow='sm'
         _hover={{
           transform: "translateX(8px)",
         }}
@@ -228,7 +229,6 @@ function CampaignCardNew({
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
-            fallbackSrc="https://i.pinimg.com/originals/19/1e/f9/191ef9c2e0445fd469a8450e58808021.jpg"
             objectFit="fill"
             w="full"
             h="full"
@@ -256,11 +256,11 @@ function CampaignCardNew({
               justifyContent={"space-between"}
             >
               <Box display={"flex"} flexDirection={"row"}>
-                <Box fontWeight={"600"} fontSize={"16px"} marginRight={"10px"}>
+                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/ReliefFunds
                 </Box>{" "}
-                <Box color={"gray.600"} fontSize={"16px"}>
-                  6 hours ago by {creatorId} ✅
+                <Box color={"gray.600"} fontSize={"14px"}>
+                  6 hours ago by {creatorId} ✅ 
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
@@ -292,7 +292,7 @@ function CampaignCardNew({
                     ? "Raised : " + web3.utils.fromWei(balance, "ether")
                     : "Raised : 0"}
                 </Text>
-                <Text as="span" pr={2} fontWeight={"bold"}>
+                <Text as="span" pr={2}>
                   {" "}
                   ETH
                 </Text>
@@ -307,7 +307,7 @@ function CampaignCardNew({
                 </Text>
               </Box>
               <Text fontSize={"md"} fontWeight="normal">
-                target of {web3.utils.fromWei(target, "ether")} ETH ($
+                Target : {web3.utils.fromWei(target, "ether")} ETH ($
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
@@ -363,7 +363,12 @@ export default function Home({ campaigns }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"}>
+        <Container
+          py={{ base: "4", md: "12" }}
+          maxW={"7xl"}
+          align={"left"}
+          position={"relative"}
+        >
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -402,6 +407,14 @@ export default function Home({ campaigns }) {
               Create Campaign
             </Button>
           </NextLink>
+          <Img
+            position={"absolute"}
+            right={40}
+            top={55}
+            src={"/landing1.png"}
+            roundedTop="lg"
+            objectFit="cover"
+          />
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
           <HStack spacing={2} justifyContent={"space-between"}>
@@ -519,8 +532,8 @@ export default function Home({ campaigns }) {
               borderRadius={"20"}
               bg={"#97C5E0"}
               _hover={{
-                bg: "#000000",
-                color: "#ffffff",
+                // bg: "#000000",
+                color: "#2C2C7B",
               }}
             >
               Create Campaign
