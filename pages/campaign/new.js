@@ -56,7 +56,9 @@ export default function NewCampaign() {
     console.log(
       data.minimumContribution,
       data.campaignName,
+      data.campaignContributor,
       data.description,
+      data.daysRemaining,
       data.imageUrl,
       data.target
     );
@@ -66,7 +68,9 @@ export default function NewCampaign() {
         .createCampaign(
           web3.utils.toWei(data.minimumContribution, "ether"),
           data.campaignName,
+          data.campaignContributor,
           data.description,
+          data.daysRemaining,
           data.imageUrl,
           web3.utils.toWei(data.target, "ether")
         )
@@ -133,10 +137,26 @@ export default function NewCampaign() {
                     isDisabled={isSubmitting}
                   />
                 </FormControl>
+                <FormControl id="campaignContributor">
+                  <FormLabel>Campaign Contributor</FormLabel>
+                  <Input
+                    {...register("campaignContributor", { required: true })}
+                    isDisabled={isSubmitting}
+                  />
+                </FormControl>
                 <FormControl id="description">
                   <FormLabel>Campaign Description</FormLabel>
                   <Textarea
                     {...register("description", { required: true })}
+                    isDisabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormControl id="daysRemaining">
+                  <FormLabel>Campaign Duration</FormLabel>
+                  <Input
+                    type="number"
+                    steps="any"
+                    {...register("daysRemaining", { required: true })}
                     isDisabled={isSubmitting}
                   />
                 </FormControl>
@@ -177,7 +197,9 @@ export default function NewCampaign() {
                 ) : null}
                 {errors.minimumContribution ||
                 errors.name ||
+                errors.creator ||
                 errors.description ||
+                errors.day ||
                 errors.imageUrl ||
                 errors.target ? (
                   <Alert status="error">
