@@ -272,7 +272,7 @@ function CampaignCardNew({
             </Box>
 
             <Box
-              fontSize="3xl"
+              fontSize="2xl"
               fontWeight="semibold"
               as="h4"
               lineHeight="tight"
@@ -280,7 +280,7 @@ function CampaignCardNew({
             >
               {name}
             </Box>
-            <Box isTruncated maxW={"75%"}>
+            <Box isTruncated maxW={"60%"}>
               <Text noOfLines={3}>{description}</Text>
             </Box>
           </Box>
@@ -409,7 +409,7 @@ export default function Home({ campaigns }) {
           <Img
             position={"absolute"}
             right={40}
-            top={55}
+            top={53}
             src={"/landing1.png"}
             roundedTop="lg"
             objectFit="cover"
