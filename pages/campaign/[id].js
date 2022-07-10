@@ -379,7 +379,7 @@ export default function CampaignSingle({
                     <Stack spacing={10}>
                       {wallet.status === "connected" ? (
                         <Button
-                          fontFamily={"heading"}
+                          // fontFamily={"heading"}
                           mt={4}
                           w={"full"}
                           bgGradient="linear(to-r, teal.400,green.400)"
@@ -416,7 +416,7 @@ export default function CampaignSingle({
               >
                 <NextLink href={`/campaign/${id}/requests`}>
                   <Button
-                    fontFamily={"heading"}
+                    // fontFamily={"heading"}
                     w={"full"}
                     bgGradient="linear(to-r, teal.400,green.400)"
                     color={"white"}
