@@ -11,6 +11,7 @@ import {
 } from "../../lib/getETHPrice";
 import {
   Box,
+  Image,
   Flex,
   Stack,
   Heading,
@@ -44,6 +45,7 @@ import Confetti from "react-confetti";
 import web3 from "../../smart-contract/web3";
 import Campaign from "../../smart-contract/campaign";
 import factory from "../../smart-contract/factory";
+import { redirect } from "next/dist/server/api-utils";
 
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
@@ -76,19 +78,20 @@ function StatsCard(props) {
       py={"5"}
       shadow={"sm"}
       border={"1px solid"}
-      borderColor={"gray.500"}
+      borderColor={"#43B0F1"}
       rounded={"lg"}
       transition={"transform 0.3s ease"}
       _hover={{
-        transform: "translateY(-5px)",
+        transform: "translateX(5px)",
       }}
     >
       <Tooltip
-        label={info}
+        // label={info}
         bg={useColorModeValue("white", "gray.700")}
         placement={"top"}
         color={useColorModeValue("gray.800", "white")}
         fontSize={"1em"}
+        borderRadius={"10px"}
       >
         <Flex justifyContent={"space-between"}>
           <Box pl={{ base: 2, md: 4 }}>
@@ -164,29 +167,8 @@ export default function CampaignSingle({
       {isSubmitted ? <Confetti width={width} height={height} /> : null}
       <main>
         {" "}
-        <Box position={"relative"}>
-          {isSubmitted ? (
-            <Container
-              maxW={"7xl"}
-              columns={{ base: 1, md: 2 }}
-              spacing={{ base: 10, lg: 32 }}
-              py={{ base: 6 }}
-            >
-              <Alert status="success" mt="2">
-                <AlertIcon />
-                <AlertDescription mr={2}>
-                  {" "}
-                  Thank You for your Contribution 🙏
-                </AlertDescription>
-                <CloseButton
-                  position="absolute"
-                  right="8px"
-                  top="8px"
-                  onClick={() => setIsSubmitted(false)}
-                />
-              </Alert>
-            </Container>
-          ) : null}
+        {/* <Box position={"relative"}>
+          
           <Container
             as={SimpleGrid}
             maxW={"7xl"}
@@ -195,65 +177,11 @@ export default function CampaignSingle({
             py={{ base: 6 }}
           >
             <Stack spacing={{ base: 6 }}>
-              <Heading
-                lineHeight={1.1}
-                fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
-              >
-                {name}
-              </Heading>
-              <Text
-                color={useColorModeValue("gray.500", "gray.200")}
-                fontSize={{ base: "lg" }}
-              >
-                {description}
-              </Text>
-              <Link
-                color="teal.500"
-                href={`https://rinkeby.etherscan.io/address/${id}`}
-                isExternal
-              >
-                View on Rinkeby Etherscan <ExternalLinkIcon mx="2px" />
-              </Link>
-              <Box mx={"auto"} w={"full"}>
-                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5 }}>
-                  <StatsCard
-                    title={"Minimum Contribution"}
-                    stat={`${web3.utils.fromWei(
-                      minimumContribution,
-                      "ether"
-                    )} ETH ($${getWEIPriceInUSD(
-                      ETHPrice,
-                      minimumContribution
-                    )})`}
-                    info={
-                      "You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"
-                    }
-                  />
-                  <StatsCard
-                    title={"Wallet Address of Campaign Creator"}
-                    stat={manager}
-                    info={
-                      "The Campaign Creator created the campaign and can create requests to withdraw money."
-                    }
-                  />
-                  <StatsCard
-                    title={"Number of Requests"}
-                    stat={requestsCount}
-                    info={
-                      "A request tries to withdraw money from the contract. Requests must be approved by approvers"
-                    }
-                  />
-                  <StatsCard
-                    title={"Number of Approvers"}
-                    stat={approversCount}
-                    info={
-                      "Number of people who have already donated to this campaign"
-                    }
-                  />
-                </SimpleGrid>
-              </Box>
-            </Stack>
-            <Stack spacing={{ base: 4 }}>
+              <Image
+                src={image}
+                borderRadius={"20px"}
+                boxShadow={"lg"}
+              />
               <Box>
                 <Stat
                   bg={useColorModeValue("white", "gray.700")}
@@ -327,6 +255,49 @@ export default function CampaignSingle({
                   </StatNumber>
                 </Stat>
               </Box>
+              <Box mx={"auto"} w={"full"}>
+                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5 }}>
+                  <StatsCard
+                    title={"Minimum Contribution"}
+                    stat={`${web3.utils.fromWei(
+                      minimumContribution,
+                      "ether"
+                    )} ETH ($${getWEIPriceInUSD(
+                      ETHPrice,
+                      minimumContribution
+                    )})`}
+                    info={
+                      "You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"
+                    }
+                  />
+                  <StatsCard
+                    title={"Wallet Address of Campaign Creator"}
+                    stat={manager}
+                    info={
+                      "The Campaign Creator created the campaign and can create requests to withdraw money."
+                    }
+                  />
+                  <StatsCard
+                    title={"Number of Requests"}
+                    stat={requestsCount}
+                    info={
+                      "A request tries to withdraw money from the contract. Requests must be approved by approvers"
+                    }
+                  />
+                  <StatsCard
+                    title={"Number of Approvers"}
+                    stat={approversCount}
+                    info={
+                      "Number of people who have already donated to this campaign"
+                    }
+                  />
+                </SimpleGrid>
+              </Box>
+
+
+
+            </Stack>
+            <Stack spacing={{ base: 4 }}>
               <Stack
                 bg={useColorModeValue("white", "gray.700")}
                 boxShadow={"lg"}
@@ -334,6 +305,26 @@ export default function CampaignSingle({
                 p={{ base: 4, sm: 6, md: 8 }}
                 spacing={{ base: 6 }}
               >
+                <Heading
+                  lineHeight={1.1}
+                  fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+                >
+                  {name}
+                </Heading>
+                <Text
+                  color={useColorModeValue("gray.500", "gray.200")}
+                  fontSize={{ base: "lg" }}
+                >
+                  {description}
+                </Text>
+                <Link
+                  color="#0065A1"
+                  href={`https://rinkeby.etherscan.io/address/${id}`}
+                  isExternal
+                >
+                  View on Rinkeby Etherscan <ExternalLinkIcon mx="2px" />
+                </Link>
+
                 <Heading
                   lineHeight={1.1}
                   fontSize={{ base: "2xl", sm: "3xl" }}
@@ -371,7 +362,7 @@ export default function CampaignSingle({
 
                     {error ? (
                       <Alert status="error" mt="2">
-                        <AlertIcon />
+                        <AlertIcon color={"red"} />
                         <AlertDescription mr={2}> {error}</AlertDescription>
                       </Alert>
                     ) : null}
@@ -395,8 +386,8 @@ export default function CampaignSingle({
                           Contribute
                         </Button>
                       ) : (
-                        <Alert status="warning" mt={4}>
-                          <AlertIcon />
+                        <Alert status="warning" mt={4} bgColor={"red.100"}>
+                          <AlertIcon color={"red"} />
                           <AlertDescription mr={2}>
                             Please Connect Your Wallet to Contribute
                           </AlertDescription>
@@ -435,7 +426,279 @@ export default function CampaignSingle({
               </Stack>
             </Stack>
           </Container>
-        </Box>
+        </Box> */}
+        <Flex
+          px={"17.5vw"}
+          direction={"column"}
+          justifyContent={"space-evenly"}
+          gap={"3vw"}
+          marginTop={"5vh"}
+        >
+          {isSubmitted ? (
+            <Container
+              maxW={"7xl"}
+              columns={{ base: 1, md: 2 }}
+              spacing={{ base: 10, lg: 32 }}
+              py={{ base: 6 }}
+            >
+              <Alert status="success" mt="2">
+                <AlertIcon />
+                <AlertDescription mr={2}>
+                  {" "}
+                  Thank You for your Contribution 🙏
+                </AlertDescription>
+                <CloseButton
+                  position="absolute"
+                  right="8px"
+                  top="8px"
+                  onClick={() => setIsSubmitted(false)}
+                />
+              </Alert>
+            </Container>
+          ) : null}
+          <Flex direction={"row"}>
+            <Image src={image} fit={"cover"} borderRadius={"20px"} w={"25vw"} />
+            <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
+              <Heading
+                lineHeight={1.1}
+                fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+              >
+                {name}
+              </Heading>
+              <Text
+                color={useColorModeValue("gray.500", "gray.200")}
+                fontSize={{ base: "lg" }}
+              >
+                {description}
+              </Text>
+              <Link
+                color="#0065A1"
+                href={`https://rinkeby.etherscan.io/address/${id}`}
+                isExternal
+              >
+                View on Rinkeby Etherscan <ExternalLinkIcon mx="2px" />
+              </Link>
+            </Flex>
+          </Flex>
+          <Box>
+            <Stat
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              rounded={"20px"}
+              p={{ base: 4, sm: 6, md: 8 }}
+              spacing={{ base: 8 }}
+            >
+              <StatLabel fontWeight={"medium"}>
+                <Text as="span" isTruncated mr={2}>
+                  {" "}
+                  Campaign Balance
+                </Text>
+                <Tooltip
+                  label="The balance is how much money this campaign has left to
+                  spend."
+                  bg={useColorModeValue("white", "gray.700")}
+                  placement={"top"}
+                  color={useColorModeValue("gray.800", "white")}
+                  fontSize={"1em"}
+                  px="4"
+                >
+                  <InfoIcon
+                    color={useColorModeValue("teal.800", "white")}
+                  />
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>
+                <Box
+                  fontSize={"2xl"}
+                  isTruncated
+                  maxW={{ base: "	15rem", sm: "sm" }}
+                  pt="2"
+                >
+                  <Text as="span" fontWeight={"bold"}>
+                    {balance > 0
+                      ? web3.utils.fromWei(balance, "ether")
+                      : "0, Become a Donor 😄"}
+                  </Text>
+                  <Text
+                    as="span"
+                    display={balance > 0 ? "inline" : "none"}
+                    pr={2}
+                    fontWeight={"bold"}
+                  >
+                    {" "}
+                    ETH
+                  </Text>
+                  <Text
+                    as="span"
+                    fontSize="lg"
+                    display={balance > 0 ? "inline" : "none"}
+                    fontWeight={"normal"}
+                    color={useColorModeValue("gray.500", "gray.200")}
+                  >
+                    (${getWEIPriceInUSD(ETHPrice, balance)})
+                  </Text>
+                </Box>
+
+                <Text fontSize={"md"} fontWeight="normal">
+                  target of {web3.utils.fromWei(target, "ether")} ETH ($
+                  {getWEIPriceInUSD(ETHPrice, target)})
+                </Text>
+                <Progress
+                  colorScheme="teal"
+                  size="sm"
+                  value={web3.utils.fromWei(balance, "ether")}
+                  max={web3.utils.fromWei(target, "ether")}
+                  mt={4}
+                />
+              </StatNumber>
+            </Stat>
+          </Box>
+          <Flex direction={"row"} justifyContent={"space-between"}>
+            <Stack
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              rounded={"20px"}
+              paddingY={"3vw"}
+              paddingX={"2vw"}
+              spacing={10}
+              maxW={"48%"}
+            >
+              <NextLink href={`/campaign/${id}/requests`}>
+                <Button
+                  // fontFamily={"heading"}
+                  w={"full"}
+                  bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+                  color={"white"}
+                  _hover={{
+                    bgGradient: 'linear(to l, #ffffff, #2C2C7B)',
+                    boxShadow: "xl",
+                  }}
+                >
+                  View Withdrawal Requests
+                </Button>
+              </NextLink>
+              <Text fontSize={"sm"}>
+                * You can see where these funds are being used & if you have
+                contributed you can also approve those Withdrawal Requests :)
+              </Text>
+            </Stack>
+            <Stack
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              rounded={"20px"}
+              p={{ base: 4, sm: 6, md: 8 }}
+              spacing={4}
+              maxW={"48%"}
+              width={"48%"}>
+              <Heading
+                lineHeight={1}
+                fontSize={{ base: "2xl", sm: "3xl" }}
+                color={useColorModeValue("teal.600", "teal.200")}
+              >
+                Contribute Now!
+              </Heading>
+              <Box mt={5}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <FormControl id="value">
+                    <FormLabel>
+                      Amount in Ether you want to contribute
+                    </FormLabel>
+                    <InputGroup>
+                      {" "}
+                      <Input
+                        {...register("value", { required: true })}
+                        type="number"
+                        isDisabled={formState.isSubmitting}
+                        onChange={(e) => {
+                          setAmountInUSD(Math.abs(e.target.value));
+                        }}
+                        step="any"
+                        min="0"
+                      />{" "}
+                      <InputRightAddon children="ETH" />
+                    </InputGroup>
+                    {amountInUSD ? (
+                      <FormHelperText>
+                        ~$ {getETHPriceInUSD(ETHPrice, amountInUSD)}
+                      </FormHelperText>
+                    ) : null}
+                  </FormControl>
+
+                  {error ? (
+                    <Alert status="error" mt="2">
+                      <AlertIcon color={"red"} />
+                      <AlertDescription mr={2}> {error}</AlertDescription>
+                    </Alert>
+                  ) : null}
+
+                  <Stack spacing={10}>
+                    {wallet.status === "connected" ? (
+                      <Button
+                        // fontFamily={"heading"}
+                        mt={4}
+                        w={"full"}
+                        bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+                        color={"white"}
+                        _hover={{
+                          bgGradient: 'linear(to-l, #2C2C7B, #1CB5E0)',
+                          boxShadow: "xl",
+                        }}
+                        isLoading={formState.isSubmitting}
+                        isDisabled={amountInUSD ? false : true}
+                        type="submit"
+                      >
+                        Contribute
+                      </Button>
+                    ) : (
+                      <Alert status="warning" mt={4} bgColor={"red.100"}>
+                        <AlertIcon color={"red"} />
+                        <AlertDescription mr={2}>
+                          Please Connect Your Wallet to Contribute
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </Stack>
+                </form>
+              </Box>
+            </Stack>
+          </Flex>
+          <SimpleGrid columns={{ base: 2 }} spacing={{ base: 5 }}>
+            <StatsCard
+              title={"Minimum Contribution"}
+              stat={`${web3.utils.fromWei(
+                minimumContribution,
+                "ether"
+              )} ETH ($${getWEIPriceInUSD(
+                ETHPrice,
+                minimumContribution
+              )})`}
+              info={
+                "You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"
+              }
+            />
+            <StatsCard
+              title={"Wallet Address of Campaign Creator"}
+              stat={manager}
+              info={
+                "The Campaign Creator created the campaign and can create requests to withdraw money."
+              }
+            />
+            <StatsCard
+              title={"Number of Requests"}
+              stat={requestsCount}
+              info={
+                "A request tries to withdraw money from the contract. Requests must be approved by approvers"
+              }
+            />
+            <StatsCard
+              title={"Number of Approvers"}
+              stat={approversCount}
+              info={
+                "Number of people who have already donated to this campaign"
+              }
+            />
+          </SimpleGrid>
+        </Flex>
       </main>
     </div>
   );
