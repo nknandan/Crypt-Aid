@@ -77,12 +77,12 @@ function StatsCard(props) {
       px={{ base: 2, md: 4 }}
       py={"5"}
       shadow={"sm"}
-      border={"1px solid"}
+      border={"2px solid"}
       borderColor={"#43B0F1"}
       rounded={"lg"}
       transition={"transform 0.3s ease"}
       _hover={{
-        transform: "translateX(5px)",
+        transform: "translateY(-5px)",
       }}
     >
       <Tooltip
@@ -457,7 +457,7 @@ export default function CampaignSingle({
             </Container>
           ) : null}
           <Flex direction={"row"}>
-            <Image src={image} fit={"cover"} borderRadius={"20px"} w={"25vw"} />
+            <Image src={image} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
               <Heading
                 lineHeight={1.1}

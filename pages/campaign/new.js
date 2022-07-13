@@ -122,6 +122,7 @@ export default function NewCampaign() {
                     <Input
                       {...register("campaignName", { required: true })}
                       isDisabled={isSubmitting}
+                      placeholder={"Covid Relief Fund"}
                     />
                   </FormControl>
                   <FormControl id="description">
@@ -129,6 +130,7 @@ export default function NewCampaign() {
                     <Textarea
                       {...register("description", { required: true })}
                       isDisabled={isSubmitting}
+                      placeholder={"The COVID-19 pandemic is one of the worst health and economic crises in modern history and it continues to require the best of humanity to overcome. Your donation to this fund will help stop the spread of the virus, including the highly contagious Omicron variant, to protect us all."}
                     />
                   </FormControl>
                   <FormControl id="imageUrl">
@@ -137,6 +139,7 @@ export default function NewCampaign() {
                       {...register("imageUrl", { required: true })}
                       isDisabled={isSubmitting}
                       type="url"
+                      placeholder={"https://via.placeholder.com/150"}
                     />
                   </FormControl>
                   <FormControl id="minimumContribution">
@@ -151,6 +154,7 @@ export default function NewCampaign() {
                         onChange={(e) => {
                           setMinContriInUSD(Math.abs(e.target.value));
                         }}
+                        placeholder={"0.000001"}
                       />{" "}
                       <InputRightAddon children="ETH" bgColor={"#9ed1f0"} />
                     </InputGroup>
@@ -171,6 +175,7 @@ export default function NewCampaign() {
                         onChange={(e) => {
                           setTargetInUSD(Math.abs(e.target.value));
                         }}
+                        placeholder={"0.5"}
                       />
                       <InputRightAddon children="ETH" bgColor={"#9ed1f0"} />
                     </InputGroup>
@@ -183,7 +188,7 @@ export default function NewCampaign() {
 
                   {error ? (
                     <Alert status="error">
-                      <AlertIcon color={"red"}/>
+                      <AlertIcon color={"red"} />
                       <AlertDescription mr={2}> {error}</AlertDescription>
                     </Alert>
                   ) : null}
@@ -193,7 +198,7 @@ export default function NewCampaign() {
                     errors.imageUrl ||
                     errors.target ? (
                     <Alert status="error">
-                      <AlertIcon color={"red"}/>
+                      <AlertIcon color={"red"} />
                       <AlertDescription mr={2}>
                         {" "}
                         All Fields are Required
@@ -228,7 +233,7 @@ export default function NewCampaign() {
                           Connect your wallet{" "}
                         </Button>
                         <Alert status="warning" bgColor={"red.100"}>
-                          <AlertIcon color={"red"}/>
+                          <AlertIcon color={"red"} />
                           <AlertDescription mr={2}>
                             Connect your wallet to create campaigns
                           </AlertDescription>
