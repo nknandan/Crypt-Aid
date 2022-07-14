@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../../styles/Home.module.css";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
 import { AiFillRocket, AiFillFire } from "react-icons/ai";
 import { IoIosPodium } from "react-icons/io";
@@ -394,32 +394,24 @@ export default function Home({ campaigns }) {
             <Heading as="h2" size="lg">
               Explore all Campaigns
             </Heading>
-            <Button
-              fontSize={"md"}
-              fontWeight={200}
-              variant={"link"}
-              display={{ base: "none", md: "inline-flex" }}
-              color={"black"}
-              pt={"20px"}
-            >
-              <Grid templateColumns="repeat(3, 1fr)">
-                <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="blue" variant="ghost" isActive="true">
-                    <SunIcon /> Newest
-                  </Button>
-                </GridItem>
-                <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="blue" variant="ghost">
-                    <Icon as={IoIosPodium} /> Top Contributors
-                  </Button>
-                </GridItem>
-                <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="blue" variant="ghost">
-                    <Icon as={AiFillRocket} /> Most Funds Collected
-                  </Button>
-                </GridItem>
-              </Grid>
-            </Button>
+
+            <Grid templateColumns="repeat(3, 1fr)">
+              <GridItem width="20" h="5" bg="white.500">
+                <Button colorScheme="blue" variant="ghost" isActive="true">
+                  <SunIcon /> Newest
+                </Button>
+              </GridItem>
+              <GridItem width="23" h="5" bg="white.500">
+                <Button colorScheme="blue" variant="ghost">
+                  <Icon as={IoIosPodium} /> Top Contributors
+                </Button>
+              </GridItem>
+              <GridItem width="23" h="5" bg="white.500">
+                <Button colorScheme="blue" variant="ghost">
+                  <Icon as={AiFillRocket} /> Most Funds Collected
+                </Button>
+              </GridItem>
+            </Grid>
           </HStack>
 
           <Divider marginTop="4" />
