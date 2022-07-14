@@ -24,7 +24,7 @@ export default function NavBar() {
   const wallet = useWallet();
 
   return (
-    <Box bg={'red'}>
+    <Box bg={"red"}>
       <Flex
         color={useColorModeValue("gray.600", "white")}
         py={{ base: 2 }}
@@ -32,7 +32,7 @@ export default function NavBar() {
         borderBottom={1}
         borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
-        bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+        bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
         align={"center"}
         pos="fixed"
         top="0"
@@ -89,16 +89,16 @@ export default function NavBar() {
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={'white'}    
+              color={"white"}
             >
-              <NextLink href="/campaign/new">Explore</NextLink>
+              <NextLink href="/campaign/explore">Explore</NextLink>
             </Button>
             <Button
               fontSize={"md"}
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={'white'}
+              color={"white"}
             >
               <NextLink href="/campaign/new">About</NextLink>
             </Button>
@@ -135,7 +135,7 @@ export default function NavBar() {
                   href={"#"}
                   _hover={{
                     bg: "#0065A1",
-                    color: "white"
+                    color: "white",
                   }}
                   onClick={() => wallet.connect()}
                 >

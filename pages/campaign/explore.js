@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../../styles/Home.module.css";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
 import {
   Heading,
@@ -371,7 +372,6 @@ export default function Home({ campaigns }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
           <HStack spacing={2} justifyContent={"space-between"}>
             <Heading as="h2" size="lg">
@@ -385,7 +385,42 @@ export default function Home({ campaigns }) {
               color={"black"}
               pt={"20px"}
             >
-              <NextLink href="/">View all ➡️</NextLink>
+              <Grid templateColumns="repeat(5, 1fr)">
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Button colorScheme="teal" variant="ghost">
+                    Best
+                  </Button>
+                </GridItem>
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Button colorScheme="teal" variant="ghost">
+                    Hot
+                  </Button>
+                </GridItem>
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Button colorScheme="teal" variant="ghost">
+                    New
+                  </Button>
+                </GridItem>
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Button colorScheme="teal" variant="ghost">
+                    Top
+                  </Button>
+                </GridItem>
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Menu>
+                    <MenuButton as={Button} colorScheme="teal" variant="ghost">
+                      More
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem>Download</MenuItem>
+                      <MenuItem>Create a Copy</MenuItem>
+                      <MenuItem>Mark as Draft</MenuItem>
+                      <MenuItem>Delete</MenuItem>
+                      <MenuItem>Attend a Workshop</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </GridItem>
+              </Grid>
             </Button>
           </HStack>
 
