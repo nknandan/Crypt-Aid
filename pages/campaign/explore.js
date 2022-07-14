@@ -402,20 +402,20 @@ export default function Home({ campaigns }) {
               color={"black"}
               pt={"20px"}
             >
-              <Grid templateColumns="repeat(5, 1fr)">
+              <Grid templateColumns="repeat(3, 1fr)">
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="blue" variant="ghost" isActive="true">
-                    <SunIcon /> New
+                    <SunIcon /> Newest
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="blue" variant="ghost">
-                    <Icon as={IoIosPodium} /> Top
+                    <Icon as={IoIosPodium} /> Top Contributors
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="blue" variant="ghost">
-                    <Icon as={AiFillRocket} /> Best
+                    <Icon as={AiFillRocket} /> Most Funds Collected
                   </Button>
                 </GridItem>
               </Grid>
