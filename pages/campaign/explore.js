@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../../styles/Home.module.css";
 import { Grid, GridItem } from "@chakra-ui/react";
+import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
+import { AiFillRocket, AiFillFire } from "react-icons/ai";
+import { IoIosPodium } from "react-icons/io";
 import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
 import {
   Heading,
@@ -388,28 +391,28 @@ export default function Home({ campaigns }) {
               <Grid templateColumns="repeat(5, 1fr)">
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    Best
+                    <Icon as={AiFillRocket} /> Best
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    Hot
+                    <Icon as={AiFillFire} /> Hot
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    New
+                    <SunIcon /> New
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    Top
+                    <Icon as={IoIosPodium} /> Top
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Menu>
                     <MenuButton as={Button} colorScheme="teal" variant="ghost">
-                      More
+                      <ChevronDownIcon />
                     </MenuButton>
                     <MenuList>
                       <MenuItem>Download</MenuItem>
