@@ -1,4 +1,6 @@
 import Head from "next/head";
+import React from "react";
+import ReactDOM from "react-dom";
 import { useState, useEffect } from "react";
 import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
@@ -36,7 +38,15 @@ import {
   CloseButton,
   FormHelperText,
   Link,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
+
+import { useDisclosure } from "@chakra-ui/react";
 
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -156,6 +166,9 @@ export default function CampaignSingle({
       console.log(err);
     }
   }
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
 
   return (
     <div>
@@ -457,8 +470,18 @@ export default function CampaignSingle({
             </Container>
           ) : null}
           <Flex direction={"row"}>
-            <Image src={image} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
-            <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
+            <Image
+              src={image}
+              fit={"fill"}
+              borderRadius={"20px"}
+              maxW={"25vw"}
+              maxH={"50vh"}
+            />
+            <Flex
+              ml={"5vw"}
+              justifyContent={"space-evenly"}
+              direction={"column"}
+            >
               <Heading
                 lineHeight={1.1}
                 fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
@@ -502,9 +525,7 @@ export default function CampaignSingle({
                   fontSize={"1em"}
                   px="4"
                 >
-                  <InfoIcon
-                    color={useColorModeValue("teal.800", "white")}
-                  />
+                  <InfoIcon color={useColorModeValue("teal.800", "white")} />
                 </Tooltip>
               </StatLabel>
               <StatNumber>
@@ -563,20 +584,47 @@ export default function CampaignSingle({
               spacing={10}
               maxW={"48%"}
             >
-              <NextLink href={`/campaign/${id}/requests`}>
+              <>
                 <Button
+                  onClick={onOpen}
                   // fontFamily={"heading"}
                   w={"full"}
-                  bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+                  bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
                   color={"white"}
                   _hover={{
-                    bgGradient: 'linear(to l, #ffffff, #2C2C7B)',
+                    bgGradient: "linear(to l, #ffffff, #2C2C7B)",
                     boxShadow: "xl",
                   }}
                 >
                   View Withdrawal Requests
                 </Button>
-              </NextLink>
+
+                <AlertDialog
+                  isOpen={isOpen}
+                  leastDestructiveRef={cancelRef}
+                  onClose={onClose}
+                >
+                  <AlertDialogOverlay>
+                    <AlertDialogContent>
+                      <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                        Feature Under Maintainance
+                      </AlertDialogHeader>
+
+                      <AlertDialogBody>
+                        This feature is currently being developed and is not
+                        ready for use.
+                      </AlertDialogBody>
+
+                      <AlertDialogFooter>
+                        <Button colorScheme="red" onClick={onClose} ml={3}>
+                          Close
+                        </Button>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialogOverlay>
+                </AlertDialog>
+              </>
+
               <Text fontSize={"sm"}>
                 * You can see where these funds are being used & if you have
                 contributed you can also approve those Withdrawal Requests :)
@@ -589,7 +637,8 @@ export default function CampaignSingle({
               p={{ base: 4, sm: 6, md: 8 }}
               spacing={4}
               maxW={"48%"}
-              width={"48%"}>
+              width={"48%"}
+            >
               <Heading
                 lineHeight={1}
                 fontSize={{ base: "2xl", sm: "3xl" }}
@@ -637,10 +686,10 @@ export default function CampaignSingle({
                         // fontFamily={"heading"}
                         mt={4}
                         w={"full"}
-                        bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+                        bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
                         color={"white"}
                         _hover={{
-                          bgGradient: 'linear(to-l, #2C2C7B, #1CB5E0)',
+                          bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
                           boxShadow: "xl",
                         }}
                         isLoading={formState.isSubmitting}
@@ -668,10 +717,7 @@ export default function CampaignSingle({
               stat={`${web3.utils.fromWei(
                 minimumContribution,
                 "ether"
-              )} ETH ($${getWEIPriceInUSD(
-                ETHPrice,
-                minimumContribution
-              )})`}
+              )} ETH ($${getWEIPriceInUSD(ETHPrice, minimumContribution)})`}
               info={
                 "You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"
               }
