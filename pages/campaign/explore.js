@@ -18,6 +18,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
   Container,
   SimpleGrid,
   Box,
@@ -360,6 +364,20 @@ export default function Home({ campaigns }) {
     getSummary();
   }, []);
 
+  var buttonVal = 0;
+
+  function newButtonFunc() {
+    buttonVal = 0;
+  }
+
+  function topButtonVal() {
+    buttonVal = 1;
+  }
+
+  function bestButtonVal() {
+    buttonVal = 2;
+  }
+
   return (
     <div>
       <Head>
@@ -385,34 +403,20 @@ export default function Home({ campaigns }) {
               pt={"20px"}
             >
               <Grid templateColumns="repeat(5, 1fr)">
-              <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="teal" variant="ghost">
-                    <SunIcon /> Newest
+                <GridItem w="100%" h="10" bg="white.500">
+                  <Button colorScheme="blue" variant="ghost" isActive="true">
+                    <SunIcon /> New
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="teal" variant="ghost">
-                    <Icon as={AiFillRocket} /> Top Contributed
+                  <Button colorScheme="blue" variant="ghost">
+                    <Icon as={IoIosPodium} /> Top
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="teal" variant="ghost">
-                    <Icon as={IoIosPodium} /> Most Fund Collected
+                  <Button colorScheme="blue" variant="ghost">
+                    <Icon as={AiFillRocket} /> Best
                   </Button>
-                </GridItem>
-                <GridItem w="100%" h="10" bg="white.500">
-                  <Menu>
-                    <MenuButton as={Button} colorScheme="teal" variant="ghost">
-                      <ChevronDownIcon />
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>Download</MenuItem>
-                      <MenuItem>Create a Copy</MenuItem>
-                      <MenuItem>Mark as Draft</MenuItem>
-                      <MenuItem>Delete</MenuItem>
-                      <MenuItem>Attend a Workshop</MenuItem>
-                    </MenuList>
-                  </Menu>
                 </GridItem>
               </Grid>
             </Button>
