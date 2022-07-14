@@ -18,10 +18,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
   Container,
   SimpleGrid,
   Box,
@@ -389,24 +385,19 @@ export default function Home({ campaigns }) {
               pt={"20px"}
             >
               <Grid templateColumns="repeat(5, 1fr)">
-                <GridItem w="100%" h="10" bg="white.500">
+              <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    <Icon as={AiFillRocket} /> Best
+                    <SunIcon /> Newest
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    <Icon as={AiFillFire} /> Hot
+                    <Icon as={AiFillRocket} /> Top Contributed
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
                   <Button colorScheme="teal" variant="ghost">
-                    <SunIcon /> New
-                  </Button>
-                </GridItem>
-                <GridItem w="100%" h="10" bg="white.500">
-                  <Button colorScheme="teal" variant="ghost">
-                    <Icon as={IoIosPodium} /> Top
+                    <Icon as={IoIosPodium} /> Most Fund Collected
                   </Button>
                 </GridItem>
                 <GridItem w="100%" h="10" bg="white.500">
