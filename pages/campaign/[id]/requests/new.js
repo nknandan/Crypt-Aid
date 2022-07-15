@@ -140,7 +140,7 @@ export default function NewRequest() {
                 </FormControl>
                 {errors.description || errors.value || errors.recipient ? (
                   <Alert status="error">
-                    <AlertIcon />
+                    <AlertIcon color={"red"} />
                     <AlertDescription mr={2}>
                       {" "}
                       All Fields are Required
@@ -149,7 +149,7 @@ export default function NewRequest() {
                 ) : null}
                 {error ? (
                   <Alert status="error">
-                    <AlertIcon />
+                    <AlertIcon color={"red"} />
                     <AlertDescription mr={2}> {error}</AlertDescription>
                   </Alert>
                 ) : null}
@@ -179,9 +179,9 @@ export default function NewRequest() {
                         Connect Wallet{" "}
                       </Button>
                       <Alert status="warning">
-                        <AlertIcon />
+                        <AlertIcon color={"red"} />
                         <AlertDescription mr={2}>
-                          Please Connect Your Wallet First to Create a Campaign
+                          Connect your wallet to create campaign
                         </AlertDescription>
                       </Alert>
                     </Stack>

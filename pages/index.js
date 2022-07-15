@@ -211,7 +211,7 @@ function CampaignCardNew({
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
-        h={"40vh"}
+        h={"25vh"}
         w={"65vw"}
         display={"flex"}
         flexDirection={"row"}
@@ -220,7 +220,7 @@ function CampaignCardNew({
         bgColor={"#ffffff"}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
-        boxShadow="sm"
+        boxShadow='sm'
         _hover={{
           transform: "translateX(8px)",
         }}
@@ -329,6 +329,7 @@ function CampaignCardNew({
 export default function Home({ campaigns }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
+  const [campaignListNumber, setCampaignListNumber] = useState(0);
 
   async function getSummary() {
     try {
@@ -341,11 +342,17 @@ export default function Home({ campaigns }) {
       updateEthPrice(ETHPrice);
       console.log("summary ", summary);
       setCampaignList(summary);
-
+      setCampaignListNumber(5);
       return summary;
     } catch (e) {
       console.log(e);
     }
+  };
+
+  function handleShowMore() {
+    setCampaignListNumber(campaignListNumber >= campaignList.length ?
+      campaignListNumber : campaignListNumber + 1)
+      console.log(campaignListNumber);
   }
 
   useEffect(() => {
@@ -436,7 +443,7 @@ export default function Home({ campaigns }) {
           {campaignList.length > 0 ? (
             <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
               {campaignList
-                .slice(0)
+                .slice(campaignList.length - campaignListNumber)
                 .reverse()
                 .map((el, i) => {
                   return (
@@ -462,6 +469,25 @@ export default function Home({ campaigns }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
+          <Button
+            display={{ sm: "inline-flex" }}
+            w={"200px"}
+            fontSize={"md"}
+            fontWeight={600}
+            color={"black"}
+            borderRadius={"20"}
+            bg={"#ffffff"}
+            border={"1px solid #0065A1"}
+            marginLeft= {"50%"}
+            transform={"translate(-50%, 0)"}
+            onClick={handleShowMore}
+            _hover={{
+              bg: "#0065A1",
+              color: "#ffffff",
+            }}
+          >
+            View more
+          </Button>
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"} id="howitworks">
           <HStack spacing={2}>
@@ -531,8 +557,8 @@ export default function Home({ campaigns }) {
               borderRadius={"20"}
               bg={"#97C5E0"}
               _hover={{
-                // bg: "#000000",
-                color: "#2C2C7B",
+                bg: "#1CB5E0",
+                color: "#ffffff",
               }}
             >
               Create Campaign
