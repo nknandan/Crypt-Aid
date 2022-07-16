@@ -435,7 +435,7 @@ export default function Home({ campaigns }) {
               color={"black"}
               pt={"20px"}
             >
-              <NextLink href="/">View all ➡️</NextLink>
+              <NextLink href="/explore">View all ➡️</NextLink>
             </Button>
           </HStack>
 
