@@ -325,6 +325,7 @@ export default function CampaignSingle({
               maxW={"48%"}
             >
               <>
+<<<<<<< HEAD
               <NextLink href={`/campaign/${id}/requests`}>
                   <Button
                     // fontFamily={"heading"}
@@ -345,6 +346,27 @@ export default function CampaignSingle({
                   leastDestructiveRef={cancelRef}
                   onClose={onClose}
                 >
+=======
+                <Button
+                  onClick={onOpen}
+                  // fontFamily={"heading"}
+                  w={"full"}
+                  bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+                  color={"white"}
+                  _hover={{
+                    bgGradient: "linear(to l, #ffffff, #2C2C7B)",
+                    boxShadow: "xl",
+                  }}
+                >
+                  View Withdrawal Requests
+                </Button>
+
+                <AlertDialog
+                  isOpen={isOpen}
+                  leastDestructiveRef={cancelRef}
+                  onClose={onClose}
+                >
+>>>>>>> 20e37546df43df77a2e3392f5a6fb96362643869
                   <AlertDialogOverlay>
                     <AlertDialogContent>
                       <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -363,7 +385,11 @@ export default function CampaignSingle({
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialogOverlay>
+<<<<<<< HEAD
                 </AlertDialog> */}
+=======
+                </AlertDialog>
+>>>>>>> 20e37546df43df77a2e3392f5a6fb96362643869
               </>
 
               <Text fontSize={"sm"}>
