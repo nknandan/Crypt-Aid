@@ -41,12 +41,19 @@ export default function NewRequest() {
   });
   const [error, setError] = useState("");
   const [inUSD, setInUSD] = useState();
+  const [userAccount, setUserAccount] = useState("");
+  const [creatorAccount, setCreatorAccount] = useState("");
   const [ETHPrice, setETHPrice] = useState(0);
   const wallet = useWallet();
   useAsync(async () => {
     try {
       const result = await getETHPrice();
+      const userAccountArray = await web3.eth.getAccounts();
+      setUserAccount(userAccountArray[0])
       setETHPrice(result);
+      const campaign = Campaign(id);
+      const summary = await campaign.methods.getSummary().call();
+      setCreatorAccount(summary[4])
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +86,8 @@ export default function NewRequest() {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main>
-        <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
+        {creatorAccount == userAccount ? (<Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
+
           <Text fontSize={"lg"} color={"teal.400"} justifyContent="center">
             <ArrowBackIcon mr={2} />
             <NextLink href={`/campaign/${id}/requests`}>
@@ -190,7 +198,20 @@ export default function NewRequest() {
               </Stack>
             </form>
           </Box>
-        </Stack>
+        </Stack>) 
+        : 
+        (<Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6} height={"70vh"}>
+          <Text fontSize={"lg"} color={"teal.400"} justifyContent="center" marginBottom={"15vh"}>
+            <ArrowBackIcon mr={2} />
+            <NextLink href={`/campaign/${id}/requests`}>
+              Back to Requests
+            </NextLink>
+          </Text>
+          <Stack alignContent={"center"} bg={"red.200"} p={10} borderRadius={20}>
+            <Heading fontSize={"4xl"} textAlign={"center"}>You must be the campaign creator to create withdrawal requests !</Heading>
+          </Stack>
+        </Stack>)}
+
       </main>
     </div>
   );

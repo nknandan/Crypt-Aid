@@ -289,7 +289,7 @@ export default function Requests({
       </Head>
 
       <main>
-        <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"}>
+        <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} >
           <Flex flexDirection={{ base: "column", md: "row" }} py={4}>
             <Box py="4">
               <Text fontSize={"lg"} color={"teal.400"}>
@@ -338,7 +338,7 @@ export default function Requests({
           ) : null}
         </Container>
         {requestsList.length > 0 ? (
-          <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"}>
+          <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} height={"100vh"}>
             <Flex flexDirection={{ base: "column", lg: "row" }} py={4}>
               <Box py="2" pr="2">
                 <Heading
@@ -429,8 +429,9 @@ export default function Requests({
               display={
                 requestsList.length === 0 && !isLoading ? "block" : "none"
               }
+              height={"70vh"}
             >
-              <SimpleGrid row spacing={2} align="center">
+              <SimpleGrid row spacing={3} align="center" >
                 <Stack align="center">
                   <NextImage
                     src="/static/no-requests.png"

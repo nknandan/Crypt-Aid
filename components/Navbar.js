@@ -100,7 +100,7 @@ export default function NavBar() {
               display={{ base: "none", md: "inline-flex" }}
               color={'white'}
             >
-              <NextLink href="/campaign/new">About</NextLink>
+              <NextLink href="/about">About</NextLink>
             </Button>
             {/* <Button
               fontSize={"md"}

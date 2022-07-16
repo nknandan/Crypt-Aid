@@ -210,7 +210,6 @@ export default function Home({ campaigns }) {
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
 
-
   async function getSummary() {
     try {
       const summary = await Promise.all(
@@ -231,11 +230,11 @@ export default function Home({ campaigns }) {
   useEffect(() => {
     getSummary();
   }, []);
+
   return (
     <div>
       <Head>
-        <title>Explore Campaigns | CryptAid</title>
-
+        <title>About Us | CryptAid</title>
         <meta
           name="description"
           content="Transparent Crowdfunding in Blockchain"
@@ -243,82 +242,33 @@ export default function Home({ campaigns }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
-          <HStack spacing={2} justifyContent={"space-between"}>
-            <Heading as="h2" size="lg">
-              Explore all Campaigns
-            </Heading>
-            <Grid templateColumns="repeat(2, 1fr)">
-              <GridItem width="20" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" isActive={newButton} borderRadius={20} onClick={() => { setNewButton(1); setTrendingButton(0) }} _hover={{bg: 'gray.300'}}>
-                  <SunIcon /> New
-                </Button>
-              </GridItem>
-              <GridItem width="23" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" isActive={trendingButton} borderRadius={20} onClick={() => { setNewButton(0); setTrendingButton(1) }} _hover={{bg: 'gray.300'}}>
-                  <Icon as={IoIosPodium} /> Trending
-                </Button>
-              </GridItem>
-              {/* <GridItem width="23" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" onClick={() => { setNewButton(0); setPopularButton(1); setTrendingButton(0) }}>
-                  <Icon as={AiFillRocket} /> Popular
-                </Button>
-              </GridItem> */}
-            </Grid>
-          </HStack>
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} height={"100vh"}>
+          <Heading as="h2" size="lg" marginBottom={"5vh"}>
+            About CryptAid
+          </Heading>
+          <Stack spacing={"10vh"} justifyContent={"space-between"}>
 
-          <Divider marginTop="4" />
-          {campaignList.length > 0 ? (
-            <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-              {newButton == 1 ?
-                (campaignList
-                  .slice(0)
-                  .reverse()
-                  .map((el, i) => {
-                    return (
-                      <div key={i}>
-                        <CampaignCardNew
-                          name={el[5]}
-                          description={el[6]}
-                          creatorId={el[4]}
-                          imageURL={el[7]}
-                          id={campaigns[campaignList.length - 1 - i]}
-                          target={el[8]}
-                          balance={el[1]}
-                          ethPrice={ethPrice}
-                        />
-                      </div>
-                    );
-                  })) : (trendingButton == 1 ?
-                    (campaignList
-                      .sort((a,b)=>{
-                        return b[1]-a[1];
-                      })
-                      .map((el, i) => {
-                        return (
-                          <div key={i}>
-                            <CampaignCardNew
-                              name={el[5]}
-                              description={el[6]}
-                              creatorId={el[4]}
-                              imageURL={el[7]}
-                              id={campaigns[campaignList.length - 1 - i]}
-                              target={el[8]}
-                              balance={el[1]}
-                              ethPrice={ethPrice}
-                            />
-                          </div>
-                        );
-                      })) : {})}
-            </SimpleGrid>
-          ) : (
-            <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-              <Skeleton height="15rem" />
-              <Skeleton height="15rem" />
-              <Skeleton height="15rem" />
-            </SimpleGrid>
-          )}
-        </Container>    
+            <Flex direction={"row"} justifyContent={"center"}>
+              <Text maxW={"40vw"} fontSize={"18px"}>
+                Every one of us has the desire for the world to be a better place. That first inspiration to help someone, improve a community, contribute to a noble cause or perhaps transform a whole country. Through CryptAid, we enable people and nonprofits to put compassion into practice. Since that is how change occurs.
+              </Text>
+              {/* <Image src={""}/> */}
+            </Flex>
+            <Flex direction={"row"} justifyContent={"center"}>
+              <Text maxW={"40vw"} fontSize={"18px"}>
+                With fundraising for everyone, we are building the giving layer of the internet—a place where people, groups, companies, and nonprofit organizations can support important causes and collect funds to have a long-lasting impact. Through CryptAid, individuals and organizations can raise the funds they need to mobilize support for their cause and reach a large audience. Are you prepared to join us as we improve the way people give and change lives?
+              </Text>
+              {/* <Image src={""}/> */}
+            </Flex>
+            <Flex direction={"row"} justifyContent={"center"}>
+              <Text maxW={"40vw"} fontSize={"18px"}>
+              Launched in 2022, We are the first entry into the world’s social fundraising platforms. We aim to have a transparent, anti-fraudulent, decentralized platform where people can contribute. In this way, we can create a sense of trust among individuals so that they can donate their money to worthy causes without being concerned about being scammed. With the help of blockchain technology, we provide our users with a secure, transparent and anti-fraud platform for fundraising.
+              </Text>
+              {/* <Image src={""}/> */}
+            </Flex>
+          </Stack>
+
+        </Container>
       </main>
     </div>
   );
