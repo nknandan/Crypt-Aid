@@ -210,6 +210,7 @@ export default function Home({ campaigns }) {
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
 
+
   async function getSummary() {
     try {
       const summary = await Promise.all(
@@ -230,11 +231,11 @@ export default function Home({ campaigns }) {
   useEffect(() => {
     getSummary();
   }, []);
-
   return (
     <div>
       <Head>
         <title>Explore Campaigns | CryptAid</title>
+
         <meta
           name="description"
           content="Transparent Crowdfunding in Blockchain"
@@ -247,7 +248,6 @@ export default function Home({ campaigns }) {
             <Heading as="h2" size="lg">
               Explore all Campaigns
             </Heading>
-
             <Grid templateColumns="repeat(2, 1fr)">
               <GridItem width="20" h="5" bg="white.500">
                 <Button colorScheme="blue" variant="ghost" isActive={newButton} borderRadius={20} onClick={() => { setNewButton(1); setTrendingButton(0) }} _hover={{bg: 'gray.300'}}>
