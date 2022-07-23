@@ -105,7 +105,6 @@ export default function NewCampaign() {
             />
           </Box>
           <Stack spacing={8} py={12} px={6} w={"40vw"}>
-
             <Stack>
               <Heading fontSize={"4xl"}>Create a campaign</Heading>
             </Stack>
@@ -130,7 +129,9 @@ export default function NewCampaign() {
                     <Textarea
                       {...register("description", { required: true })}
                       isDisabled={isSubmitting}
-                      placeholder={"The COVID-19 pandemic is one of the worst health and economic crises in modern history and it continues to require the best of humanity to overcome. Your donation to this fund will help stop the spread of the virus, including the highly contagious Omicron variant, to protect us all."}
+                      placeholder={
+                        "The COVID-19 pandemic is one of the worst health and economic crises in modern history and it continues to require the best of humanity to overcome. Your donation to this fund will help stop the spread of the virus, including the highly contagious Omicron variant, to protect us all."
+                      }
                     />
                   </FormControl>
                   <FormControl id="imageUrl">
@@ -156,7 +157,9 @@ export default function NewCampaign() {
                         }}
                         placeholder={"0.000001"}
                       />{" "}
-                      <InputRightAddon children="ETH" bgColor={"#9ed1f0"} />
+                      <InputRightAddon bgColor={"#9ed1f0"}>
+                        <span>ETH</span>
+                      </InputRightAddon>
                     </InputGroup>
                     {minContriInUSD ? (
                       <FormHelperText>
@@ -177,7 +180,9 @@ export default function NewCampaign() {
                         }}
                         placeholder={"0.5"}
                       />
-                      <InputRightAddon children="ETH" bgColor={"#9ed1f0"} />
+                      <InputRightAddon bgColor={"#9ed1f0"}>
+                        <span>ETH</span>
+                      </InputRightAddon>
                     </InputGroup>
                     {targetInUSD ? (
                       <FormHelperText>
@@ -193,10 +198,10 @@ export default function NewCampaign() {
                     </Alert>
                   ) : null}
                   {errors.minimumContribution ||
-                    errors.name ||
-                    errors.description ||
-                    errors.imageUrl ||
-                    errors.target ? (
+                  errors.name ||
+                  errors.description ||
+                  errors.imageUrl ||
+                  errors.target ? (
                     <Alert status="error">
                       <AlertIcon color={"red"} />
                       <AlertDescription mr={2}>
@@ -212,7 +217,7 @@ export default function NewCampaign() {
                         color={"white"}
                         _hover={{
                           bg: "#0065A1",
-                          color: "white"
+                          color: "white",
                         }}
                         isLoading={isSubmitting}
                         type="submit"
@@ -226,7 +231,7 @@ export default function NewCampaign() {
                           bg={"#43B0F1"}
                           _hover={{
                             bg: "#0065A1",
-                            color: "white"
+                            color: "white",
                           }}
                           onClick={() => wallet.connect()}
                         >

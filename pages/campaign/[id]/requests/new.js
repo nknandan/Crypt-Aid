@@ -49,11 +49,11 @@ export default function NewRequest() {
     try {
       const result = await getETHPrice();
       const userAccountArray = await web3.eth.getAccounts();
-      setUserAccount(userAccountArray[0])
+      setUserAccount(userAccountArray[0]);
       setETHPrice(result);
       const campaign = Campaign(id);
       const summary = await campaign.methods.getSummary().call();
-      setCreatorAccount(summary[4])
+      setCreatorAccount(summary[4]);
     } catch (error) {
       console.log(error);
     }
@@ -78,6 +78,8 @@ export default function NewRequest() {
     }
   }
 
+  const color1 = useColorModeValue("white", "gray.700");
+
   return (
     <div>
       <Head>
@@ -86,132 +88,148 @@ export default function NewRequest() {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main>
-        {creatorAccount == userAccount ? (<Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
-
-          <Text fontSize={"lg"} color={"teal.400"} justifyContent="center">
-            <ArrowBackIcon mr={2} />
-            <NextLink href={`/campaign/${id}/requests`}>
-              Back to Requests
-            </NextLink>
-          </Text>
-          <Stack>
-            <Heading fontSize={"4xl"}>Create a Withdrawal Request 💸</Heading>
-          </Stack>
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-          >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={4}>
-                <FormControl id="description">
-                  <FormLabel>Request Description</FormLabel>
-                  <Textarea
-                    {...register("description", { required: true })}
-                    isDisabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormControl id="value">
-                  <FormLabel>Amount in Ether</FormLabel>
-                  <InputGroup>
-                    {" "}
-                    <Input
-                      type="number"
-                      {...register("value", { required: true })}
+        {creatorAccount == userAccount ? (
+          <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
+            <Text fontSize={"lg"} color={"teal.400"} justifyContent="center">
+              <ArrowBackIcon mr={2} />
+              <NextLink href={`/campaign/${id}/requests`}>
+                Back to Requests
+              </NextLink>
+            </Text>
+            <Stack>
+              <Heading fontSize={"4xl"}>Create a Withdrawal Request 💸</Heading>
+            </Stack>
+            <Box rounded={"lg"} bg={color1} boxShadow={"lg"} p={8}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack spacing={4}>
+                  <FormControl id="description">
+                    <FormLabel>Request Description</FormLabel>
+                    <Textarea
+                      {...register("description", { required: true })}
                       isDisabled={isSubmitting}
-                      onChange={(e) => {
-                        setInUSD(Math.abs(e.target.value));
-                      }}
-                      step="any"
-                    />{" "}
-                    <InputRightAddon children="ETH" />
-                  </InputGroup>
-                  {inUSD ? (
-                    <FormHelperText>
-                      ~$ {getETHPriceInUSD(ETHPrice, inUSD)}
-                    </FormHelperText>
-                  ) : null}
-                </FormControl>
-
-                <FormControl id="recipient">
-                  <FormLabel htmlFor="recipient">
-                    Recipient Ethereum Wallet Address
-                  </FormLabel>
-                  <Input
-                    name="recipient"
-                    {...register("recipient", {
-                      required: true,
-                    })}
-                    isDisabled={isSubmitting}
-                  />
-                </FormControl>
-                {errors.description || errors.value || errors.recipient ? (
-                  <Alert status="error">
-                    <AlertIcon color={"red"} />
-                    <AlertDescription mr={2}>
+                    />
+                  </FormControl>
+                  <FormControl id="value">
+                    <FormLabel>Amount in Ether</FormLabel>
+                    <InputGroup>
                       {" "}
-                      All Fields are Required
-                    </AlertDescription>
-                  </Alert>
-                ) : null}
-                {error ? (
-                  <Alert status="error">
-                    <AlertIcon color={"red"} />
-                    <AlertDescription mr={2}> {error}</AlertDescription>
-                  </Alert>
-                ) : null}
-                <Stack spacing={10}>
-                  {wallet.status === "connected" ? (
-                    <Button
-                      bg={"teal.400"}
-                      color={"white"}
-                      _hover={{
-                        bg: "teal.500",
-                      }}
-                      isLoading={isSubmitting}
-                      type="submit"
-                    >
-                      Create Withdrawal Request
-                    </Button>
-                  ) : (
-                    <Stack spacing={3}>
-                      <Button
-                        color={"white"}
-                        bg={"teal.400"}
-                        _hover={{
-                          bg: "teal.300",
+                      <Input
+                        type="number"
+                        {...register("value", { required: true })}
+                        isDisabled={isSubmitting}
+                        onChange={(e) => {
+                          setInUSD(Math.abs(e.target.value));
                         }}
-                        onClick={() => wallet.connect()}
-                      >
-                        Connect Wallet{" "}
-                      </Button>
-                      <Alert status="warning">
-                        <AlertIcon color={"red"} />
-                        <AlertDescription mr={2}>
-                          Connect your wallet to create campaign
-                        </AlertDescription>
-                      </Alert>
-                    </Stack>
-                  )}
-                </Stack>
-              </Stack>
-            </form>
-          </Box>
-        </Stack>) 
-        : 
-        (<Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6} height={"70vh"}>
-          <Text fontSize={"lg"} color={"teal.400"} justifyContent="center" marginBottom={"15vh"}>
-            <ArrowBackIcon mr={2} />
-            <NextLink href={`/campaign/${id}/requests`}>
-              Back to Requests
-            </NextLink>
-          </Text>
-          <Stack alignContent={"center"} bg={"red.200"} p={10} borderRadius={20}>
-            <Heading fontSize={"4xl"} textAlign={"center"}>You must be the campaign creator to create withdrawal requests !</Heading>
-          </Stack>
-        </Stack>)}
+                        step="any"
+                      />{" "}
+                      <InputRightAddon>
+                        <span>ETH</span>
+                      </InputRightAddon>
+                    </InputGroup>
+                    {inUSD ? (
+                      <FormHelperText>
+                        ~$ {getETHPriceInUSD(ETHPrice, inUSD)}
+                      </FormHelperText>
+                    ) : null}
+                  </FormControl>
 
+                  <FormControl id="recipient">
+                    <FormLabel htmlFor="recipient">
+                      Recipient Ethereum Wallet Address
+                    </FormLabel>
+                    <Input
+                      name="recipient"
+                      {...register("recipient", {
+                        required: true,
+                      })}
+                      isDisabled={isSubmitting}
+                    />
+                  </FormControl>
+                  {errors.description || errors.value || errors.recipient ? (
+                    <Alert status="error">
+                      <AlertIcon color={"red"} />
+                      <AlertDescription mr={2}>
+                        {" "}
+                        All Fields are Required
+                      </AlertDescription>
+                    </Alert>
+                  ) : null}
+                  {error ? (
+                    <Alert status="error">
+                      <AlertIcon color={"red"} />
+                      <AlertDescription mr={2}> {error}</AlertDescription>
+                    </Alert>
+                  ) : null}
+                  <Stack spacing={10}>
+                    {wallet.status === "connected" ? (
+                      <Button
+                        bg={"teal.400"}
+                        color={"white"}
+                        _hover={{
+                          bg: "teal.500",
+                        }}
+                        isLoading={isSubmitting}
+                        type="submit"
+                      >
+                        Create Withdrawal Request
+                      </Button>
+                    ) : (
+                      <Stack spacing={3}>
+                        <Button
+                          color={"white"}
+                          bg={"teal.400"}
+                          _hover={{
+                            bg: "teal.300",
+                          }}
+                          onClick={() => wallet.connect()}
+                        >
+                          Connect Wallet{" "}
+                        </Button>
+                        <Alert status="warning">
+                          <AlertIcon color={"red"} />
+                          <AlertDescription mr={2}>
+                            Connect your wallet to create campaign
+                          </AlertDescription>
+                        </Alert>
+                      </Stack>
+                    )}
+                  </Stack>
+                </Stack>
+              </form>
+            </Box>
+          </Stack>
+        ) : (
+          <Stack
+            spacing={8}
+            mx={"auto"}
+            maxW={"2xl"}
+            py={12}
+            px={6}
+            height={"70vh"}
+          >
+            <Text
+              fontSize={"lg"}
+              color={"teal.400"}
+              justifyContent="center"
+              marginBottom={"15vh"}
+            >
+              <ArrowBackIcon mr={2} />
+              <NextLink href={`/campaign/${id}/requests`}>
+                Back to Requests
+              </NextLink>
+            </Text>
+            <Stack
+              alignContent={"center"}
+              bg={"red.200"}
+              p={10}
+              borderRadius={20}
+            >
+              <Heading fontSize={"4xl"} textAlign={"center"}>
+                You must be the campaign creator to create withdrawal requests !
+              </Heading>
+            </Stack>
+          </Stack>
+        )}
       </main>
     </div>
   );

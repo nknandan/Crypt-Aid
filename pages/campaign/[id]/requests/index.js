@@ -106,14 +106,20 @@ const RequestRow = ({
       setLoadingFinalize(false);
     }
   };
+  const color1 = useColorModeValue("teal.100", "teal.700");
+  const color2 = useColorModeValue("gray.100", "gray.700");
+  const color3 = useColorModeValue("white", "gray.700");
+  const color4 = useColorModeValue("gray.800", "white");
+  const color5 = useColorModeValue("green.600", "green.300");
+  const color6 = useColorModeValue("teal.800", "white");
+  const color7 = useColorModeValue("gray.600", "gray.300");
+
+  const bp1 = useBreakpointValue({ base: "left" });
+  const bp2 = useBreakpointValue({ base: "center" });
 
   return (
     <Tr
-      bg={
-        readyToFinalize && !request.complete
-          ? useColorModeValue("teal.100", "teal.700")
-          : useColorModeValue("gray.100", "gray.700")
-      }
+      bg={readyToFinalize && !request.complete ? color1 : color2}
       opacity={request.complete ? "0.4" : "1"}
     >
       <Td>{id} </Td>
@@ -139,9 +145,9 @@ const RequestRow = ({
         <HStack spacing={2}>
           <Tooltip
             label={errorMessageApprove}
-            bg={useColorModeValue("white", "gray.700")}
+            bg={color3}
             placement={"top"}
-            color={useColorModeValue("gray.800", "white")}
+            color={color4}
             fontSize={"1em"}
           >
             <WarningIcon
@@ -152,14 +158,12 @@ const RequestRow = ({
           {request.complete ? (
             <Tooltip
               label="This Request has been finalized & withdrawn to the recipient,it may then have less no of approvers"
-              bg={useColorModeValue("white", "gray.700")}
+              bg={color3}
               placement={"top"}
-              color={useColorModeValue("gray.800", "white")}
+              color={color4}
               fontSize={"1em"}
             >
-              <CheckCircleIcon
-                color={useColorModeValue("green.600", "green.300")}
-              />
+              <CheckCircleIcon color={color5} />
             </Tooltip>
           ) : (
             <Button
@@ -181,9 +185,9 @@ const RequestRow = ({
       <Td>
         <Tooltip
           label={errorMessageFinalize}
-          bg={useColorModeValue("white", "gray.700")}
+          bg={color3}
           placement={"top"}
-          color={useColorModeValue("gray.800", "white")}
+          color={color4}
           fontSize={"1em"}
         >
           <WarningIcon
@@ -194,15 +198,13 @@ const RequestRow = ({
         </Tooltip>
         {request.complete ? (
           <Tooltip
-              label="This Request has been finalized & withdrawn to the recipient,it may then have less no of approvers"
-            bg={useColorModeValue("white", "gray.700")}
+            label="This Request has been finalized & withdrawn to the recipient,it may then have less no of approvers"
+            bg={color3}
             placement={"top"}
-            color={useColorModeValue("gray.800", "white")}
+            color={color4}
             fontSize={"1em"}
           >
-            <CheckCircleIcon
-              color={useColorModeValue("green.600", "green.300")}
-            />
+            <CheckCircleIcon color={color5} />
           </Tooltip>
         ) : (
           <HStack spacing={2}>
@@ -222,14 +224,14 @@ const RequestRow = ({
 
             <Tooltip
               label="This Request is ready to be Finalized because it has been approved by 50% Approvers"
-              bg={useColorModeValue("white", "gray.700")}
+              bg={color3}
               placement={"top"}
-              color={useColorModeValue("gray.800", "white")}
+              color={color4}
               fontSize={"1.2em"}
             >
               <InfoIcon
                 as="span"
-                color={useColorModeValue("teal.800", "white")}
+                color={color6}
                 display={
                   readyToFinalize && !request.complete ? "inline-block" : "none"
                 }
@@ -289,7 +291,7 @@ export default function Requests({
       </Head>
 
       <main>
-        <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} >
+        <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"}>
           <Flex flexDirection={{ base: "column", md: "row" }} py={4}>
             <Box py="4">
               <Text fontSize={"lg"} color={"teal.400"}>
@@ -338,13 +340,18 @@ export default function Requests({
           ) : null}
         </Container>
         {requestsList.length > 0 ? (
-          <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} height={"100vh"}>
+          <Container
+            px={{ base: "4", md: "12" }}
+            maxW={"7xl"}
+            align={"left"}
+            height={"100vh"}
+          >
             <Flex flexDirection={{ base: "column", lg: "row" }} py={4}>
               <Box py="2" pr="2">
                 <Heading
-                  textAlign={useBreakpointValue({ base: "left" })}
+                  textAlign={bp1}
                   // fontFamily={"heading"}
-                  color={useColorModeValue("gray.800", "white")}
+                  color={color4}
                   as="h3"
                   isTruncated
                   maxW={"3xl"}
@@ -431,7 +438,7 @@ export default function Requests({
               }
               height={"70vh"}
             >
-              <SimpleGrid row spacing={3} align="center" >
+              <SimpleGrid row spacing={3} align="center">
                 <Stack align="center">
                   <NextImage
                     src="/static/no-requests.png"
@@ -440,19 +447,10 @@ export default function Requests({
                     height="150"
                   />
                 </Stack>
-                <Heading
-                  textAlign={"center"}
-                  color={useColorModeValue("gray.800", "white")}
-                  as="h4"
-                  size="md"
-                >
+                <Heading textAlign={"center"} color={color4} as="h4" size="md">
                   No Requests yet for {name} Campaign
                 </Heading>
-                <Text
-                  textAlign={useBreakpointValue({ base: "center" })}
-                  color={useColorModeValue("gray.600", "gray.300")}
-                  fontSize="sm"
-                >
+                <Text textAlign={bp2} color={color7} fontSize="sm">
                   Create a Withdrawal Request to Withdraw funds from the
                   Campaign😄
                 </Text>
