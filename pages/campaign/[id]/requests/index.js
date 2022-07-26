@@ -225,7 +225,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
                 bg: "green.600",
                 color: "white",
               }}
-              isDisabled={disabled || (!request.complete && !readyToFinalize)}
+              isDisabled={disabled || (!request.complete && !readyToFinalize) || userAccount != request.recipient}
               onClick={onFinalize}
               isLoading={loadingFinalize}
             >
