@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  exportTrailingSlash: true,
+  trailingSlash: true,
   reactStrictMode: true,
   future: {
     webpack5: false,

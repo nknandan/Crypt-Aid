@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAsync } from "react-use";
 import Head from "next/head";
 import NextLink from "next/link";
 import NextImage from "next/image";
@@ -31,12 +32,7 @@ import {
   Stack,
   Link,
 } from "@chakra-ui/react";
-import {
-  ArrowBackIcon,
-  InfoIcon,
-  CheckCircleIcon,
-  WarningIcon,
-} from "@chakra-ui/icons";
+import { ArrowBackIcon, InfoIcon, CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
 import web3 from "../../../../smart-contract/web3";
 import Campaign from "../../../../smart-contract/campaign";
 import factory from "../../../../smart-contract/factory";
@@ -61,20 +57,28 @@ export async function getServerSideProps({ params }) {
   };
 }
 
-const RequestRow = ({
-  id,
-  request,
-  approversCount,
-  campaignId,
-  disabled,
-  ETHPrice,
-}) => {
+const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPrice }) => {
   const router = useRouter();
   const readyToFinalize = request.approvalCount > approversCount / 2;
   const [errorMessageApprove, setErrorMessageApprove] = useState();
   const [loadingApprove, setLoadingApprove] = useState(false);
   const [errorMessageFinalize, setErrorMessageFinalize] = useState();
   const [loadingFinalize, setLoadingFinalize] = useState(false);
+
+  const [userAccount, setUserAccount] = useState("");
+  const [creatorAccount, setCreatorAccount] = useState("");
+  useAsync(async () => {
+    try {
+      const userAccountArray = await web3.eth.getAccounts();
+      setUserAccount(userAccountArray[0]);
+      const campaign = Campaign(id);
+      const summary = await campaign.methods.getSummary().call();
+      setCreatorAccount(summary[4]);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const onApprove = async () => {
     setLoadingApprove(true);
     try {
@@ -123,11 +127,7 @@ const RequestRow = ({
         {getWEIPriceInUSD(ETHPrice, request.value)})
       </Td>
       <Td>
-        <Link
-          color="teal.500"
-          href={`https://rinkeby.etherscan.io/address/${request.recipient}`}
-          isExternal
-        >
+        <Link color="teal.500" href={`https://rinkeby.etherscan.io/address/${request.recipient}`} isExternal>
           {" "}
           {request.recipient.substr(0, 10) + "..."}
         </Link>
@@ -157,24 +157,38 @@ const RequestRow = ({
               color={useColorModeValue("gray.800", "white")}
               fontSize={"1em"}
             >
-              <CheckCircleIcon
-                color={useColorModeValue("green.600", "green.300")}
-              />
+              <CheckCircleIcon color={useColorModeValue("green.600", "green.300")} />
             </Tooltip>
           ) : (
-            <Button
-              colorScheme="yellow"
-              variant="outline"
-              _hover={{
-                bg: "yellow.600",
-                color: "white",
-              }}
-              onClick={onApprove}
-              isDisabled={disabled || request.approvalCount == approversCount}
-              isLoading={loadingApprove}
-            >
-              Approve
-            </Button>
+            <div>
+              <Button
+                colorScheme="yellow"
+                variant="outline"
+                _hover={{
+                  bg: "yellow.600",
+                  color: "white",
+                }}
+                onClick={onApprove}
+                isDisabled={disabled || request.approvalCount == approversCount || userAccount == request.recipient}
+                isLoading={loadingApprove}
+              >
+                Approve
+              </Button>
+              <Button
+                colorScheme="yellow"
+                variant="outline"
+                _hover={{
+                  bg: "yellow.600",
+                  color: "white",
+                }}
+                onClick={() => {
+                  console.log("User == " + userAccount);
+                  console.log("Creator == " + request.recipient);
+                }}
+              >
+                Debug
+              </Button>
+            </div>
           )}
         </HStack>
       </Td>
@@ -200,9 +214,7 @@ const RequestRow = ({
             color={useColorModeValue("gray.800", "white")}
             fontSize={"1em"}
           >
-            <CheckCircleIcon
-              color={useColorModeValue("green.600", "green.300")}
-            />
+            <CheckCircleIcon color={useColorModeValue("green.600", "green.300")} />
           </Tooltip>
         ) : (
           <HStack spacing={2}>
@@ -230,9 +242,7 @@ const RequestRow = ({
               <InfoIcon
                 as="span"
                 color={useColorModeValue("teal.800", "white")}
-                display={
-                  readyToFinalize && !request.complete ? "inline-block" : "none"
-                }
+                display={readyToFinalize && !request.complete ? "inline-block" : "none"}
               />
             </Tooltip>
           </HStack>
@@ -242,14 +252,7 @@ const RequestRow = ({
   );
 };
 
-export default function Requests({
-  campaignId,
-  requestCount,
-  approversCount,
-  balance,
-  name,
-  ETHPrice,
-}) {
+export default function Requests({ campaignId, requestCount, approversCount, balance, name, ETHPrice }) {
   const [requestsList, setRequestsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [FundNotAvailable, setFundNotAvailable] = useState(false);
@@ -294,26 +297,16 @@ export default function Requests({
             <Box py="4">
               <Text fontSize={"lg"} color={"teal.400"}>
                 <ArrowBackIcon mr={2} />
-                <NextLink href={`/campaign/${campaignId}`}>
-                  Back to Campaign
-                </NextLink>
+                <NextLink href={`/campaign/${campaignId}`}>Back to Campaign</NextLink>
               </Text>
             </Box>
             <Spacer />
             <Box py="4">
               Campaign Balance :{" "}
               <Text as="span" fontWeight={"bold"} fontSize="lg">
-                {balance > 0
-                  ? web3.utils.fromWei(balance, "ether")
-                  : "0, Become a Donor 😄"}
+                {balance > 0 ? web3.utils.fromWei(balance, "ether") : "0, Become a Donor 😄"}
               </Text>
-              <Text
-                as="span"
-                display={balance > 0 ? "inline" : "none"}
-                pr={2}
-                fontWeight={"bold"}
-                fontSize="lg"
-              >
+              <Text as="span" display={balance > 0 ? "inline" : "none"} pr={2} fontWeight={"bold"} fontSize="lg">
                 {" "}
                 ETH
               </Text>
@@ -331,8 +324,7 @@ export default function Requests({
             <Alert status="error" my={4}>
               <AlertIcon />
               <AlertDescription>
-                The Current Balance of the Campaign is 0, Please Contribute to
-                approve and finalize Requests.
+                The Current Balance of the Campaign is 0, Please Contribute to approve and finalize Requests.
               </AlertDescription>
             </Alert>
           ) : null}
@@ -410,12 +402,7 @@ export default function Requests({
           </Container>
         ) : (
           <div>
-            <Container
-              px={{ base: "4", md: "12" }}
-              maxW={"7xl"}
-              align={"left"}
-              display={isLoading ? "block" : "none"}
-            >
+            <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} display={isLoading ? "block" : "none"}>
               <SimpleGrid rows={{ base: 3 }} spacing={2}>
                 <Skeleton height="2rem" />
                 <Skeleton height="5rem" />
@@ -426,25 +413,13 @@ export default function Requests({
             <Container
               maxW={"lg"}
               align={"center"}
-              display={
-                requestsList.length === 0 && !isLoading ? "block" : "none"
-              }
+              display={requestsList.length === 0 && !isLoading ? "block" : "none"}
             >
               <SimpleGrid row spacing={2} align="center">
                 <Stack align="center">
-                  <NextImage
-                    src="/static/no-requests.png"
-                    alt="no-request"
-                    width="150"
-                    height="150"
-                  />
+                  <NextImage src="/static/no-requests.png" alt="no-request" width="150" height="150" />
                 </Stack>
-                <Heading
-                  textAlign={"center"}
-                  color={useColorModeValue("gray.800", "white")}
-                  as="h4"
-                  size="md"
-                >
+                <Heading textAlign={"center"} color={useColorModeValue("gray.800", "white")} as="h4" size="md">
                   No Requests yet for {name} Campaign
                 </Heading>
                 <Text
@@ -452,8 +427,7 @@ export default function Requests({
                   color={useColorModeValue("gray.600", "gray.300")}
                   fontSize="sm"
                 >
-                  Create a Withdrawal Request to Withdraw funds from the
-                  Campaign😄
+                  Create a Withdrawal Request to Withdraw funds from the Campaign😄
                 </Text>
 
                 <Button
@@ -465,9 +439,7 @@ export default function Requests({
                     bg: "teal.300",
                   }}
                 >
-                  <NextLink href={`/campaign/${campaignId}/requests/new`}>
-                    Create Withdrawal Request
-                  </NextLink>
+                  <NextLink href={`/campaign/${campaignId}/requests/new`}>Create Withdrawal Request</NextLink>
                 </Button>
 
                 <Button
@@ -479,9 +451,7 @@ export default function Requests({
                     bg: "gray.300",
                   }}
                 >
-                  <NextLink href={`/campaign/${campaignId}/`}>
-                    Go to Campaign
-                  </NextLink>
+                  <NextLink href={`/campaign/${campaignId}/`}>Go to Campaign</NextLink>
                 </Button>
               </SimpleGrid>
             </Container>

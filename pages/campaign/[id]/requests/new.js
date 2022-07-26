@@ -50,6 +50,7 @@ export default function NewRequest() {
       const result = await getETHPrice();
       const userAccountArray = await web3.eth.getAccounts();
       setUserAccount(userAccountArray[0]);
+      // console.log(userAccount);
       setETHPrice(result);
       const campaign = Campaign(id);
       const summary = await campaign.methods.getSummary().call();
@@ -64,11 +65,7 @@ export default function NewRequest() {
     try {
       const accounts = await web3.eth.getAccounts();
       await campaign.methods
-        .createRequest(
-          data.description,
-          web3.utils.toWei(data.value, "ether"),
-          data.recipient
-        )
+        .createRequest(data.description, web3.utils.toWei(data.value, "ether"), data.recipient)
         .send({ from: accounts[0] });
 
       router.push(`/campaign/${id}/requests`);
@@ -92,9 +89,7 @@ export default function NewRequest() {
           <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
             <Text fontSize={"lg"} color={"teal.400"} justifyContent="center">
               <ArrowBackIcon mr={2} />
-              <NextLink href={`/campaign/${id}/requests`}>
-                Back to Requests
-              </NextLink>
+              <NextLink href={`/campaign/${id}/requests`}>Back to Requests</NextLink>
             </Text>
             <Stack>
               <Heading fontSize={"4xl"}>Create a Withdrawal Request 💸</Heading>
@@ -104,10 +99,7 @@ export default function NewRequest() {
                 <Stack spacing={4}>
                   <FormControl id="description">
                     <FormLabel>Request Description</FormLabel>
-                    <Textarea
-                      {...register("description", { required: true })}
-                      isDisabled={isSubmitting}
-                    />
+                    <Textarea {...register("description", { required: true })} isDisabled={isSubmitting} />
                   </FormControl>
                   <FormControl id="value">
                     <FormLabel>Amount in Ether</FormLabel>
@@ -126,17 +118,11 @@ export default function NewRequest() {
                         <span>ETH</span>
                       </InputRightAddon>
                     </InputGroup>
-                    {inUSD ? (
-                      <FormHelperText>
-                        ~$ {getETHPriceInUSD(ETHPrice, inUSD)}
-                      </FormHelperText>
-                    ) : null}
+                    {inUSD ? <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, inUSD)}</FormHelperText> : null}
                   </FormControl>
 
                   <FormControl id="recipient">
-                    <FormLabel htmlFor="recipient">
-                      Recipient Ethereum Wallet Address
-                    </FormLabel>
+                    <FormLabel htmlFor="recipient">Recipient Ethereum Wallet Address</FormLabel>
                     <Input
                       name="recipient"
                       {...register("recipient", {
@@ -148,10 +134,7 @@ export default function NewRequest() {
                   {errors.description || errors.value || errors.recipient ? (
                     <Alert status="error">
                       <AlertIcon color={"red"} />
-                      <AlertDescription mr={2}>
-                        {" "}
-                        All Fields are Required
-                      </AlertDescription>
+                      <AlertDescription mr={2}> All Fields are Required</AlertDescription>
                     </Alert>
                   ) : null}
                   {error ? (
@@ -187,9 +170,7 @@ export default function NewRequest() {
                         </Button>
                         <Alert status="warning">
                           <AlertIcon color={"red"} />
-                          <AlertDescription mr={2}>
-                            Connect your wallet to create campaign
-                          </AlertDescription>
+                          <AlertDescription mr={2}>Connect your wallet to create campaign</AlertDescription>
                         </Alert>
                       </Stack>
                     )}
@@ -199,31 +180,12 @@ export default function NewRequest() {
             </Box>
           </Stack>
         ) : (
-          <Stack
-            spacing={8}
-            mx={"auto"}
-            maxW={"2xl"}
-            py={12}
-            px={6}
-            height={"70vh"}
-          >
-            <Text
-              fontSize={"lg"}
-              color={"teal.400"}
-              justifyContent="center"
-              marginBottom={"15vh"}
-            >
+          <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6} height={"70vh"}>
+            <Text fontSize={"lg"} color={"teal.400"} justifyContent="center" marginBottom={"15vh"}>
               <ArrowBackIcon mr={2} />
-              <NextLink href={`/campaign/${id}/requests`}>
-                Back to Requests
-              </NextLink>
+              <NextLink href={`/campaign/${id}/requests`}>Back to Requests</NextLink>
             </Text>
-            <Stack
-              alignContent={"center"}
-              bg={"red.200"}
-              p={10}
-              borderRadius={20}
-            >
+            <Stack alignContent={"center"} bg={"red.200"} p={10} borderRadius={20}>
               <Heading fontSize={"4xl"} textAlign={"center"}>
                 You must be the campaign creator to create withdrawal requests !
               </Heading>
