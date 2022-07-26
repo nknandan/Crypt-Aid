@@ -174,7 +174,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
               >
                 Approve
               </Button>
-              <Button
+              {/* <Button
                 colorScheme="yellow"
                 variant="outline"
                 _hover={{
@@ -187,7 +187,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
                 }}
               >
                 Debug
-              </Button>
+              </Button> */}
             </div>
           )}
         </HStack>
