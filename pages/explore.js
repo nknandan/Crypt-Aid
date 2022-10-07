@@ -75,16 +75,7 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -127,11 +118,7 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -148,13 +135,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-              isTruncated
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
               {name}
             </Box>
             <Box isTruncated maxW={"60%"}>
@@ -164,11 +145,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -191,8 +168,8 @@ function CampaignCardNew({
             <Progress
               colorScheme="blue"
               size="sm"
-              // value={web3.utils.fromWei(balance, "ether")}
-              value={50}
+              value={web3.utils.fromWei(balance, "ether")}
+              // value={50}
               max={web3.utils.fromWei(target, "ether")}
               mt="2"
             />
@@ -210,13 +187,10 @@ export default function Home({ campaigns }) {
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
 
-
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -236,10 +210,7 @@ export default function Home({ campaigns }) {
       <Head>
         <title>Explore Campaigns | CryptAid</title>
 
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -250,12 +221,32 @@ export default function Home({ campaigns }) {
             </Heading>
             <Grid templateColumns="repeat(2, 1fr)">
               <GridItem width="20" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" isActive={newButton} borderRadius={20} onClick={() => { setNewButton(1); setTrendingButton(0) }} _hover={{bg: 'gray.300'}}>
+                <Button
+                  colorScheme="blue"
+                  variant="ghost"
+                  isActive={newButton}
+                  borderRadius={20}
+                  onClick={() => {
+                    setNewButton(1);
+                    setTrendingButton(0);
+                  }}
+                  _hover={{ bg: "gray.300" }}
+                >
                   <SunIcon /> New
                 </Button>
               </GridItem>
               <GridItem width="23" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" isActive={trendingButton} borderRadius={20} onClick={() => { setNewButton(0); setTrendingButton(1) }} _hover={{bg: 'gray.300'}}>
+                <Button
+                  colorScheme="blue"
+                  variant="ghost"
+                  isActive={trendingButton}
+                  borderRadius={20}
+                  onClick={() => {
+                    setNewButton(0);
+                    setTrendingButton(1);
+                  }}
+                  _hover={{ bg: "gray.300" }}
+                >
                   <Icon as={IoIosPodium} /> Trending
                 </Button>
               </GridItem>
@@ -270,46 +261,48 @@ export default function Home({ campaigns }) {
           <Divider marginTop="4" />
           {campaignList.length > 0 ? (
             <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-              {newButton == 1 ?
-                (campaignList
-                  .slice(0)
-                  .reverse()
-                  .map((el, i) => {
-                    return (
-                      <div key={i}>
-                        <CampaignCardNew
-                          name={el[5]}
-                          description={el[6]}
-                          creatorId={el[4]}
-                          imageURL={el[7]}
-                          id={campaigns[campaignList.length - 1 - i]}
-                          target={el[8]}
-                          balance={el[1]}
-                          ethPrice={ethPrice}
-                        />
-                      </div>
-                    );
-                  })) : (trendingButton == 1 ?
-                    (campaignList
-                      .sort((a,b)=>{
-                        return b[1]-a[1];
-                      })
-                      .map((el, i) => {
-                        return (
-                          <div key={i}>
-                            <CampaignCardNew
-                              name={el[5]}
-                              description={el[6]}
-                              creatorId={el[4]}
-                              imageURL={el[7]}
-                              id={campaigns[campaignList.length - 1 - i]}
-                              target={el[8]}
-                              balance={el[1]}
-                              ethPrice={ethPrice}
-                            />
-                          </div>
-                        );
-                      })) : {})}
+              {newButton == 1
+                ? campaignList
+                    .slice(0)
+                    .reverse()
+                    .map((el, i) => {
+                      return (
+                        <div key={i}>
+                          <CampaignCardNew
+                            name={el[5]}
+                            description={el[6]}
+                            creatorId={el[4]}
+                            imageURL={el[7]}
+                            id={campaigns[campaignList.length - 1 - i]}
+                            target={el[8]}
+                            balance={el[1]}
+                            ethPrice={ethPrice}
+                          />
+                        </div>
+                      );
+                    })
+                : trendingButton == 1
+                ? campaignList
+                    .sort((a, b) => {
+                      return b[1] - a[1];
+                    })
+                    .map((el, i) => {
+                      return (
+                        <div key={i}>
+                          <CampaignCardNew
+                            name={el[5]}
+                            description={el[6]}
+                            creatorId={el[4]}
+                            imageURL={el[7]}
+                            id={campaigns[campaignList.length - 1 - i]}
+                            target={el[8]}
+                            balance={el[1]}
+                            ethPrice={ethPrice}
+                          />
+                        </div>
+                      );
+                    })
+                : {}}
             </SimpleGrid>
           ) : (
             <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
@@ -318,7 +311,7 @@ export default function Home({ campaigns }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-        </Container>    
+        </Container>
       </main>
     </div>
   );

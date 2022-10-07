@@ -75,16 +75,7 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -127,11 +118,7 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -148,13 +135,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-              isTruncated
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
               {name}
             </Box>
             <Box isTruncated maxW={"60%"}>
@@ -164,11 +145,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -192,7 +169,7 @@ function CampaignCardNew({
               colorScheme="blue"
               size="sm"
               // value={web3.utils.fromWei(balance, "ether")}
-              value={50}
+              value={web3.utils.fromWei(balance, "ether")}
               max={web3.utils.fromWei(target, "ether")}
               mt="2"
             />
@@ -213,9 +190,7 @@ export default function Home({ campaigns }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -235,10 +210,7 @@ export default function Home({ campaigns }) {
     <div>
       <Head>
         <title>About Us | CryptAid</title>
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -247,27 +219,36 @@ export default function Home({ campaigns }) {
             About CryptAid
           </Heading>
           <Stack spacing={"10vh"} justifyContent={"space-between"}>
-
             <Flex direction={"row"} justifyContent={"center"}>
               <Text maxW={"40vw"} fontSize={"18px"}>
-                Every one of us has the desire for the world to be a better place. That first inspiration to help someone, improve a community, contribute to a noble cause or perhaps transform a whole country. Through CryptAid, we enable people and nonprofits to put compassion into practice. Since that is how change occurs.
+                Every one of us has the desire for the world to be a better place. That first inspiration to help
+                someone, improve a community, contribute to a noble cause or perhaps transform a whole country. Through
+                CryptAid, we enable people and nonprofits to put compassion into practice. Since that is how change
+                occurs.
               </Text>
               {/* <Image src={""}/> */}
             </Flex>
             <Flex direction={"row"} justifyContent={"center"}>
               <Text maxW={"40vw"} fontSize={"18px"}>
-                With fundraising for everyone, we are building the giving layer of the internet—a place where people, groups, companies, and nonprofit organizations can support important causes and collect funds to have a long-lasting impact. Through CryptAid, individuals and organizations can raise the funds they need to mobilize support for their cause and reach a large audience. Are you prepared to join us as we improve the way people give and change lives?
+                With fundraising for everyone, we are building the giving layer of the internet—a place where people,
+                groups, companies, and nonprofit organizations can support important causes and collect funds to have a
+                long-lasting impact. Through CryptAid, individuals and organizations can raise the funds they need to
+                mobilize support for their cause and reach a large audience. Are you prepared to join us as we improve
+                the way people give and change lives?
               </Text>
               {/* <Image src={""}/> */}
             </Flex>
             <Flex direction={"row"} justifyContent={"center"}>
               <Text maxW={"40vw"} fontSize={"18px"}>
-              Launched in 2022, We are the first entry into the world’s social fundraising platforms. We aim to have a transparent, anti-fraudulent, decentralized platform where people can contribute. In this way, we can create a sense of trust among individuals so that they can donate their money to worthy causes without being concerned about being scammed. With the help of blockchain technology, we provide our users with a secure, transparent and anti-fraud platform for fundraising.
+                Launched in 2022, We are the first entry into the world’s social fundraising platforms. We aim to have a
+                transparent, anti-fraudulent, decentralized platform where people can contribute. In this way, we can
+                create a sense of trust among individuals so that they can donate their money to worthy causes without
+                being concerned about being scammed. With the help of blockchain technology, we provide our users with a
+                secure, transparent and anti-fraud platform for fundraising.
               </Text>
               {/* <Image src={""}/> */}
             </Flex>
           </Stack>
-
         </Container>
       </main>
     </div>
