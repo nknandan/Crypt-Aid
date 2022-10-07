@@ -220,7 +220,7 @@ function CampaignCardNew({
         bgColor={"#ffffff"}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
-        boxShadow='sm'
+        boxShadow="sm"
         _hover={{
           transform: "translateX(8px)",
         }}
@@ -347,12 +347,15 @@ export default function Home({ campaigns }) {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   function handleShowMore() {
-    setCampaignListNumber(campaignListNumber >= campaignList.length ?
-      campaignListNumber : campaignListNumber + 1)
-      console.log(campaignListNumber);
+    setCampaignListNumber(
+      campaignListNumber >= campaignList.length
+        ? campaignListNumber
+        : campaignListNumber + 1
+    );
+    console.log(campaignListNumber);
   }
 
   useEffect(() => {
@@ -478,7 +481,7 @@ export default function Home({ campaigns }) {
             borderRadius={"20"}
             bg={"#ffffff"}
             border={"1px solid #0065A1"}
-            marginLeft= {"50%"}
+            marginLeft={"50%"}
             transform={"translate(-50%, 0)"}
             onClick={handleShowMore}
             _hover={{
