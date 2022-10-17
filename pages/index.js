@@ -64,154 +64,11 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCard({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
-        bg={useColorModeValue("white", "gray.800")}
-        maxW={{ md: "sm" }}
-        borderWidth="1px"
-        rounded="lg"
-        shadow="lg"
-        position="relative"
-        alignItems="center"
-        justifyContent="center"
-        cursor="pointer"
-        transition={"transform 0.3s ease"}
-        _hover={{
-          transform: "translateY(-8px)",
-        }}
-      >
-        <Box height="18em">
-          <Img
-            src={imageURL}
-            alt={`Picture of ${name}`}
-            roundedTop="lg"
-            objectFit="cover"
-            w="full"
-            h="full"
-            display="block"
-          />
-        </Box>
-        <Box p="6">
-          <Flex
-            mt="1"
-            justifyContent="space-between"
-            alignContent="center"
-            py={2}
-          >
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-              isTruncated
-            >
-              {name}
-            </Box>
-
-            <Tooltip
-              label="Contribute"
-              bg={useColorModeValue("white", "gray.700")}
-              placement={"top"}
-              color={useColorModeValue("gray.800", "white")}
-              fontSize={"1.2em"}
-            >
-              <chakra.a display={"flex"}>
-                <Icon
-                  as={FaHandshake}
-                  h={7}
-                  w={7}
-                  alignSelf={"center"}
-                  color={"teal.400"}
-                />{" "}
-              </chakra.a>
-            </Tooltip>
-          </Flex>
-          <Flex alignContent="center" py={2}>
-            {" "}
-            <Text color={"gray.500"} pr={2}>
-              by
-            </Text>{" "}
-            <Heading size="base" isTruncated>
-              {creatorId}
-            </Heading>
-          </Flex>
-          <Flex direction="row" py={2}>
-            <Box w="full">
-              <Box
-                fontSize={"2xl"}
-                isTruncated
-                maxW={{ base: "	15rem", sm: "sm" }}
-                pt="2"
-              >
-                <Text as="span" fontWeight={"bold"}>
-                  {balance > 0
-                    ? web3.utils.fromWei(balance, "ether")
-                    : "0, Become a Donor 😄"}
-                </Text>
-                <Text
-                  as="span"
-                  display={balance > 0 ? "inline" : "none"}
-                  pr={2}
-                  fontWeight={"bold"}
-                >
-                  {" "}
-                  ETH
-                </Text>
-                <Text
-                  as="span"
-                  fontSize="lg"
-                  display={balance > 0 ? "inline" : "none"}
-                  fontWeight={"normal"}
-                  color={useColorModeValue("gray.500", "gray.200")}
-                >
-                  (${getWEIPriceInUSD(ethPrice, balance)})
-                </Text>
-              </Box>
-
-              <Text fontSize={"md"} fontWeight="normal">
-                target of {web3.utils.fromWei(target, "ether")} ETH ($
-                {getWEIPriceInUSD(ethPrice, target)})
-              </Text>
-              <Progress
-                colorScheme="teal"
-                size="sm"
-                value={web3.utils.fromWei(balance, "ether")}
-                max={web3.utils.fromWei(target, "ether")}
-                mt="2"
-              />
-            </Box>{" "}
-          </Flex>
-        </Box>
-      </Box>
-    </NextLink>
-  );
-}
-
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
-  return (
-    <NextLink href={`/campaign/${id}`}>
-      <Box
-        h={"25vh"}
+        h={"30vh"}
         w={"65vw"}
         display={"flex"}
         flexDirection={"row"}
@@ -250,11 +107,7 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -271,13 +124,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-              isTruncated
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
               {name}
             </Box>
             <Box isTruncated maxW={"60%"}>
@@ -287,11 +134,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -311,14 +154,7 @@ function CampaignCardNew({
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress
-              colorScheme="blue"
-              size="sm"
-              // value={web3.utils.fromWei(balance, "ether")}
-              value={50}
-              max={web3.utils.fromWei(target, "ether")}
-              mt="2"
-            />
+            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
           </Box>
         </Box>
       </Box>
@@ -334,15 +170,13 @@ export default function Home({ campaigns }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
       console.log("summary ", summary);
       setCampaignList(summary);
-      setCampaignListNumber(5);
+      setCampaignListNumber(3);
       return summary;
     } catch (e) {
       console.log(e);
@@ -350,11 +184,7 @@ export default function Home({ campaigns }) {
   }
 
   function handleShowMore() {
-    setCampaignListNumber(
-      campaignListNumber >= campaignList.length
-        ? campaignListNumber
-        : campaignListNumber + 1
-    );
+    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
     console.log(campaignListNumber);
   }
 
@@ -366,19 +196,11 @@ export default function Home({ campaigns }) {
     <div>
       <Head>
         <title>CryptAid</title>
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container
-          py={{ base: "4", md: "12" }}
-          maxW={"7xl"}
-          align={"left"}
-          position={"relative"}
-        >
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}>
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -416,19 +238,12 @@ export default function Home({ campaigns }) {
               Create Campaign
             </Button>
           </NextLink>
-          <Img
-            position={"absolute"}
-            right={40}
-            top={53}
-            src={"/landing1.png"}
-            roundedTop="lg"
-            objectFit="cover"
-          />
+          <Img position={"absolute"} right={40} top={53} src={"/landing1.png"} roundedTop="lg" objectFit="cover" />
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
           <HStack spacing={2} justifyContent={"space-between"}>
             <Heading as="h2" size="lg">
-              Trending Campaigns
+              New Campaigns
             </Heading>
             <Button
               fontSize={"md"}
@@ -472,7 +287,7 @@ export default function Home({ campaigns }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          <Button
+          {campaignList.length > 3 &&  campaignListNumber != campaignList.length ? (<Button
             display={{ sm: "inline-flex" }}
             w={"200px"}
             fontSize={"md"}
@@ -490,7 +305,8 @@ export default function Home({ campaigns }) {
             }}
           >
             View more
-          </Button>
+          </Button>) : (<></>)}
+          
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"} id="howitworks">
           <HStack spacing={2}>
@@ -510,9 +326,7 @@ export default function Home({ campaigns }) {
             <Feature
               icon={<Icon as={FcShare} w={10} h={10} />}
               title={"SHARE"}
-              text={
-                "We let you share your favorite campaigns with your near and dear ones."
-              }
+              text={"We let you share your favorite campaigns with your near and dear ones."}
             />
             <Feature
               icon={<Icon as={FcMoneyTransfer} w={10} h={10} />}
@@ -533,19 +347,12 @@ export default function Home({ campaigns }) {
           py={"20px"}
           position={"relative"}
         >
-          <Text
-            color={"white"}
-            fontSize={"2rem"}
-            mx={"20px"}
-            fontWeight={"600"}
-            pb={"10px"}
-          >
+          <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
             Feeling Inspired ?
           </Text>
           <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-            Let`s make a difference together. You can raise money or <br /> make
-            a donation, and our platform will let you do that <br />{" "}
-            effortlessly anywhere in the world.
+            Let`s make a difference together. You can raise money or <br /> make a donation, and our platform will let
+            you do that <br /> effortlessly anywhere in the world.
           </Text>
           <NextLink href="/campaign/new">
             <Button
