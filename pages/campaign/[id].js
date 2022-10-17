@@ -433,7 +433,7 @@ export default function CampaignSingle({
             </Container>
           ) : null}
           <Flex direction={"row"}>
-            <Image src={image} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
+            <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
               <Heading lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
                 {name}
@@ -441,8 +441,8 @@ export default function CampaignSingle({
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
                 {description}
               </Text>
-              <Link color="#0065A1" href={`https://rinkeby.etherscan.io/address/${id}`} isExternal>
-                View on Rinkeby Etherscan <ExternalLinkIcon mx="2px" />
+              <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
+                View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
               </Link>
             </Flex>
           </Flex>

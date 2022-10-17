@@ -127,7 +127,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
         {getWEIPriceInUSD(ETHPrice, request.value)})
       </Td>
       <Td>
-        <Link color="teal.500" href={`https://rinkeby.etherscan.io/address/${request.recipient}`} isExternal>
+        <Link color="teal.500" href={`https://goerli.etherscan.io/address/${request.recipient}`} isExternal>
           {" "}
           {request.recipient.substr(0, 10) + "..."}
         </Link>

@@ -17,11 +17,10 @@ function MyApp({ Component, pageProps }) {
       {" "}
       <ChakraProvider theme={theme}>
         <UseWalletProvider
-          chainId={4}
+          chainId={5}
           connectors={{
             walletconnect: {
-              rpcUrl:
-                "https://eth-goerli.g.alchemy.com/v2/K00m6ORqZWyriwhu66xBEKnyBk4T-6F-",
+              rpcUrl: "https://goerli.infura.io/v3/45506ce6184f433aa07ed69c689ff539", // GOERLI END POINT
             },
           }}
         >
