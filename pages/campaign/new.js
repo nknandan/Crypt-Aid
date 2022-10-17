@@ -54,8 +54,28 @@ export default function NewCampaign() {
     }
   }, []);
   async function onSubmit(data) {
-    console.log(data.minimumContribution, data.campaignName, data.description, data.imageUrl, data.target);
+    console.log(
+      data.minimumContribution,
+      data.campaignName,
+      data.description,
+      data.imageUrl,
+      data.target
+    );
     try {
+      console.log("ADD 1");
+      fetch("api/test/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: data.campaignName,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
+          targetAmount: web3.utils.toWei(data.target, "ether"),
+        }),
+      });
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCampaign(
@@ -90,13 +110,24 @@ export default function NewCampaign() {
               <ArrowBackIcon mr={2} />
               <NextLink href="/"> Back to Home</NextLink>
             </Text>
-            <Image src={"/new2.png"} objectFit="contain" w="30vw" h="60vh" my={"auto"} />
+            <Image
+              src={"/new2.png"}
+              objectFit="contain"
+              w="30vw"
+              h="60vh"
+              my={"auto"}
+            />
           </Box>
           <Stack spacing={8} py={12} px={6} w={"40vw"}>
             <Stack>
               <Heading fontSize={"4xl"}>Create a campaign</Heading>
             </Stack>
-            <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
+            <Box
+              rounded={"2xl"}
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              p={8}
+            >
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={4}>
                   <FormControl id="campaignName">
@@ -145,7 +176,9 @@ export default function NewCampaign() {
                       </InputRightAddon>
                     </InputGroup>
                     {minContriInUSD ? (
-                      <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, minContriInUSD)}</FormHelperText>
+                      <FormHelperText>
+                        ~$ {getETHPriceInUSD(ETHPrice, minContriInUSD)}
+                      </FormHelperText>
                     ) : null}
                   </FormControl>
                   <FormControl id="target">
@@ -165,7 +198,11 @@ export default function NewCampaign() {
                         <span>ETH</span>
                       </InputRightAddon>
                     </InputGroup>
-                    {targetInUSD ? <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, targetInUSD)}</FormHelperText> : null}
+                    {targetInUSD ? (
+                      <FormHelperText>
+                        ~$ {getETHPriceInUSD(ETHPrice, targetInUSD)}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
 
                   {error ? (
@@ -181,7 +218,10 @@ export default function NewCampaign() {
                   errors.target ? (
                     <Alert status="error">
                       <AlertIcon color={"red"} />
-                      <AlertDescription mr={2}> All Fields are Required</AlertDescription>
+                      <AlertDescription mr={2}>
+                        {" "}
+                        All Fields are Required
+                      </AlertDescription>
                     </Alert>
                   ) : null}
                   <Stack spacing={10}>
@@ -216,7 +256,9 @@ export default function NewCampaign() {
                         </Button>
                         <Alert status="warning" bgColor={"red.100"}>
                           <AlertIcon color={"red"} />
-                          <AlertDescription mr={2}>Connect your wallet to create campaigns</AlertDescription>
+                          <AlertDescription mr={2}>
+                            Connect your wallet to create campaigns
+                          </AlertDescription>
                         </Alert>
                       </Stack>
                     )}
