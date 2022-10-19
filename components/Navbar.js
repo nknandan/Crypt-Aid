@@ -143,6 +143,23 @@ export default function NavBar() {
                 </Button>
               </div>
             )}
+            <Button
+                  display={{ base: "none", md: "inline-flex" }}
+                  fontSize={"md"}
+                  fontWeight={600}
+                  color={"black"}
+                  bg={"#43B0F1"}
+                  borderRadius={20}
+                  width={150}
+                  href={"#"}
+                  _hover={{
+                    bg: "#0065A1",
+                    color: "white"
+                  }}
+                >
+                  <NextLink href="/createAccount">About</NextLink>
+                </Button>
+            
 
             {/* <DarkModeSwitch /> */}
           </Stack>
