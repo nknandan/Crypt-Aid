@@ -59,11 +59,12 @@ export default function NewCampaign() {
       data.campaignName,
       data.description,
       data.imageUrl,
-      data.target
+      data.target,
+      "HELLO"
     );
     try {
       console.log("ADD 1");
-      fetch("api/test/add", {
+      fetch("api/campaign/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,6 +91,7 @@ export default function NewCampaign() {
         });
 
       router.push("/");
+      console.log("ADD 2");
     } catch (err) {
       setError(err.message);
       console.log(err);

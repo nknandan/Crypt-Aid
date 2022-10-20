@@ -1,15 +1,15 @@
-import connectMongo from "../../utils/connectMongo";
 import Campaign from "../../../models/campaignModel";
+import { connectMongo } from "../../../utils/connectMongo";
 
-export default async function createCampaign(req, res) {
+export default async function addCampaign(req, res) {
   try {
     console.log("CONNECTING TO MONGO");
     await connectMongo();
     console.log("CONNECTED TO MONGO");
 
-    console.log("CREATING DATABASE FILE");
+    console.log("CREATING DATABASE");
     const campaign = await Campaign.create(req.body);
-    console.log("ADDED TO DATABASE");
+    console.log("CREATED DATABASE VARIABLE");
 
     res.json({ campaign });
   } catch (error) {
