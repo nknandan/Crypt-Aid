@@ -24,7 +24,7 @@ export default function NavBar() {
   const wallet = useWallet();
 
   return (
-    <Box bg={'red'}>
+    <Box bg={"red"}>
       <Flex
         color={useColorModeValue("gray.600", "white")}
         py={{ base: 2 }}
@@ -32,7 +32,7 @@ export default function NavBar() {
         borderBottom={1}
         borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
-        bgGradient='linear(to-l, #2C2C7B, #1CB5E0)'
+        bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
         align={"center"}
         pos="fixed"
         top="0"
@@ -58,12 +58,7 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box
-                as={"span"}
-                color={useColorModeValue("#fefefe", "teal.300")}
-                position={"relative"}
-                zIndex={10}
-              >
+              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10}>
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
@@ -89,7 +84,7 @@ export default function NavBar() {
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={'white'}    
+              color={"white"}
             >
               <NextLink href="/explore">Explore</NextLink>
             </Button>
@@ -98,7 +93,7 @@ export default function NavBar() {
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={'white'}
+              color={"white"}
             >
               <NextLink href="/about">About</NextLink>
             </Button>
@@ -117,10 +112,7 @@ export default function NavBar() {
                   {wallet.account.substr(0, 10) + "..."}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => wallet.reset()}>
-                    {" "}
-                    Disconnect Wallet{" "}
-                  </MenuItem>
+                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
                 </MenuList>
               </Menu>
             ) : (
@@ -135,7 +127,7 @@ export default function NavBar() {
                   href={"#"}
                   _hover={{
                     bg: "#0065A1",
-                    color: "white"
+                    color: "white",
                   }}
                   onClick={() => wallet.connect()}
                 >
@@ -144,29 +136,26 @@ export default function NavBar() {
               </div>
             )}
             <Button
-                  display={{ base: "none", md: "inline-flex" }}
-                  fontSize={"md"}
-                  fontWeight={600}
-                  color={"black"}
-                  bg={"#43B0F1"}
-                  borderRadius={20}
-                  width={150}
-                  href={"#"}
-                  _hover={{
-                    bg: "#0065A1",
-                    color: "white"
-                  }}
-                >
-                  <NextLink href="/createAccount">About</NextLink>
-                </Button>
-            
+              display={{ base: "none", md: "inline-flex" }}
+              fontSize={"md"}
+              fontWeight={600}
+              color={"black"}
+              bg={"#43B0F1"}
+              borderRadius={20}
+              width={150}
+              href={"#"}
+              _hover={{
+                bg: "#0065A1",
+                color: "white",
+              }}
+            >
+              <NextLink href="/createAccount">Login</NextLink>
+            </Button>
 
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>
-            {/* <DarkModeSwitch /> */}
-          </Flex>
+          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
     </Box>
