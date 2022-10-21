@@ -20,6 +20,8 @@
     "dotenv": "8.6.0",
     "framer-motion": "6",
     "fs-extra": "^10.1.0",
+    "mongodb": "^4.11.0",
+    "mongoose": "^6.6.5",
     "next": "^12.2.0",
     "next-auth": "^4.12.3",
     "node-fetch": "2.6.1",
