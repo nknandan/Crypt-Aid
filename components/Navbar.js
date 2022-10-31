@@ -12,6 +12,9 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  InputGroup,
+  Input,
+  Img,
   MenuItem,
 } from "@chakra-ui/react";
 import { useWallet } from "use-wallet";
@@ -70,15 +73,31 @@ export default function NavBar() {
             spacing={20}
             display={{ base: "none", md: "flex" }}
           >
-            {/* <Button
-              fontSize={"md"}
-              fontWeight={200}
-              variant={"link"}
-              display={{ base: "none", md: "inline-flex" }}
-              color={'white'}
+            <Flex
+              backgroundColor={"gray.100"}
+              width={"30vw"}
+              borderRadius={10}
+              alignContent={"center"}
+              alignItems={"center"}
             >
-              <NextLink href="/campaign/new">Create Campaign</NextLink>
-            </Button> */}
+              <InputGroup w={"90%"} border={"0px"}>
+                <Input type="string" border={"0px"} placeholder={"Search for campaigns"} />
+              </InputGroup>
+              <Button
+                bg={"#43B0F1"}
+                borderRadius={0}
+                href={"#"}
+                _hover={{
+                  bg: "#0065A1",
+                  color: "white",
+                }}
+                width={"10%"}
+                borderRightRadius={10}
+                onClick={() => wallet.connect()}
+              >
+                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
+              </Button>
+            </Flex>
             <Button
               fontSize={"md"}
               fontWeight={200}
@@ -109,7 +128,7 @@ export default function NavBar() {
             {wallet.status === "connected" ? (
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                  {wallet.account.substr(0, 10) + "..."}
+                  {wallet.account.substr(0, 4) + "..."}
                 </MenuButton>
                 <MenuList>
                   <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
@@ -131,7 +150,7 @@ export default function NavBar() {
                   }}
                   onClick={() => wallet.connect()}
                 >
-                  Connect Wallet{" "}
+                  <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/walleticon.png"} />
                 </Button>
               </div>
             )}
