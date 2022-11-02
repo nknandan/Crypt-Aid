@@ -338,7 +338,6 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                   // fontFamily={"heading"}
                   color={useColorModeValue("gray.800", "white")}
                   as="h3"
-                  isTruncated
                   maxW={"3xl"}
                 >
                   Withdrawal Requests for {name} Campaign
@@ -371,9 +370,7 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                     <Th>ID</Th>
                     <Th w="30%">Description</Th>
                     <Th isNumeric>Amount</Th>
-                    <Th maxW="12%" isTruncated>
-                      Recipient Wallet Address
-                    </Th>
+                    <Th maxW="12%">Recipient Wallet Address</Th>
                     <Th>Approval Count </Th>
                     <Th>Approve </Th>
                     <Th>Finalize </Th>

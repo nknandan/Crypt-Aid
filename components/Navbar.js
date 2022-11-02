@@ -17,14 +17,62 @@ import {
   Img,
   MenuItem,
 } from "@chakra-ui/react";
-import { useWallet } from "use-wallet";
-
+import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import DarkModeSwitch from "./DarkModeSwitch";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
+import { useWallet } from "use-wallet";
+
+import Campaign from "../smart-contract/campaign";
+import factory from "../smart-contract/factory";
+import SearchTable from "./searchTable";
+
+const keys = ["5", "6"];
+
 export default function NavBar() {
   const wallet = useWallet();
+  const [campaignList, setCampaignList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchData, setsearchData] = useState([]);
+
+  const getCampaigns = async () => {
+    try {
+      const campaigns = await factory.methods.getDeployedCampaigns().call();
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      setCampaignList(summary);
+      return summary;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const search = (data) => {
+    // console.log(data);
+    // console.log("STILL");
+    data = data.filter((item) => {
+      console.log(item["5"]);
+      if (searchQuery == "") return false;
+      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
+        // console.log("TRUE");
+        return true;
+      } else {
+        return false;
+      }
+    });
+    console.log("IN SEARCH");
+    console.log(data);
+    return data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getCampaigns();
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box bg={"red"}>
@@ -82,8 +130,22 @@ export default function NavBar() {
             >
               {/* TODO  */}
               <InputGroup w={"90%"} border={"0px"}>
-                <Input type="string" border={"0px"} placeholder={"Search for campaigns"} />
+                <Input
+                  type="string"
+                  border={"0px"}
+                  placeholder={"Search for campaigns"}
+                  onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+                />
+                {/* <ul className="list">
+                  {search(campaignList).map((user) => (
+                    <li className="listItem" key={user.id}>
+                      {user["5"]}
+                    </li>
+                  ))}
+                </ul> */}
+                {<SearchTable searchData={search(campaignList)} />}
               </InputGroup>
+
               <Button
                 bg={"#43B0F1"}
                 borderRadius={0}
@@ -155,6 +217,23 @@ export default function NavBar() {
                 </Button>
               </div>
             )}
+            {/* 
+
+             */}
+
+            <Button
+              onClick={() => {
+                console.log("Debug Now.");
+                console.log(campaignList);
+              }}
+            >
+              DEBUG
+            </Button>
+
+            {/* 
+
+
+                 */}
             <Button
               display={{ base: "none", md: "inline-flex" }}
               fontSize={"md"}
