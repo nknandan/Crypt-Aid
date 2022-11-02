@@ -101,10 +101,8 @@ function StatsCard(props) {
       >
         <Flex justifyContent={"space-between"}>
           <Box pl={{ base: 2, md: 4 }}>
-            <StatLabel fontWeight={"medium"} isTruncated>
-              {title}
-            </StatLabel>
-            <StatNumber fontSize={"base"} fontWeight={"bold"} isTruncated maxW={{ base: "	10rem", sm: "sm" }}>
+            <StatLabel fontWeight={"medium"}>{title}</StatLabel>
+            <StatNumber fontSize={"base"} fontWeight={"bold"} maxW={{ base: "	10rem", sm: "sm" }}>
               {stat}
             </StatNumber>
           </Box>
@@ -195,7 +193,7 @@ export default function CampaignSingle({
                   spacing={{ base: 8 }}
                 >
                   <StatLabel fontWeight={"medium"}>
-                    <Text as="span" isTruncated mr={2}>
+                    <Text as="span"  mr={2}>
                       {" "}
                       Campaign Balance
                     </Text>
@@ -216,7 +214,7 @@ export default function CampaignSingle({
                   <StatNumber>
                     <Box
                       fontSize={"2xl"}
-                      isTruncated
+                      
                       maxW={{ base: "	15rem", sm: "sm" }}
                       pt="2"
                     >
@@ -455,7 +453,7 @@ export default function CampaignSingle({
               spacing={{ base: 8 }}
             >
               <StatLabel fontWeight={"medium"}>
-                <Text as="span" isTruncated mr={2}>
+                <Text as="span" mr={2}>
                   {" "}
                   Campaign Balance
                 </Text>
@@ -472,7 +470,7 @@ export default function CampaignSingle({
                 </Tooltip>
               </StatLabel>
               <StatNumber>
-                <Box fontSize={"2xl"} isTruncated maxW={{ base: "	15rem", sm: "sm" }} pt="2">
+                <Box fontSize={"2xl"} maxW={{ base: "	15rem", sm: "sm" }} pt="2">
                   <Text as="span" fontWeight={"bold"}>
                     {balance > 0 ? web3.utils.fromWei(balance, "ether") : "0, Become a Donor 😄"}
                   </Text>

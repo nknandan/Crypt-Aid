@@ -37,6 +37,7 @@ export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
 
   console.log(campaigns);
+  console.log("HERE.");
 
   return {
     props: { campaigns },
@@ -124,16 +125,16 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               </Box>
             </Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
-            <Box isTruncated maxW={"60%"}>
+            <Box maxW={"60%"}>
               <Text noOfLines={3}>{description}</Text>
             </Box>
           </Box>
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
-              <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
+              <Box maxW={{ base: "	15rem", sm: "sm" }}>
                 <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
@@ -287,26 +288,29 @@ export default function Home({ campaigns }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {campaignList.length > 3 &&  campaignListNumber != campaignList.length ? (<Button
-            display={{ sm: "inline-flex" }}
-            w={"200px"}
-            fontSize={"md"}
-            fontWeight={600}
-            color={"black"}
-            borderRadius={"20"}
-            bg={"#ffffff"}
-            border={"1px solid #0065A1"}
-            marginLeft={"50%"}
-            transform={"translate(-50%, 0)"}
-            onClick={handleShowMore}
-            _hover={{
-              bg: "#0065A1",
-              color: "#ffffff",
-            }}
-          >
-            View more
-          </Button>) : (<></>)}
-          
+          {campaignList.length > 3 && campaignListNumber != campaignList.length ? (
+            <Button
+              display={{ sm: "inline-flex" }}
+              w={"200px"}
+              fontSize={"md"}
+              fontWeight={600}
+              color={"black"}
+              borderRadius={"20"}
+              bg={"#ffffff"}
+              border={"1px solid #0065A1"}
+              marginLeft={"50%"}
+              transform={"translate(-50%, 0)"}
+              onClick={handleShowMore}
+              _hover={{
+                bg: "#0065A1",
+                color: "#ffffff",
+              }}
+            >
+              View more
+            </Button>
+          ) : (
+            <></>
+          )}
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"} id="howitworks">
           <HStack spacing={2}>

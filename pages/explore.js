@@ -114,16 +114,16 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               </Box>
             </Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
-            <Box isTruncated maxW={"60%"}>
+            <Box maxW={"60%"}>
               <Text noOfLines={3}>{description}</Text>
             </Box>
           </Box>
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
-              <Box isTruncated maxW={{ base: "	15rem", sm: "sm" }}>
+              <Box maxW={{ base: "	15rem", sm: "sm" }}>
                 <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
