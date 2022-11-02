@@ -80,6 +80,7 @@ export default function NavBar() {
               alignContent={"center"}
               alignItems={"center"}
             >
+              {/* TODO  */}
               <InputGroup w={"90%"} border={"0px"}>
                 <Input type="string" border={"0px"} placeholder={"Search for campaigns"} />
               </InputGroup>
