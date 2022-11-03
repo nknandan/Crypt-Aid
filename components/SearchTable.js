@@ -1,8 +1,5 @@
 const SearchTable = ({ searchData }) => {
-  console.log("NOW");
-
   const data = searchData ?? [];
-  console.log(data);
   return (
     <>
       {/* <h1>Hello World</h1> */}

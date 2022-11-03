@@ -60,7 +60,6 @@ export default function NewRequest() {
     }
   }, []);
   async function onSubmit(data) {
-    console.log(data);
     const campaign = Campaign(id);
     try {
       const accounts = await web3.eth.getAccounts();
