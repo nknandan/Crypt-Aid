@@ -27,6 +27,7 @@ import { useWallet } from "use-wallet";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const keys = ["5", "6"];
 
@@ -35,12 +36,15 @@ export default function NavBar() {
   const [campaignList, setCampaignList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchData, setsearchData] = useState([]);
+  const { user, isLoading, error } = useUser();
 
   const getCampaigns = async () => {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       setCampaignList(summary);
       return summary;
@@ -55,7 +59,10 @@ export default function NavBar() {
     data = data.filter((item) => {
       console.log(item["5"]);
       if (searchQuery == "") return false;
-      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
+      if (
+        item["5"].toLowerCase().includes(searchQuery) ||
+        item["6"].toLowerCase().includes(searchQuery)
+      ) {
         // console.log("TRUE");
         return true;
       } else {
@@ -109,7 +116,12 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10}>
+              <Box
+                as={"span"}
+                color={useColorModeValue("#fefefe", "teal.300")}
+                position={"relative"}
+                zIndex={10}
+              >
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
@@ -158,7 +170,12 @@ export default function NavBar() {
                 borderRightRadius={10}
                 onClick={() => wallet.connect()}
               >
-                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
+                <Img
+                  position={"absolute"}
+                  height={"60%"}
+                  objectFit={"contain"}
+                  src={"/search.png"}
+                />
               </Button>
             </Flex>
             <Button
@@ -194,7 +211,10 @@ export default function NavBar() {
                   {wallet.account.substr(0, 4) + "..."}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
+                  <MenuItem onClick={() => wallet.reset()}>
+                    {" "}
+                    Disconnect Wallet{" "}
+                  </MenuItem>
                 </MenuList>
               </Menu>
             ) : (
@@ -213,7 +233,12 @@ export default function NavBar() {
                   }}
                   onClick={() => wallet.connect()}
                 >
-                  <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/walleticon.png"} />
+                  <Img
+                    position={"absolute"}
+                    height={"60%"}
+                    objectFit={"contain"}
+                    src={"/walleticon.png"}
+                  />
                 </Button>
               </div>
             )}
@@ -248,13 +273,21 @@ export default function NavBar() {
                 color: "white",
               }}
             >
-              <NextLink href="/createAccount">Login</NextLink>
+              {user ? (
+                <>
+                  <NextLink href="/api/auth/logout">Logout</NextLink>
+                </>
+              ) : (
+                <NextLink href="/api/auth/login">Login</NextLink>
+              )}
             </Button>
 
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
+          <Flex display={{ base: "flex", md: "none" }}>
+            {/* <DarkModeSwitch /> */}
+          </Flex>
         </Container>
       </Flex>
     </Box>
