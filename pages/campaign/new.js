@@ -27,6 +27,10 @@ import {
 import NextLink from "next/link";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getETHPrice, getETHPriceInUSD } from "../../lib/getETHPrice";
+import {
+  withPageAuthRequired,
+  WithPageAuthRequired,
+} from "@auth0/nextjs-auth0";
 
 import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3";
@@ -264,3 +268,5 @@ export default function NewCampaign() {
     </div>
   );
 }
+
+export const getServerSideProps = withPageAuthRequired();

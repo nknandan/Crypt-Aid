@@ -182,6 +182,7 @@ export default function Home({ campaigns }) {
 
   useEffect(() => {
     getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>

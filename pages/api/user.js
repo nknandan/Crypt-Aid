@@ -1,5 +1,5 @@
-import User from "../../../models/campaignModel";
-import { connectMongo } from "../../../utils/connectMongo";
+import User from "../../models/user";
+import { connectMongo } from "../../utils/connectMongo";
 import clientPromise from "../../lib/mongodb";
 
 export default async function addCampaign(req, res) {
@@ -9,8 +9,7 @@ export default async function addCampaign(req, res) {
   if (req.method === "GET") {
     try {
       await connectMongo();
-
-      const campaign = await Campaign.find();
+      const users = await User.find();
 
       res.json({ campaign });
     } catch (error) {

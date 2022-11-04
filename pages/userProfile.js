@@ -19,9 +19,19 @@ import {
 import factory from "../smart-contract/factory";
 import web3 from "../smart-contract/web3";
 import Campaign from "../smart-contract/campaign";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { FaHandshake } from "react-icons/fa";
+import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
+import { connectMongo } from "../utils/connectMongo";
+import User from "../models/user";
 
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
+  await connectMongo();
+  const users = await User.find();
+  console.log(users[0]);
+  //console.log(campaigns);
+
   return {
     props: { campaigns },
   };
@@ -216,11 +226,11 @@ export default function userProfile({ campaigns }) {
 
   async function getSummary() {
     try {
-      const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
-      );
-      const ETHPrice = await getETHPrice();
-      updateEthPrice(ETHPrice);
+      // const summary = await Promise.all(
+      //   campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      // );
+      const ethPrice = await getETHPrice();
+      updateEthPrice(ethPrice);
       setCampaignList(summary);
       setCampaignListNumber(3);
       return summary;
@@ -231,6 +241,7 @@ export default function userProfile({ campaigns }) {
 
   useEffect(() => {
     getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -287,7 +298,9 @@ export default function userProfile({ campaigns }) {
                   />
                   <Flex flexDir={"column"}>
                     <Text fontSize={16}>Total amount contributed</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>$ 69.99</Text>
+                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                      $ 69.99
+                    </Text>
                   </Flex>
                 </Center>
                 <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
@@ -313,7 +326,9 @@ export default function userProfile({ campaigns }) {
                   />
                   <Flex flexDir={"column"}>
                     <Text fontSize={16}>Total campaigns funded</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>7</Text>
+                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                      7
+                    </Text>
                   </Flex>
                 </Center>
               </Flex>
@@ -324,16 +339,16 @@ export default function userProfile({ campaigns }) {
           </Flex>
           <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderLeftWidth={1} borderLeftColor={"gray.500"} flexDir={"column"} padding={10}>
             <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
-              <Img
-                src={"/user.png"}
-                height={10}
-                mr={5}
-              />
+              <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
-                <Text fontSize={22} fontWeight={600} noOfLines={1}>Alvin Antony Shaju</Text>
+                <Text fontSize={22} fontWeight={600} noOfLines={1}>
+                  Alvin Antony Shaju
+                </Text>
                 <Center justifyContent={"flex-start"}>
                   <Flex h={2} w={2} borderRadius={"50%"} bgColor={"green.300"} mr={3}></Flex>
-                  <Text fontSize={16} color={"gray.500"}>Online</Text>
+                  <Text fontSize={16} color={"gray.500"}>
+                    Online
+                  </Text>
                 </Center>
               </Flex>
             </Center>
@@ -352,7 +367,6 @@ export default function userProfile({ campaigns }) {
                 description={"save alvin antony shaju.do this project.pls.lalalallalal"}
                 imageURL={"randomimageurl"} />
             </Flex>
-
           </Flex>
         </Container>
       </main>
