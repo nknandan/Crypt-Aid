@@ -80,8 +80,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
-            </Box>
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
@@ -124,28 +123,36 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
 function LatestActivity({ name, description, imageURL }) {
   return (
     <NextLink href={`/explore`}>
-      <Flex h={"20vh"} borderRadius={20} p={0} bgColor={"gray.200"} w={"100%"} transition={"transform 0.3s ease"} boxShadow="sm"
+      <Flex
+        h={"20vh"}
+        borderRadius={20}
+        p={0}
+        bgColor={"gray.200"}
+        w={"100%"}
+        transition={"transform 0.3s ease"}
+        boxShadow="sm"
         _hover={{
           transform: "translateY(-4px)",
         }}
         cursor={"pointer"}
         my={4}
       >
-        <Img
-          src="/dummy.png"
-          h={"100%"}
-          minW={"40%"}
-          maxW={"40%"}
-          objectFit={"cover"}
-          borderRadius={20}
-        />
+        <Img src="/dummy.png" h={"100%"} minW={"40%"} maxW={"40%"} objectFit={"cover"} borderRadius={20} />
         <Flex flexDirection={"column"} p={"4%"} justifyContent={"space-between"}>
           <Flex flexDirection={"column"}>
-            <Text fontSize={24} fontWeight={"500"}>{name}</Text>
-            <Text noOfLines={3} lineHeight={"20px"}>{description}{description}{description}</Text>
+            <Text fontSize={24} fontWeight={"500"}>
+              {name}
+            </Text>
+            <Text noOfLines={3} lineHeight={"20px"}>
+              {description}
+              {description}
+              {description}
+            </Text>
           </Flex>
           <Flex w={"100%"} justifyContent={"flex-end"}>
-            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>Read More</Button>
+            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>
+              Read More
+            </Button>
           </Flex>
         </Flex>
       </Flex>
@@ -157,12 +164,66 @@ function ActiveCampaigns({ setActivePending, campaignList, campaigns, ethPrice }
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
-        <Heading fontSize={30} mr={10}>Active Campaigns</Heading>
-        <Heading fontSize={30} color={"gray.500"} onClick={() => { setActivePending(1) }} cursor={"pointer"}>Pending Campaigns</Heading>
+        <Heading fontSize={30} mr={10}>
+          Active Campaigns
+        </Heading>
+        <Heading
+          fontSize={30}
+          color={"gray.500"}
+          onClick={() => {
+            setActivePending(1);
+          }}
+          cursor={"pointer"}
+        >
+          Pending Campaigns
+        </Heading>
+      </Flex>
+      <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+          {campaignList.map((el, i) => {
+            return (
+              <div key={i}>
+                <CampaignCardNew
+                  name={el[5]}
+                  description={el[6]}
+                  creatorId={el[4]}
+                  imageURL={el[7]}
+                  id={campaigns[campaignList.length - 1 - i]}
+                  target={el[8]}
+                  balance={el[1]}
+                  ethPrice={ethPrice}
+                />
+              </div>
+            );
+          })}
+        </SimpleGrid>
+      </Flex>
+    </Flex>
+  );
+}
+
+function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
+  return (
+    <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
+      <Flex>
+        <Heading
+          fontSize={30}
+          mr={10}
+          color={"gray.500"}
+          onClick={() => {
+            setActivePending(0);
+          }}
+          cursor={"pointer"}
+        >
+          Active Campaigns
+        </Heading>
+        <Heading fontSize={30}>Pending Campaigns</Heading>
       </Flex>
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
           {campaignList
+            .slice(0)
+            .reverse()
             .map((el, i) => {
               return (
                 <div key={i}>
@@ -181,44 +242,11 @@ function ActiveCampaigns({ setActivePending, campaignList, campaigns, ethPrice }
             })}
         </SimpleGrid>
       </Flex>
-    </Flex>);
+    </Flex>
+  );
 }
 
-function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
-  return (<Flex w={"100%"} h={"20vh"} flexDir={"column"}>
-    <Flex>
-      <Heading fontSize={30} mr={10} color={"gray.500"} onClick={() => { setActivePending(0) }} cursor={"pointer"}>Active Campaigns</Heading>
-      <Heading fontSize={30}>Pending Campaigns</Heading>
-    </Flex>
-    <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
-      <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-        {campaignList
-          .slice(0)
-          .reverse()
-          .map((el, i) => {
-            return (
-              <div key={i}>
-                <CampaignCardNew
-                  name={el[5]}
-                  description={el[6]}
-                  creatorId={el[4]}
-                  imageURL={el[7]}
-                  id={campaigns[campaignList.length - 1 - i]}
-                  target={el[8]}
-                  balance={el[1]}
-                  ethPrice={ethPrice}
-                />
-              </div>
-            );
-          })}
-      </SimpleGrid>
-    </Flex>
-  </Flex>);
-}
-
-
-export default function userProfile({ campaigns }) {
-
+export default function UserProfile({ campaigns }) {
   const [activePending, setActivePending] = useState(0);
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
@@ -263,39 +291,60 @@ export default function userProfile({ campaigns }) {
         >
           <Flex height={"200vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
           <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
-            <Flex w={"90%"} h={"20vh"} bgColor={"white"} borderBottomRadius={20}
+            <Flex
+              w={"90%"}
+              h={"20vh"}
+              bgColor={"white"}
+              borderBottomRadius={20}
               alignSelf={"center"}
-              bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}></Flex>
-            <Center borderRadius={"50%"} borderWidth={5} borderColor={"white"} h={"20vh"} w={"20vh"} pos={"absolute"} top={"15vh"} left={"25vw"}>
-              <Img
-                src={"/asdas.jpg"}
-                h={"19vh"}
-                w={"19vh"}
-                objectFit={"fill"}
-                borderRadius={"50%"}
-              ></Img>
+              bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
+            ></Flex>
+            <Center
+              borderRadius={"50%"}
+              borderWidth={5}
+              borderColor={"white"}
+              h={"20vh"}
+              w={"20vh"}
+              pos={"absolute"}
+              top={"15vh"}
+              left={"25vw"}
+            >
+              <Img src={"/asdas.jpg"} h={"19vh"} w={"19vh"} objectFit={"fill"} borderRadius={"50%"}></Img>
             </Center>
             <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
-              <Text fontSize={30} fontWeight={800} color={"blue.800"}>Alvin Antony</Text>
-              <Text fontSize={15} fontWeight={300} mt={-2}>@alvinantonyshaju</Text>
+              <Text fontSize={30} fontWeight={800} color={"blue.800"}>
+                Alvin Antony
+              </Text>
+              <Text fontSize={15} fontWeight={300} mt={-2}>
+                @alvinantonyshaju
+              </Text>
             </Flex>
-            <Button w={"6vh"} h={"6vh"} bgColor={"gray.300"} pos={"absolute"} left={"65vw"} top={"28vh"} borderRadius={"50%"}>
-              <Img
-                objectFit={"cover"}
-                src={"/settings.png"}
-              />
+            <Button
+              w={"6vh"}
+              h={"6vh"}
+              bgColor={"gray.300"}
+              pos={"absolute"}
+              left={"65vw"}
+              top={"28vh"}
+              borderRadius={"50%"}
+            >
+              <Img objectFit={"cover"} src={"/settings.png"} />
             </Button>
             <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
-              <Heading mb={6} fontSize={30}>Dashboard</Heading>
-              <Flex flexDirection={'row'} width={"100%"} justifyContent={"space-between"}>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalamount.png"}
-                    height={10}
-                    mr={5}
-                  />
+              <Heading mb={6} fontSize={30}>
+                Dashboard
+              </Heading>
+              <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-between"}>
+                <Center
+                  bgColor={"gray.200"}
+                  borderRadius={10}
+                  p={5}
+                  py={2}
+                  _hover={{
+                    transform: "translateX(8px)",
+                  }}
+                >
+                  <Img src={"/totalamount.png"} height={10} mr={5} />
                   <Flex flexDir={"column"}>
                     <Text fontSize={16}>Total amount contributed</Text>
                     <Text fontSize={26} fontWeight={600} color={"blue.500"}>
@@ -303,27 +352,33 @@ export default function userProfile({ campaigns }) {
                     </Text>
                   </Flex>
                 </Center>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalcreated.png"}
-                    height={10}
-                    mr={5}
-                  />
+                <Center
+                  bgColor={"gray.200"}
+                  borderRadius={10}
+                  p={5}
+                  py={2}
+                  _hover={{
+                    transform: "translateX(8px)",
+                  }}
+                >
+                  <Img src={"/totalcreated.png"} height={10} mr={5} />
                   <Flex flexDir={"column"}>
                     <Text fontSize={16}>Total campaigns created</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>0</Text>
+                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                      0
+                    </Text>
                   </Flex>
                 </Center>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalcampaigns.png"}
-                    height={10}
-                    mr={5}
-                  />
+                <Center
+                  bgColor={"gray.200"}
+                  borderRadius={10}
+                  p={5}
+                  py={2}
+                  _hover={{
+                    transform: "translateX(8px)",
+                  }}
+                >
+                  <Img src={"/totalcampaigns.png"} height={10} mr={5} />
                   <Flex flexDir={"column"}>
                     <Text fontSize={16}>Total campaigns funded</Text>
                     <Text fontSize={26} fontWeight={600} color={"blue.500"}>
@@ -334,10 +389,32 @@ export default function userProfile({ campaigns }) {
               </Flex>
             </Flex>
             <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-              {activePending ? (<PendingCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />) : (<ActiveCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />)}
+              {activePending ? (
+                <PendingCampaigns
+                  setActivePending={setActivePending}
+                  campaignList={campaignList}
+                  campaigns={campaigns}
+                  ethPrice={ethPrice}
+                />
+              ) : (
+                <ActiveCampaigns
+                  setActivePending={setActivePending}
+                  campaignList={campaignList}
+                  campaigns={campaigns}
+                  ethPrice={ethPrice}
+                />
+              )}
             </Flex>
           </Flex>
-          <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderLeftWidth={1} borderLeftColor={"gray.500"} flexDir={"column"} padding={10}>
+          <Flex
+            height={"200vh"}
+            width={"25vw"}
+            bgColor={"gray.100"}
+            borderLeftWidth={1}
+            borderLeftColor={"gray.500"}
+            flexDir={"column"}
+            padding={10}
+          >
             <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
               <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
@@ -353,19 +430,24 @@ export default function userProfile({ campaigns }) {
               </Flex>
             </Center>
             <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"} w={"100%"}>
-              <Text fontSize={24} fontWeight={600} mb={5} mt={2}>Recent Donations</Text>
+              <Text fontSize={24} fontWeight={600} mb={5} mt={2}>
+                Recent Donations
+              </Text>
               <LatestActivity
                 name={"Hi alvin"}
                 description={"save alvin antony shaju.do this project.pls.lalalallalal"}
-                imageURL={"randomimageurl"} />
+                imageURL={"randomimageurl"}
+              />
               <LatestActivity
                 name={"Hi alvin"}
                 description={"save alvin antony shaju.do this project.pls.lalalallalal"}
-                imageURL={"randomimageurl"} />
+                imageURL={"randomimageurl"}
+              />
               <LatestActivity
                 name={"Hi alvin"}
                 description={"save alvin antony shaju.do this project.pls.lalalallalal"}
-                imageURL={"randomimageurl"} />
+                imageURL={"randomimageurl"}
+              />
             </Flex>
           </Flex>
         </Container>
