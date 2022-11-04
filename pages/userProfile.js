@@ -29,15 +29,22 @@ export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
   await connectMongo();
   const users = await User.find();
-  console.log(users[0]);
-  //console.log(campaigns);
 
   return {
-    props: { campaigns },
+    props: { campaign: campaigns, users: JSON.parse(JSON.stringify(users)) },
   };
 }
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
+function CampaignCardNew({
+  name,
+  description,
+  creatorId,
+  imageURL,
+  id,
+  balance,
+  target,
+  ethPrice,
+}) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -80,9 +87,18 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
+            <Box
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+            ></Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+            <Box
+              fontSize="2xl"
+              fontWeight="semibold"
+              as="h4"
+              lineHeight="tight"
+            >
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -92,7 +108,11 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
+                <Text as="span">
+                  {balance > 0
+                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
+                    : "Raised : 0"}
+                </Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -112,7 +132,13 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
+            <Progress
+              colorScheme="blue"
+              size="sm"
+              value={balance}
+              max={target}
+              mt="2"
+            />
           </Box>
         </Box>
       </Box>
@@ -137,8 +163,19 @@ function LatestActivity({ name, description, imageURL }) {
         cursor={"pointer"}
         my={4}
       >
-        <Img src="/dummy.png" h={"100%"} minW={"40%"} maxW={"40%"} objectFit={"cover"} borderRadius={20} />
-        <Flex flexDirection={"column"} p={"4%"} justifyContent={"space-between"}>
+        <Img
+          src="/dummy.png"
+          h={"100%"}
+          minW={"40%"}
+          maxW={"40%"}
+          objectFit={"cover"}
+          borderRadius={20}
+        />
+        <Flex
+          flexDirection={"column"}
+          p={"4%"}
+          justifyContent={"space-between"}
+        >
           <Flex flexDirection={"column"}>
             <Text fontSize={24} fontWeight={"500"}>
               {name}
@@ -160,7 +197,12 @@ function LatestActivity({ name, description, imageURL }) {
   );
 }
 
-function ActiveCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
+function ActiveCampaigns({
+  setActivePending,
+  campaignList,
+  campaigns,
+  ethPrice,
+}) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
@@ -202,7 +244,12 @@ function ActiveCampaigns({ setActivePending, campaignList, campaigns, ethPrice }
   );
 }
 
-function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
+function PendingCampaigns({
+  setActivePending,
+  campaignList,
+  campaigns,
+  ethPrice,
+}) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
@@ -246,7 +293,7 @@ function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice 
   );
 }
 
-export default function UserProfile({ campaigns }) {
+export default function UserProfile({ campaigns, users }) {
   const [activePending, setActivePending] = useState(0);
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
@@ -255,7 +302,9 @@ export default function UserProfile({ campaigns }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ethPrice = await getETHPrice();
       updateEthPrice(ethPrice);
@@ -272,11 +321,24 @@ export default function UserProfile({ campaigns }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const obj = localStorage.getItem("user");
+  const u = JSON.parse(obj);
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].email == u.email) {
+      var user = users[i];
+      break;
+    }
+  }
+  console.log(user);
+
   return (
     <div>
       <Head>
         <title>User Profile | CryptAid</title>
-        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
+        <meta
+          name="description"
+          content="Transparent Crowdfunding in Blockchain"
+        />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -290,7 +352,12 @@ export default function UserProfile({ campaigns }) {
           flexDirection={"row"}
         >
           <Flex height={"200vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
-          <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+          <Flex
+            height={"200vh"}
+            width={"55vw"}
+            bgColor={"gray.100"}
+            flexDirection={"column"}
+          >
             <Flex
               w={"90%"}
               h={"20vh"}
@@ -309,14 +376,26 @@ export default function UserProfile({ campaigns }) {
               top={"15vh"}
               left={"25vw"}
             >
-              <Img src={"/asdas.jpg"} h={"19vh"} w={"19vh"} objectFit={"fill"} borderRadius={"50%"}></Img>
+              <Img
+                src={"/asdas.jpg"}
+                h={"19vh"}
+                w={"19vh"}
+                objectFit={"fill"}
+                borderRadius={"50%"}
+              ></Img>
             </Center>
-            <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
+            <Flex
+              flexDir={"column"}
+              w={"20vw"}
+              pos={"absolute"}
+              top={"27vh"}
+              left={"35vw"}
+            >
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                Alvin Antony
+                {user.username}
               </Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>
-                @alvinantonyshaju
+                {user.email}
               </Text>
             </Flex>
             <Button
@@ -330,11 +409,21 @@ export default function UserProfile({ campaigns }) {
             >
               <Img objectFit={"cover"} src={"/settings.png"} />
             </Button>
-            <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
+            <Flex
+              w={"100%"}
+              mt={"12%"}
+              px={"10%"}
+              py={5}
+              flexDirection={"column"}
+            >
               <Heading mb={6} fontSize={30}>
                 Dashboard
               </Heading>
-              <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-between"}>
+              <Flex
+                flexDirection={"row"}
+                width={"100%"}
+                justifyContent={"space-between"}
+              >
                 <Center
                   bgColor={"gray.200"}
                   borderRadius={10}
@@ -415,37 +504,62 @@ export default function UserProfile({ campaigns }) {
             flexDir={"column"}
             padding={10}
           >
-            <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
+            <Center
+              bgColor={"gray.200"}
+              borderRadius={10}
+              p={5}
+              py={2}
+              justifyContent={"space-evenly"}
+            >
               <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
-                  Alvin Antony Shaju
+                  {user.username}
                 </Text>
                 <Center justifyContent={"flex-start"}>
-                  <Flex h={2} w={2} borderRadius={"50%"} bgColor={"green.300"} mr={3}></Flex>
+                  <Flex
+                    h={2}
+                    w={2}
+                    borderRadius={"50%"}
+                    bgColor={"green.300"}
+                    mr={3}
+                  ></Flex>
                   <Text fontSize={16} color={"gray.500"}>
                     Online
                   </Text>
                 </Center>
               </Flex>
             </Center>
-            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"} w={"100%"}>
+            <Flex
+              flexDir={"column"}
+              mt={5}
+              mb={5}
+              maxH={"65vh"}
+              overflowY={"auto"}
+              w={"100%"}
+            >
               <Text fontSize={24} fontWeight={600} mb={5} mt={2}>
                 Recent Donations
               </Text>
               <LatestActivity
                 name={"Hi alvin"}
-                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                description={
+                  "save alvin antony shaju.do this project.pls.lalalallalal"
+                }
                 imageURL={"randomimageurl"}
               />
               <LatestActivity
                 name={"Hi alvin"}
-                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                description={
+                  "save alvin antony shaju.do this project.pls.lalalallalal"
+                }
                 imageURL={"randomimageurl"}
               />
               <LatestActivity
                 name={"Hi alvin"}
-                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                description={
+                  "save alvin antony shaju.do this project.pls.lalalallalal"
+                }
                 imageURL={"randomimageurl"}
               />
             </Flex>
