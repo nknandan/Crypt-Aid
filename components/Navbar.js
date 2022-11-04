@@ -175,43 +175,14 @@ export default function NavBar() {
             >
               <NextLink href="/about">About</NextLink>
             </Button>
-            {wallet.status === "connected" ? (
-              <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                  {wallet.account.substr(0, 4) + "..."}
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
-                </MenuList>
-              </Menu>
-            ) : (
-              <div>
-                <Button
-                  display={{ base: "none", md: "inline-flex" }}
-                  fontSize={"md"}
-                  fontWeight={600}
-                  color={"black"}
-                  bg={"#43B0F1"}
-                  borderRadius={20}
-                  href={"#"}
-                  _hover={{
-                    bg: "#0065A1",
-                    color: "white",
-                  }}
-                  onClick={() => wallet.connect()}
-                >
-                  <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/walleticon.png"} />
-                </Button>
-              </div>
-            )}
-            <Button
+            {/* <Button
               onClick={() => {
                 console.log("Debug Now.");
                 console.log(campaignList);
               }}
             >
               DEBUG
-            </Button>
+            </Button> */}
 
 
             {user ? (
@@ -263,7 +234,7 @@ export default function NavBar() {
         </Container>
       </Flex>
 
-      <Flex 
+      <Flex
         borderBottom={1}
         borderLeft={1}
         borderRight={1}
@@ -279,7 +250,7 @@ export default function NavBar() {
         padding={"20px"}
         py={0}
         borderBottomRadius={10}>
-          {<SearchTable searchData={search(campaignList)} />}</Flex>
+        {<SearchTable searchData={search(campaignList)} />}</Flex>
 
       {userMenu ? (
         <Flex
@@ -301,11 +272,38 @@ export default function NavBar() {
                 {user.nickname}
               </Text>
               <Text alignSelf={"flex-start"}>{user.name}</Text>
-              <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
+              {/* <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
                 <NextLink href="/api/auth/logout">Manage your account</NextLink>
-              </Button>
+              </Button> */}
+              <NextLink href="/api/auth/logout"><Text fontWeight={600} as='u' color={"blue.800"}>Manage your account</Text></NextLink>
             </Center>
           </Center>
+          {wallet.status == "connected" ? (
+            <Center mt={5}  borderTopWidth={1} borderColor={"black"} pt={5}>
+              <Menu>
+                <MenuButton w={40} borderRadius={20} borderColor={"blue.300"} borderWidth={1} as={Button} rightIcon={<ChevronDownIcon />}>
+                  {wallet.account.substr(0, 9) + "..."}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
+                </MenuList>
+              </Menu>
+            </Center>
+          ) : (
+            <div>
+              <Center mt={5} borderTopWidth={1} borderColor={"black"} pt={5}>
+                <Button
+                  w={40} borderColor={"blue.300"} borderWidth={1} borderRadius={20}
+                  href={"#"}
+                  onClick={() => wallet.connect()}
+                >
+                  <Center>
+                    <Text>Connect wallet</Text>
+                  </Center>
+
+                </Button>
+              </Center>
+            </div>)}
           <Center mt={5} borderTopWidth={1} borderColor={"black"}>
             <Button w={40} borderColor={"blue.300"} borderWidth={1} mt={5} borderRadius={20}>
               <NextLink href="/api/auth/logout">Logout</NextLink>
