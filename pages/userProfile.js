@@ -37,6 +37,28 @@ export async function getServerSideProps(context) {
   };
 }
 
+function SettingsPage({setSettingsScreen}) {
+  return (
+    <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
+      <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
+        <Button p={0} mr={"2vh"} bgColor={"transparent"}>
+          <Img
+            src={"/back.png"}
+            h={"4vh"}
+            objectFit={"contain"}
+            onClick={()=>{setSettingsScreen(0);}}
+          />
+        </Button>
+        <Text fontSize={30} fontWeight={"600"}>Account Settings</Text>
+      </Center>
+      <Text fontSize={24} fontWeight={"400"} mt={4}>User Information</Text>
+      <Text fontSize={18} color={"gray"}>Here you can edit public information about yourself.</Text>
+      <Text fontSize={18} color={"gray"} mt={-1}>The changes will be displayed to other users within 5 minutes.</Text>
+      
+    </Flex>
+  );
+}
+
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
@@ -217,9 +239,10 @@ function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice 
 }
 
 
-export default function userProfile({ campaigns }) {
+export default function UserProfile({ campaigns }) {
 
-  const [activePending, setActivePending] = useState(0);
+  const [activePending, setActivePending] = useState(false);
+  const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
@@ -279,63 +302,76 @@ export default function userProfile({ campaigns }) {
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>Alvin Antony</Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>@alvinantonyshaju</Text>
             </Flex>
-            <Button w={"6vh"} h={"6vh"} bgColor={"gray.300"} pos={"absolute"} left={"65vw"} top={"28vh"} borderRadius={"50%"}>
+            <Button w={"56px"} h={"56px"} bgColor={"gray.300"} pos={"absolute"} left={"65vw"} top={"28vh"} borderRadius={"56px"}
+              onClick={() => {
+                setSettingsScreen(!settingsScreen);
+                console.log(settingsScreen);
+              }}
+            >
               <Img
-                objectFit={"cover"}
+                objectFit={"contain"}
                 src={"/settings.png"}
               />
             </Button>
-            <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
-              <Heading mb={6} fontSize={30}>Dashboard</Heading>
-              <Flex flexDirection={'row'} width={"100%"} justifyContent={"space-between"}>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalamount.png"}
-                    height={10}
-                    mr={5}
-                  />
-                  <Flex flexDir={"column"}>
-                    <Text fontSize={16}>Total amount contributed</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                      $ 69.99
-                    </Text>
-                  </Flex>
-                </Center>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalcreated.png"}
-                    height={10}
-                    mr={5}
-                  />
-                  <Flex flexDir={"column"}>
-                    <Text fontSize={16}>Total campaigns created</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>0</Text>
-                  </Flex>
-                </Center>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
-                  transform: "translateX(8px)",
-                }}>
-                  <Img
-                    src={"/totalcampaigns.png"}
-                    height={10}
-                    mr={5}
-                  />
-                  <Flex flexDir={"column"}>
-                    <Text fontSize={16}>Total campaigns funded</Text>
-                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                      7
-                    </Text>
-                  </Flex>
-                </Center>
+            {settingsScreen ? (
+              <Flex>
+                <SettingsPage setSettingsScreen={setSettingsScreen}/>
               </Flex>
-            </Flex>
-            <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-              {activePending ? (<PendingCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />) : (<ActiveCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />)}
-            </Flex>
+            ) : (
+              <Flex flexDirection={"column"}>
+                <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
+                  <Heading mb={6} fontSize={30}>Dashboard</Heading>
+                  <Flex flexDirection={'row'} width={"100%"} justifyContent={"space-between"}>
+                    <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                      transform: "translateX(8px)",
+                    }}>
+                      <Img
+                        src={"/totalamount.png"}
+                        height={10}
+                        mr={5}
+                      />
+                      <Flex flexDir={"column"}>
+                        <Text fontSize={16}>Total amount contributed</Text>
+                        <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                          $ 69.99
+                        </Text>
+                      </Flex>
+                    </Center>
+                    <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                      transform: "translateX(8px)",
+                    }}>
+                      <Img
+                        src={"/totalcreated.png"}
+                        height={10}
+                        mr={5}
+                      />
+                      <Flex flexDir={"column"}>
+                        <Text fontSize={16}>Total campaigns created</Text>
+                        <Text fontSize={26} fontWeight={600} color={"blue.500"}>0</Text>
+                      </Flex>
+                    </Center>
+                    <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                      transform: "translateX(8px)",
+                    }}>
+                      <Img
+                        src={"/totalcampaigns.png"}
+                        height={10}
+                        mr={5}
+                      />
+                      <Flex flexDir={"column"}>
+                        <Text fontSize={16}>Total campaigns funded</Text>
+                        <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                          7
+                        </Text>
+                      </Flex>
+                    </Center>
+                  </Flex>
+                </Flex>
+                <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
+                  {activePending ? (<PendingCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />) : (<ActiveCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />)}
+                </Flex>
+              </Flex>)}
+
           </Flex>
           <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderLeftWidth={1} borderLeftColor={"gray.500"} flexDir={"column"} padding={10}>
             <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
