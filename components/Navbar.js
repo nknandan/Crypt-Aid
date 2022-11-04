@@ -96,7 +96,7 @@ export default function NavBar() {
         }}
       >
         <Container as={Flex} maxW={"7xl"} align={"center"}>
-          <Flex flex={{ base: 1 }} justify="start" ml={{ base: -2, md: 0 }}>
+          <Flex flex={{ base: 1 }} justify="start">
             <Heading
               textAlign="left"
               // fontFamily={"heading"}
@@ -104,7 +104,7 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10}>
+              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10} ml={-100} mr={10}>
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
@@ -131,7 +131,16 @@ export default function NavBar() {
                   placeholder={"Search for campaigns"}
                   onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
-                {<SearchTable searchData={search(campaignList)} />}
+
+                {/* <ul className="list">
+                  {search(campaignList).map((user) => (
+                    <li className="listItem" key={user.id}>
+                      {user["5"]}
+                    </li>
+                  ))}
+                </ul> */}
+                {/* {<SearchTable searchData={search(campaignList)} />} */}
+
               </InputGroup>
 
               <Button
@@ -144,7 +153,6 @@ export default function NavBar() {
                 }}
                 width={"10%"}
                 borderRightRadius={10}
-                onClick={() => wallet.connect()}
               >
                 <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
               </Button>
@@ -167,15 +175,6 @@ export default function NavBar() {
             >
               <NextLink href="/about">About</NextLink>
             </Button>
-            {/* <Button
-              fontSize={"md"}
-              fontWeight={600}
-              variant={"link"}
-              display={{ base: "none", md: "inline-flex" }}
-            >
-              <NextLink href="/#howitworks"> How it Works</NextLink>
-            </Button> */}
-
             {wallet.status === "connected" ? (
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -205,10 +204,6 @@ export default function NavBar() {
                 </Button>
               </div>
             )}
-            {/* 
-
-             */}
-
             <Button
               onClick={() => {
                 console.log("Debug Now.");
@@ -217,6 +212,7 @@ export default function NavBar() {
             >
               DEBUG
             </Button>
+
 
             {user ? (
               <Button
@@ -266,6 +262,25 @@ export default function NavBar() {
           <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
+
+      <Flex 
+        borderBottom={1}
+        borderLeft={1}
+        borderRight={1}
+        borderStyle={"solid"}
+        borderColor={"blue.400"}
+        bgColor={"white"}
+        pos="fixed"
+        top="59px"
+        left={"21vw"}
+        boxShadow={"sm"}
+        zIndex="999"
+        justify={"center"}
+        padding={"20px"}
+        py={0}
+        borderBottomRadius={10}>
+          {<SearchTable searchData={search(campaignList)} />}</Flex>
+
       {userMenu ? (
         <Flex
           position={"fixed"}
