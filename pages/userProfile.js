@@ -3,57 +3,25 @@ import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
-import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
-import { AiFillRocket, AiFillFire } from "react-icons/ai";
-import { IoIosPodium } from "react-icons/io";
 import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
 import {
   Heading,
-  useBreakpointValue,
   useColorModeValue,
   Text,
   Button,
   Flex,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
   Container,
   SimpleGrid,
   Box,
-  Divider,
-  Skeleton,
-  List,
-  ListItem,
-  ListIcon,
-  OrderedList,
-  UnorderedList,
   Img,
-  Icon,
-  chakra,
-  Tooltip,
-  Link,
-  SkeletonCircle,
-  HStack,
-  Stack,
   Progress,
 } from "@chakra-ui/react";
-
 import factory from "../smart-contract/factory";
 import web3 from "../smart-contract/web3";
 import Campaign from "../smart-contract/campaign";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { FaHandshake } from "react-icons/fa";
-import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
-  console.log(campaigns);
-
   return {
     props: { campaigns },
   };
@@ -63,8 +31,8 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
-        h={"40vh"}
-        w={"65vw"}
+        h={"20vh"}
+        w={"100%"}
         display={"flex"}
         flexDirection={"row"}
         position="relative"
@@ -103,20 +71,6 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         >
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
-                  c/CommunityName
-                </Box>{" "}
-                <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {creatorId} ✅
-                </Box>
-              </Box>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Text fontWeight={"bold"} paddingRight={"5px"}>
-                  19
-                </Text>
-                <Text>days left</Text>
-              </Box>
             </Box>
 
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
@@ -149,14 +103,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress
-              colorScheme="blue"
-              size="sm"
-              value={web3.utils.fromWei(balance, "ether")}
-              // value={50}
-              max={web3.utils.fromWei(target, "ether")}
-              mt="2"
-            />
+            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
           </Box>
         </Box>
       </Box>
@@ -164,9 +111,109 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
+function LatestActivity({ name, description, imageURL }) {
+  return (
+    <NextLink href={`/explore`}>
+      <Flex h={"20vh"} borderRadius={20} p={0} bgColor={"gray.200"} w={"100%"} transition={"transform 0.3s ease"} boxShadow="sm"
+        _hover={{
+          transform: "translateY(-4px)",
+        }}
+        cursor={"pointer"}
+        my={4}
+      >
+        <Img
+          src="/dummy.png"
+          h={"100%"}
+          minW={"40%"}
+          maxW={"40%"}
+          objectFit={"cover"}
+          borderRadius={20}
+        />
+        <Flex flexDirection={"column"} p={"4%"} justifyContent={"space-between"}>
+          <Flex flexDirection={"column"}>
+            <Text fontSize={24} fontWeight={"500"}>{name}</Text>
+            <Text noOfLines={3} lineHeight={"20px"}>{description}{description}{description}</Text>
+          </Flex>
+          <Flex w={"100%"} justifyContent={"flex-end"}>
+            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>Read More</Button>
+          </Flex>
+        </Flex>
+      </Flex>
+    </NextLink>
+  );
+}
+
+function ActiveCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
+  return (
+    <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
+      <Flex>
+        <Heading fontSize={30} mr={10}>Active Campaigns</Heading>
+        <Heading fontSize={30} color={"gray.500"} onClick={() => { setActivePending(1) }} cursor={"pointer"}>Pending Campaigns</Heading>
+      </Flex>
+      <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+          {campaignList
+            .map((el, i) => {
+              return (
+                <div key={i}>
+                  <CampaignCardNew
+                    name={el[5]}
+                    description={el[6]}
+                    creatorId={el[4]}
+                    imageURL={el[7]}
+                    id={campaigns[campaignList.length - 1 - i]}
+                    target={el[8]}
+                    balance={el[1]}
+                    ethPrice={ethPrice}
+                  />
+                </div>
+              );
+            })}
+        </SimpleGrid>
+      </Flex>
+    </Flex>);
+}
+
+function PendingCampaigns({ setActivePending, campaignList, campaigns, ethPrice }) {
+  return (<Flex w={"100%"} h={"20vh"} flexDir={"column"}>
+    <Flex>
+      <Heading fontSize={30} mr={10} color={"gray.500"} onClick={() => { setActivePending(0) }} cursor={"pointer"}>Active Campaigns</Heading>
+      <Heading fontSize={30}>Pending Campaigns</Heading>
+    </Flex>
+    <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+      <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+        {campaignList
+          .slice(0)
+          .reverse()
+          .map((el, i) => {
+            return (
+              <div key={i}>
+                <CampaignCardNew
+                  name={el[5]}
+                  description={el[6]}
+                  creatorId={el[4]}
+                  imageURL={el[7]}
+                  id={campaigns[campaignList.length - 1 - i]}
+                  target={el[8]}
+                  balance={el[1]}
+                  ethPrice={ethPrice}
+                />
+              </div>
+            );
+          })}
+      </SimpleGrid>
+    </Flex>
+  </Flex>);
+}
+
+
 export default function userProfile({ campaigns }) {
+
+  const [activePending, setActivePending] = useState(0);
   const [campaignList, setCampaignList] = useState([]);
-  const [newButton, setNewButton] = useState(1);
+  const [ethPrice, updateEthPrice] = useState(null);
+  const [campaignListNumber, setCampaignListNumber] = useState(0);
+
   async function getSummary() {
     try {
       const summary = await Promise.all(
@@ -175,6 +222,7 @@ export default function userProfile({ campaigns }) {
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
       setCampaignList(summary);
+      setCampaignListNumber(3);
       return summary;
     } catch (e) {
       console.log(e);
@@ -184,6 +232,7 @@ export default function userProfile({ campaigns }) {
   useEffect(() => {
     getSummary();
   }, []);
+
   return (
     <div>
       <Head>
@@ -193,7 +242,6 @@ export default function userProfile({ campaigns }) {
       </Head>
       <main className={styles.main}>
         <Container
-          maxHeight={"100vh"}
           maxWidth={"100vw"}
           padding={0}
           margin={0}
@@ -202,12 +250,12 @@ export default function userProfile({ campaigns }) {
           display={"flex"}
           flexDirection={"row"}
         >
-          <Flex height={"100vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
-          <Flex height={"100vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
-            <Flex w={"90%"} h={"20%"} bgColor={"white"} borderBottomRadius={20}
+          <Flex height={"200vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
+          <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+            <Flex w={"90%"} h={"20vh"} bgColor={"white"} borderBottomRadius={20}
               alignSelf={"center"}
               bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}></Flex>
-            <Center borderRadius={"50%"} borderWidth={5} borderColor={"white"} h={"20vh"} w={"20vh"} pos={"absolute"} top={"14%"} left={"25vw"}>
+            <Center borderRadius={"50%"} borderWidth={5} borderColor={"white"} h={"20vh"} w={"20vh"} pos={"absolute"} top={"15vh"} left={"25vw"}>
               <Img
                 src={"/asdas.jpg"}
                 h={"19vh"}
@@ -216,20 +264,22 @@ export default function userProfile({ campaigns }) {
                 borderRadius={"50%"}
               ></Img>
             </Center>
-            <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"20%"} left={"35vw"}>
+            <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>Alvin Antony</Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>@alvinantonyshaju</Text>
             </Flex>
-            <Button w={"7vh"} h={"7vh"} bgColor={"gray.300"} pos={"absolute"} left={"65vw"} top={"21%"} borderRadius={"50%"}>
+            <Button w={"6vh"} h={"6vh"} bgColor={"gray.300"} pos={"absolute"} left={"65vw"} top={"28vh"} borderRadius={"50%"}>
               <Img
-                objectFit={"contain"}
+                objectFit={"cover"}
                 src={"/settings.png"}
               />
             </Button>
             <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
-              <Heading mb={6}>Dashboard</Heading>
-              <Flex flexDirection={'row'} width={"100%"} justifyContent={"space-evenly"}>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2}>
+              <Heading mb={6} fontSize={30}>Dashboard</Heading>
+              <Flex flexDirection={'row'} width={"100%"} justifyContent={"space-between"}>
+                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                  transform: "translateX(8px)",
+                }}>
                   <Img
                     src={"/totalamount.png"}
                     height={10}
@@ -240,7 +290,22 @@ export default function userProfile({ campaigns }) {
                     <Text fontSize={26} fontWeight={600} color={"blue.500"}>$ 69.99</Text>
                   </Flex>
                 </Center>
-                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2}>
+                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                  transform: "translateX(8px)",
+                }}>
+                  <Img
+                    src={"/totalcreated.png"}
+                    height={10}
+                    mr={5}
+                  />
+                  <Flex flexDir={"column"}>
+                    <Text fontSize={16}>Total campaigns created</Text>
+                    <Text fontSize={26} fontWeight={600} color={"blue.500"}>0</Text>
+                  </Flex>
+                </Center>
+                <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} _hover={{
+                  transform: "translateX(8px)",
+                }}>
                   <Img
                     src={"/totalcampaigns.png"}
                     height={10}
@@ -254,32 +319,10 @@ export default function userProfile({ campaigns }) {
               </Flex>
             </Flex>
             <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-              <Heading>Active campaigns</Heading>
-              <Divider marginTop="4" />
-              <SimpleGrid  spacing={10} py={8}>
-                {campaignList
-                    .slice(0)
-                    .reverse()
-                    .map((el, i) => {
-                      return (
-                        <div key={i}>
-                          <CampaignCardNew
-                            name={el[5]}
-                            description={el[6]}
-                            creatorId={el[4]}
-                            imageURL={el[7]}
-                            id={campaigns[campaignList.length - 1 - i]}
-                            target={el[8]}
-                            balance={el[1]}
-                            ethPrice={ethPrice}
-                          />
-                        </div>
-                      );
-                    })}
-              </SimpleGrid>
+              {activePending ? (<PendingCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />) : (<ActiveCampaigns setActivePending={setActivePending} campaignList={campaignList} campaigns={campaigns} ethPrice={ethPrice} />)}
             </Flex>
           </Flex>
-          <Flex height={"100vh"} width={"25vw"} bgColor={"gray.100"} borderLeftWidth={1} borderLeftColor={"gray.500"} flexDir={"column"} padding={10}>
+          <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderLeftWidth={1} borderLeftColor={"gray.500"} flexDir={"column"} padding={10}>
             <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
               <Img
                 src={"/user.png"}
@@ -294,47 +337,20 @@ export default function userProfile({ campaigns }) {
                 </Center>
               </Flex>
             </Center>
-            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"}>
-              <Text fontSize={24} fontWeight={600} mb={5} mt={2}>Latest Activity</Text>
-              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
-                  <Text fontWeight={"600"} fontSize={20}>Hi alvin</Text>
-                  <Text fontWeight={"200"} fontSize={16} lineHeight={1} mb={3}>Eda bring campaigns details and show here okay?</Text>
-                  <NextLink href="/"><a><Text as='u' color={"blue.500"}>Read more</Text></a></NextLink>
-                </Flex>
-              </Center>
-              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
-                  <Text fontWeight={"600"} fontSize={20}>Hi alvin</Text>
-                  <Text fontWeight={"200"} fontSize={16} lineHeight={1} mb={3}>Eda bring campaigns details and show here okay?</Text>
-                  <NextLink href="/"><a><Text as='u' color={"blue.500"}>Read more</Text></a></NextLink>
-                </Flex>
-              </Center>
-              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
-                  <Text fontWeight={"600"} fontSize={20}>Hi alvin</Text>
-                  <Text fontWeight={"200"} fontSize={16} lineHeight={1} mb={3}>Eda bring campaigns details and show here okay?</Text>
-                  <NextLink href="/"><a><Text as='u' color={"blue.500"}>Read more</Text></a></NextLink>
-                </Flex>
-              </Center>
+            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"} w={"100%"}>
+              <Text fontSize={24} fontWeight={600} mb={5} mt={2}>Recent Donations</Text>
+              <LatestActivity
+                name={"Hi alvin"}
+                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                imageURL={"randomimageurl"} />
+              <LatestActivity
+                name={"Hi alvin"}
+                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                imageURL={"randomimageurl"} />
+              <LatestActivity
+                name={"Hi alvin"}
+                description={"save alvin antony shaju.do this project.pls.lalalallalal"}
+                imageURL={"randomimageurl"} />
             </Flex>
 
           </Flex>
