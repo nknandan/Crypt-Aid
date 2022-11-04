@@ -9,8 +9,7 @@ export default async function addCampaign(req, res) {
   if (req.method === "GET") {
     try {
       await connectMongo();
-
-      const campaign = await User.find();
+      const users = await User.find();
 
       res.json({ campaign });
     } catch (error) {

@@ -35,7 +35,6 @@ export default function NavBar() {
   const [searchData, setsearchData] = useState([]);
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
-  console.log(user);
 
   const getCampaigns = async () => {
     try {
@@ -305,7 +304,9 @@ export default function NavBar() {
                     fontWeight={600}
                     as="u"
                     color={"blue.800"}
-                    onClick={() => localStorage.setItem("email", user.email)}
+                    onClick={() =>
+                      localStorage.setItem("user", JSON.stringify(user))
+                    }
                   >
                     Manage your account
                   </Text>
@@ -359,7 +360,7 @@ export default function NavBar() {
               borderWidth={1}
               mt={5}
               borderRadius={20}
-              onClick={() => localStorage.removeItem("email")}
+              onClick={() => localStorage.removeItem("user")}
             >
               <NextLink href="/api/auth/logout">Logout</NextLink>
             </Button>
