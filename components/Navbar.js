@@ -41,7 +41,9 @@ export default function NavBar() {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       setCampaignList(summary);
       return summary;
@@ -53,7 +55,10 @@ export default function NavBar() {
   const search = (data) => {
     data = data.filter((item) => {
       if (searchQuery == "") return false;
-      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
+      if (
+        item["5"].toLowerCase().includes(searchQuery) ||
+        item["6"].toLowerCase().includes(searchQuery)
+      ) {
         return true;
       } else {
         return false;
@@ -104,7 +109,14 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10} ml={-100} mr={10}>
+              <Box
+                as={"span"}
+                color={useColorModeValue("#fefefe", "teal.300")}
+                position={"relative"}
+                zIndex={10}
+                ml={-100}
+                mr={10}
+              >
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
@@ -140,7 +152,6 @@ export default function NavBar() {
                   ))}
                 </ul> */}
                 {/* {<SearchTable searchData={search(campaignList)} />} */}
-
               </InputGroup>
 
               <Button
@@ -154,7 +165,12 @@ export default function NavBar() {
                 width={"10%"}
                 borderRightRadius={10}
               >
-                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
+                <Img
+                  position={"absolute"}
+                  height={"60%"}
+                  objectFit={"contain"}
+                  src={"/search.png"}
+                />
               </Button>
             </Flex>
             <Button
@@ -183,7 +199,6 @@ export default function NavBar() {
             >
               DEBUG
             </Button> */}
-
 
             {user ? (
               <Button
@@ -230,7 +245,9 @@ export default function NavBar() {
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
+          <Flex display={{ base: "flex", md: "none" }}>
+            {/* <DarkModeSwitch /> */}
+          </Flex>
         </Container>
       </Flex>
 
@@ -249,8 +266,10 @@ export default function NavBar() {
         justify={"center"}
         padding={"20px"}
         py={0}
-        borderBottomRadius={10}>
-        {<SearchTable searchData={search(campaignList)} />}</Flex>
+        borderBottomRadius={10}
+      >
+        {<SearchTable searchData={search(campaignList)} />}
+      </Flex>
 
       {userMenu ? (
         <Flex
@@ -266,7 +285,12 @@ export default function NavBar() {
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
-            <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
+            <Center
+              flexDirection={"column"}
+              maxW={"70%"}
+              justifyContent={"center"}
+              ml={5}
+            >
               {/* Above ml={2} */}
               <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
                 {user.nickname}
@@ -275,17 +299,38 @@ export default function NavBar() {
               {/* <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
                 <NextLink href="/api/auth/logout">Manage your account</NextLink>
               </Button> */}
-              <NextLink href="/userProfile"><a><Text fontWeight={600} as='u' color={"blue.800"}>Manage your account</Text></a></NextLink>
+              <NextLink href="/userProfile">
+                <a>
+                  <Text
+                    fontWeight={600}
+                    as="u"
+                    color={"blue.800"}
+                    onClick={() => localStorage.setItem("email", user.email)}
+                  >
+                    Manage your account
+                  </Text>
+                </a>
+              </NextLink>
             </Center>
           </Center>
           {wallet.status == "connected" ? (
-            <Center mt={5}  borderTopWidth={1} borderColor={"black"} pt={5}>
+            <Center mt={5} borderTopWidth={1} borderColor={"black"} pt={5}>
               <Menu>
-                <MenuButton w={40} borderRadius={20} borderColor={"blue.300"} borderWidth={1} as={Button} rightIcon={<ChevronDownIcon />}>
+                <MenuButton
+                  w={40}
+                  borderRadius={20}
+                  borderColor={"blue.300"}
+                  borderWidth={1}
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                >
                   {wallet.account.substr(0, 9) + "..."}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
+                  <MenuItem onClick={() => wallet.reset()}>
+                    {" "}
+                    Disconnect Wallet{" "}
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Center>
@@ -293,19 +338,29 @@ export default function NavBar() {
             <div>
               <Center mt={5} borderTopWidth={1} borderColor={"black"} pt={5}>
                 <Button
-                  w={40} borderColor={"blue.300"} borderWidth={1} borderRadius={20}
+                  w={40}
+                  borderColor={"blue.300"}
+                  borderWidth={1}
+                  borderRadius={20}
                   href={"#"}
                   onClick={() => wallet.connect()}
                 >
                   <Center>
                     <Text>Connect wallet</Text>
                   </Center>
-
                 </Button>
               </Center>
-            </div>)}
+            </div>
+          )}
           <Center mt={5} borderTopWidth={1} borderColor={"black"}>
-            <Button w={40} borderColor={"blue.300"} borderWidth={1} mt={5} borderRadius={20}>
+            <Button
+              w={40}
+              borderColor={"blue.300"}
+              borderWidth={1}
+              mt={5}
+              borderRadius={20}
+              onClick={() => localStorage.removeItem("email")}
+            >
               <NextLink href="/api/auth/logout">Logout</NextLink>
             </Button>
           </Center>
