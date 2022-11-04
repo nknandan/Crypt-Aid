@@ -377,7 +377,7 @@ export default function UserProfile({ campaigns, users }) {
               left={"25vw"}
             >
               <Img
-                src={"/asdas.jpg"}
+                src={u.picture}
                 h={"19vh"}
                 w={"19vh"}
                 objectFit={"fill"}
