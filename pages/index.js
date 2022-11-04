@@ -35,10 +35,6 @@ import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
-
-  console.log(campaigns);
-  console.log("HERE.");
-
   return {
     props: { campaigns },
   };
@@ -175,7 +171,6 @@ export default function Home({ campaigns }) {
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
-      console.log("summary ", summary);
       setCampaignList(summary);
       setCampaignListNumber(3);
       return summary;
@@ -186,7 +181,6 @@ export default function Home({ campaigns }) {
 
   function handleShowMore() {
     setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
-    console.log(campaignListNumber);
   }
 
   useEffect(() => {

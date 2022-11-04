@@ -16,25 +16,26 @@ import {
   Input,
   Img,
   MenuItem,
+  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import DarkModeSwitch from "./DarkModeSwitch";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-
 import { useWallet } from "use-wallet";
-
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
-
-const keys = ["5", "6"];
+import { useUser } from "@auth0/nextjs-auth0";
 
 export default function NavBar() {
   const wallet = useWallet();
   const [campaignList, setCampaignList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchData, setsearchData] = useState([]);
+  const { user, isLoading, error } = useUser();
+  const [userMenu, setUserMenu] = useState(0);
+  console.log(user);
 
   const getCampaigns = async () => {
     try {
@@ -50,20 +51,14 @@ export default function NavBar() {
   };
 
   const search = (data) => {
-    // console.log(data);
-    // console.log("STILL");
     data = data.filter((item) => {
-      console.log(item["5"]);
       if (searchQuery == "") return false;
       if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
-        // console.log("TRUE");
         return true;
       } else {
         return false;
       }
     });
-    console.log("IN SEARCH");
-    console.log(data);
     return data;
   };
 
@@ -136,6 +131,7 @@ export default function NavBar() {
                   placeholder={"Search for campaigns"}
                   onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
+
                 {/* <ul className="list">
                   {search(campaignList).map((user) => (
                     <li className="listItem" key={user.id}>
@@ -144,6 +140,7 @@ export default function NavBar() {
                   ))}
                 </ul> */}
                 {/* {<SearchTable searchData={search(campaignList)} />} */}
+
               </InputGroup>
 
               <Button
@@ -215,27 +212,57 @@ export default function NavBar() {
             >
               DEBUG
             </Button>
-            <Button
-              display={{ base: "none", md: "inline-flex" }}
-              fontSize={"md"}
-              fontWeight={600}
-              color={"black"}
-              bg={"#43B0F1"}
-              borderRadius={20}
-              width={150}
-              href={"#"}
-              _hover={{
-                bg: "#0065A1",
-                color: "white",
-              }}
-            >
-              <NextLink href="/createAccount">Login</NextLink>
-            </Button>
+
+
+            {user ? (
+              <Button
+                fontSize={"md"}
+                fontWeight={600}
+                color={"black"}
+                bg={"#43B0F1"}
+                borderRadius={20}
+                width={150}
+                href={"#"}
+                display={"flex"}
+                justifyContent={"space-between"}
+                _hover={{
+                  bg: "#0065A1",
+                  color: "white",
+                }}
+                p={0}
+                onClick={() => {
+                  setUserMenu(!userMenu);
+                }}
+              >
+                <Img height={10} borderRadius={"50%"} src={user.picture} />
+                <Text mr={4}>{user.nickname}</Text>
+              </Button>
+            ) : (
+              <Button
+                fontSize={"md"}
+                fontWeight={600}
+                color={"black"}
+                bg={"#43B0F1"}
+                borderRadius={20}
+                width={150}
+                href={"#"}
+                _hover={{
+                  bg: "#0065A1",
+                  color: "white",
+                }}
+                p={0}
+              >
+                <NextLink href="/api/auth/login">Login</NextLink>
+              </Button>
+            )}
+
+            {/* <DarkModeSwitch /> */}
           </Stack>
 
           <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
+
       <Flex 
         borderBottom={1}
         borderLeft={1}
@@ -253,6 +280,41 @@ export default function NavBar() {
         py={0}
         borderBottomRadius={10}>
           {<SearchTable searchData={search(campaignList)} />}</Flex>
+
+      {userMenu ? (
+        <Flex
+          position={"fixed"}
+          top={"59px"}
+          right={20}
+          w={"17%"}
+          bgColor={"gray.300"}
+          p={5}
+          zIndex={9999}
+          flexDirection={"column"}
+          borderBottomRadius={10}
+        >
+          <Center>
+            <Img borderRadius={"50%"} height={20} src={user.picture} />
+            <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
+              {/* Above ml={2} */}
+              <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
+                {user.nickname}
+              </Text>
+              <Text alignSelf={"flex-start"}>{user.name}</Text>
+              <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
+                <NextLink href="/api/auth/logout">Manage your account</NextLink>
+              </Button>
+            </Center>
+          </Center>
+          <Center mt={5} borderTopWidth={1} borderColor={"black"}>
+            <Button w={40} borderColor={"blue.300"} borderWidth={1} mt={5} borderRadius={20}>
+              <NextLink href="/api/auth/logout">Logout</NextLink>
+            </Button>
+          </Center>
+        </Flex>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 }

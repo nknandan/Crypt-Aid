@@ -54,16 +54,7 @@ export default function NewCampaign() {
     }
   }, []);
   async function onSubmit(data) {
-    console.log(
-      data.minimumContribution,
-      data.campaignName,
-      data.description,
-      data.imageUrl,
-      data.target,
-      "HELLO"
-    );
     try {
-      console.log("ADD 1");
       fetch("api/campaign/create", {
         method: "POST",
         headers: {
@@ -250,7 +241,6 @@ export default function NewCampaign() {
                             color: "white",
                           }}
                           onClick={() => {
-                            console.log(wallet);
                             wallet.connect();
                           }}
                         >

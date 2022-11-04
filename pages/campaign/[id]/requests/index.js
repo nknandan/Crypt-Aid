@@ -266,8 +266,6 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
             return campaign.methods.requests(index).call();
           })
       );
-
-      console.log("requests", requests);
       setRequestsList(requests);
       setIsLoading(false);
       return requests;

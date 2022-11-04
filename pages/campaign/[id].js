@@ -135,7 +135,6 @@ export default function CampaignSingle({
   const router = useRouter();
   const { width, height } = useWindowSize();
   async function onSubmit(data) {
-    console.log(data);
     try {
       const campaign = Campaign(id);
       const accounts = await web3.eth.getAccounts();

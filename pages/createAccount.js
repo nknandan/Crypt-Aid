@@ -46,8 +46,6 @@ import factory from "../smart-contract/factory";
 
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
-  console.log(campaigns);
-
   return {
     props: { campaigns },
   };
