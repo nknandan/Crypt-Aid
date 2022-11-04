@@ -32,10 +32,16 @@ import {
   Stack,
   Link,
 } from "@chakra-ui/react";
-import { ArrowBackIcon, InfoIcon, CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  InfoIcon,
+  CheckCircleIcon,
+  WarningIcon,
+} from "@chakra-ui/icons";
 import web3 from "../../../../smart-contract/web3";
 import Campaign from "../../../../smart-contract/campaign";
 import factory from "../../../../smart-contract/factory";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
@@ -44,6 +50,7 @@ export async function getServerSideProps({ params }) {
   const approversCount = await campaign.methods.approversCount().call();
   const summary = await campaign.methods.getSummary().call();
   const ETHPrice = await getETHPrice();
+  withPageAuthRequired();
 
   return {
     props: {
@@ -57,7 +64,14 @@ export async function getServerSideProps({ params }) {
   };
 }
 
-const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPrice }) => {
+const RequestRow = ({
+  id,
+  request,
+  approversCount,
+  campaignId,
+  disabled,
+  ETHPrice,
+}) => {
   const router = useRouter();
   const readyToFinalize = request.approvalCount > approversCount / 2;
   const [errorMessageApprove, setErrorMessageApprove] = useState();
@@ -127,7 +141,11 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
         {getWEIPriceInUSD(ETHPrice, request.value)})
       </Td>
       <Td>
-        <Link color="teal.500" href={`https://goerli.etherscan.io/address/${request.recipient}`} isExternal>
+        <Link
+          color="teal.500"
+          href={`https://goerli.etherscan.io/address/${request.recipient}`}
+          isExternal
+        >
           {" "}
           {request.recipient.substr(0, 10) + "..."}
         </Link>
@@ -157,7 +175,9 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
               color={useColorModeValue("gray.800", "white")}
               fontSize={"1em"}
             >
-              <CheckCircleIcon color={useColorModeValue("green.600", "green.300")} />
+              <CheckCircleIcon
+                color={useColorModeValue("green.600", "green.300")}
+              />
             </Tooltip>
           ) : (
             <div>
@@ -169,7 +189,11 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
                   color: "white",
                 }}
                 onClick={onApprove}
-                isDisabled={disabled || request.approvalCount == approversCount || userAccount == request.recipient}
+                isDisabled={
+                  disabled ||
+                  request.approvalCount == approversCount ||
+                  userAccount == request.recipient
+                }
                 isLoading={loadingApprove}
               >
                 Approve
@@ -214,7 +238,9 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
             color={useColorModeValue("gray.800", "white")}
             fontSize={"1em"}
           >
-            <CheckCircleIcon color={useColorModeValue("green.600", "green.300")} />
+            <CheckCircleIcon
+              color={useColorModeValue("green.600", "green.300")}
+            />
           </Tooltip>
         ) : (
           <HStack spacing={2}>
@@ -225,7 +251,11 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
                 bg: "green.600",
                 color: "white",
               }}
-              isDisabled={disabled || (!request.complete && !readyToFinalize) || userAccount != request.recipient}
+              isDisabled={
+                disabled ||
+                (!request.complete && !readyToFinalize) ||
+                userAccount != request.recipient
+              }
               onClick={onFinalize}
               isLoading={loadingFinalize}
             >
@@ -242,7 +272,9 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
               <InfoIcon
                 as="span"
                 color={useColorModeValue("teal.800", "white")}
-                display={readyToFinalize && !request.complete ? "inline-block" : "none"}
+                display={
+                  readyToFinalize && !request.complete ? "inline-block" : "none"
+                }
               />
             </Tooltip>
           </HStack>
@@ -252,7 +284,14 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
   );
 };
 
-export default function Requests({ campaignId, requestCount, approversCount, balance, name, ETHPrice }) {
+export default function Requests({
+  campaignId,
+  requestCount,
+  approversCount,
+  balance,
+  name,
+  ETHPrice,
+}) {
   const [requestsList, setRequestsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [FundNotAvailable, setFundNotAvailable] = useState(false);
@@ -295,16 +334,26 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
             <Box py="4">
               <Text fontSize={"lg"} color={"teal.400"}>
                 <ArrowBackIcon mr={2} />
-                <NextLink href={`/campaign/${campaignId}`}>Back to Campaign</NextLink>
+                <NextLink href={`/campaign/${campaignId}`}>
+                  Back to Campaign
+                </NextLink>
               </Text>
             </Box>
             <Spacer />
             <Box py="4">
               Campaign Balance :{" "}
               <Text as="span" fontWeight={"bold"} fontSize="lg">
-                {balance > 0 ? web3.utils.fromWei(balance, "ether") : "0, Become a Donor 😄"}
+                {balance > 0
+                  ? web3.utils.fromWei(balance, "ether")
+                  : "0, Become a Donor 😄"}
               </Text>
-              <Text as="span" display={balance > 0 ? "inline" : "none"} pr={2} fontWeight={"bold"} fontSize="lg">
+              <Text
+                as="span"
+                display={balance > 0 ? "inline" : "none"}
+                pr={2}
+                fontWeight={"bold"}
+                fontSize="lg"
+              >
                 {" "}
                 ETH
               </Text>
@@ -322,7 +371,8 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
             <Alert status="error" my={4}>
               <AlertIcon />
               <AlertDescription>
-                The Current Balance of the Campaign is 0, Please Contribute to approve and finalize Requests.
+                The Current Balance of the Campaign is 0, Please Contribute to
+                approve and finalize Requests.
               </AlertDescription>
             </Alert>
           ) : null}
@@ -397,7 +447,12 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
           </Container>
         ) : (
           <div>
-            <Container px={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} display={isLoading ? "block" : "none"}>
+            <Container
+              px={{ base: "4", md: "12" }}
+              maxW={"7xl"}
+              align={"left"}
+              display={isLoading ? "block" : "none"}
+            >
               <SimpleGrid rows={{ base: 3 }} spacing={2}>
                 <Skeleton height="2rem" />
                 <Skeleton height="5rem" />
@@ -408,13 +463,25 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
             <Container
               maxW={"lg"}
               align={"center"}
-              display={requestsList.length === 0 && !isLoading ? "block" : "none"}
+              display={
+                requestsList.length === 0 && !isLoading ? "block" : "none"
+              }
             >
               <SimpleGrid row spacing={2} align="center">
                 <Stack align="center">
-                  <NextImage src="/static/no-requests.png" alt="no-request" width="150" height="150" />
+                  <NextImage
+                    src="/static/no-requests.png"
+                    alt="no-request"
+                    width="150"
+                    height="150"
+                  />
                 </Stack>
-                <Heading textAlign={"center"} color={useColorModeValue("gray.800", "white")} as="h4" size="md">
+                <Heading
+                  textAlign={"center"}
+                  color={useColorModeValue("gray.800", "white")}
+                  as="h4"
+                  size="md"
+                >
                   No Requests yet for {name} Campaign
                 </Heading>
                 <Text
@@ -422,7 +489,8 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                   color={useColorModeValue("gray.600", "gray.300")}
                   fontSize="sm"
                 >
-                  Create a Withdrawal Request to Withdraw funds from the Campaign😄
+                  Create a Withdrawal Request to Withdraw funds from the
+                  Campaign😄
                 </Text>
 
                 <Button
@@ -434,7 +502,9 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                     bg: "teal.300",
                   }}
                 >
-                  <NextLink href={`/campaign/${campaignId}/requests/new`}>Create Withdrawal Request</NextLink>
+                  <NextLink href={`/campaign/${campaignId}/requests/new`}>
+                    Create Withdrawal Request
+                  </NextLink>
                 </Button>
 
                 <Button
@@ -446,7 +516,9 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                     bg: "gray.300",
                   }}
                 >
-                  <NextLink href={`/campaign/${campaignId}/`}>Go to Campaign</NextLink>
+                  <NextLink href={`/campaign/${campaignId}/`}>
+                    Go to Campaign
+                  </NextLink>
                 </Button>
               </SimpleGrid>
             </Container>
