@@ -12,7 +12,10 @@ import {
   Flex,
   Container,
   SimpleGrid,
+  InputRightAddon,
   Box,
+  InputGroup,
+  Input,
   Img,
   Progress,
 } from "@chakra-ui/react";
@@ -37,7 +40,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-function SettingsPage({setSettingsScreen}) {
+function SettingsPage({ setSettingsScreen }) {
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
       <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
@@ -46,15 +49,87 @@ function SettingsPage({setSettingsScreen}) {
             src={"/back.png"}
             h={"4vh"}
             objectFit={"contain"}
-            onClick={()=>{setSettingsScreen(0);}}
+            onClick={() => { setSettingsScreen(0); }}
           />
         </Button>
         <Text fontSize={30} fontWeight={"600"}>Account Settings</Text>
       </Center>
-      <Text fontSize={24} fontWeight={"400"} mt={4}>User Information</Text>
-      <Text fontSize={18} color={"gray"}>Here you can edit public information about yourself.</Text>
-      <Text fontSize={18} color={"gray"} mt={-1}>The changes will be displayed to other users within 5 minutes.</Text>
-      
+      <Flex w={"100%"}>
+        <Flex w={"60%"} flexDir={"column"}>
+          <Text fontSize={24} fontWeight={"400"} mt={4}>User Information</Text>
+          <Text fontSize={18} color={"gray"}>Here you can edit public information about yourself.</Text>
+          <Text fontSize={18} color={"gray"} mt={-1} >The changes will be displayed to other users within 5 minutes.</Text>
+          <Flex flexDir={"column"} mt={10}>
+            <Text fontSize={18} mb={2}>Email address</Text>
+            <Flex cursor={"no-drop"} borderWidth={1} borderRadius={5} borderColor={"blue.300"} p={2} pb={1} px={5} w={"100%"} color={"gray.600"} justifyContent={"space-between"}>
+              alvinantony@gmail.com
+              <Img
+                height={7}
+                src={"/mail.png"}
+              />
+            </Flex>
+          </Flex>
+          <Flex flexDir={"column"} mt={8}>
+            <Text fontSize={18} mb={2}>Username</Text>
+            <InputGroup w={"100%"}>
+              <Input type="string" borderColor={"gray.300"} placeholder={"alvinantonyrocks"} />
+              <InputRightAddon bgColor={"#9ed1f0"}>
+                <Img
+                  src="/edit.png"
+                  h={6}
+                />
+              </InputRightAddon>
+            </InputGroup>
+          </Flex>
+          <Flex mt={8} justifyContent={"space-between"}>
+            <Flex flexDir={"column"}>
+              <Text fontSize={18} mb={2}>First name</Text>
+              <InputGroup w={"100%"}>
+                <Input type="string" borderColor={"gray.300"} placeholder={"Alvin"} />
+                <InputRightAddon bgColor={"#9ed1f0"}>
+                  <Img
+                    src="/edit.png"
+                    h={6}
+                  />
+                </InputRightAddon>
+              </InputGroup>
+            </Flex>
+            <Flex flexDir={"column"}>
+              <Text fontSize={18} mb={2}>Second name</Text>
+              <InputGroup w={"100%"}>
+                <Input type="string" borderColor={"gray.300"} placeholder={"Antony"} />
+                <InputRightAddon bgColor={"#9ed1f0"}>
+                  <Img
+                    src="/edit.png"
+                    h={6}
+                  />
+                </InputRightAddon>
+              </InputGroup>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex w={"40%"} flexDir={"column"} pl={10}>
+          <Text fontSize={24} fontWeight={"400"} mt={4}>Profile picture</Text>
+          <Center w={"100%"}>
+            <Center mt={8} ml={8} pos="relative">
+              <Img
+                src="/dummy.png"
+                h={"25vh"}
+                borderRadius={"50%"}
+                objectFit={"cover"}
+              />
+              <Button h={16} w={16} bgColor={"blue.300"} borderRadius={"50%"} pos={"absolute"} bottom={0} right={0}>
+                <Img
+                  src="/edit.png"
+                  objectFit={"cover"}
+                  h={7}
+                />
+              </Button>
+            </Center>
+          </Center>
+        </Flex>
+      </Flex>
+
     </Flex>
   );
 }
@@ -315,7 +390,7 @@ export default function UserProfile({ campaigns }) {
             </Button>
             {settingsScreen ? (
               <Flex>
-                <SettingsPage setSettingsScreen={setSettingsScreen}/>
+                <SettingsPage setSettingsScreen={setSettingsScreen} />
               </Flex>
             ) : (
               <Flex flexDirection={"column"}>
