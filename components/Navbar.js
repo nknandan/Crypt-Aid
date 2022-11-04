@@ -275,7 +275,7 @@ export default function NavBar() {
               {/* <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
                 <NextLink href="/api/auth/logout">Manage your account</NextLink>
               </Button> */}
-              <NextLink href="/api/auth/logout"><Text fontWeight={600} as='u' color={"blue.800"}>Manage your account</Text></NextLink>
+              <NextLink href="/userProfile"><a><Text fontWeight={600} as='u' color={"blue.800"}>Manage your account</Text></a></NextLink>
             </Center>
           </Center>
           {wallet.status == "connected" ? (
