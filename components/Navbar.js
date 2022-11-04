@@ -228,7 +228,7 @@ export default function NavBar() {
                 width={150}
                 href={"#"}
                 display={"flex"}
-                justifyContent={"space-between"}
+                justifyContent={"flex-start"}
                 _hover={{
                   bg: "#0065A1",
                   color: "white",
@@ -239,7 +239,7 @@ export default function NavBar() {
                 }}
               >
                 <Img height={10} borderRadius={"50%"} src={user.picture} />
-                <Text mr={4}>{user.nickname}</Text>
+                <Text ml={3}>{user.nickname}</Text>
               </Button>
             ) : (
               <Button
@@ -270,8 +270,8 @@ export default function NavBar() {
         <Flex
           position={"fixed"}
           top={"59px"}
-          right={20}
-          w={"17%"}
+          right={"2vw"}
+          w={"20vw"}
           bgColor={"gray.300"}
           p={5}
           zIndex={9999}
