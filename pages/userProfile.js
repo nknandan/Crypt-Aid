@@ -226,9 +226,9 @@ export default function userProfile({ campaigns }) {
 
   async function getSummary() {
     try {
-      // const summary = await Promise.all(
-      //   campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
-      // );
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
       const ethPrice = await getETHPrice();
       updateEthPrice(ethPrice);
       setCampaignList(summary);
