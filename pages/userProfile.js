@@ -64,16 +64,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -116,11 +107,7 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -137,12 +124,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -152,11 +134,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -191,18 +169,17 @@ function CampaignCardNew({
   );
 }
 
-export default function userProfile({ campaigns }) {
+export default function UserProfile({ campaigns }) {
   const [campaignList, setCampaignList] = useState([]);
   const [newButton, setNewButton] = useState(1);
+  const [ethPrice, updateEthPrice] = useState(null);
   async function getSummary() {
     try {
-      const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
-      );
-      const ETHPrice = await getETHPrice();
-      updateEthPrice(ETHPrice);
+      // const summary = await Promise.all(
+      //   campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      // );
+      const ethPrice = await getETHPrice();
+      updateEthPrice(ethPrice);
       setCampaignList(summary);
       return summary;
     } catch (e) {
@@ -212,15 +189,13 @@ export default function userProfile({ campaigns }) {
 
   useEffect(() => {
     getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
       <Head>
         <title>User Profile | CryptAid</title>
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -235,12 +210,7 @@ export default function userProfile({ campaigns }) {
           flexDirection={"row"}
         >
           <Flex height={"100vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
-          <Flex
-            height={"100vh"}
-            width={"55vw"}
-            bgColor={"gray.100"}
-            flexDirection={"column"}
-          >
+          <Flex height={"100vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
             <Flex
               w={"90%"}
               h={"20%"}
@@ -259,21 +229,9 @@ export default function userProfile({ campaigns }) {
               top={"14%"}
               left={"25vw"}
             >
-              <Img
-                src={"/asdas.jpg"}
-                h={"19vh"}
-                w={"19vh"}
-                objectFit={"fill"}
-                borderRadius={"50%"}
-              ></Img>
+              <Img src={"/asdas.jpg"} h={"19vh"} w={"19vh"} objectFit={"fill"} borderRadius={"50%"}></Img>
             </Center>
-            <Flex
-              flexDir={"column"}
-              w={"20vw"}
-              pos={"absolute"}
-              top={"20%"}
-              left={"35vw"}
-            >
+            <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"20%"} left={"35vw"}>
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
                 Alvin Antony
               </Text>
@@ -292,19 +250,9 @@ export default function userProfile({ campaigns }) {
             >
               <Img objectFit={"contain"} src={"/settings.png"} />
             </Button>
-            <Flex
-              w={"100%"}
-              mt={"12%"}
-              px={"10%"}
-              py={5}
-              flexDirection={"column"}
-            >
+            <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
               <Heading mb={6}>Dashboard</Heading>
-              <Flex
-                flexDirection={"row"}
-                width={"100%"}
-                justifyContent={"space-evenly"}
-              >
+              <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
                 <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2}>
                   <Img src={"/totalamount.png"} height={10} mr={5} />
                   <Flex flexDir={"column"}>
@@ -327,6 +275,15 @@ export default function userProfile({ campaigns }) {
             </Flex>
             <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
               <Heading>Active campaigns</Heading>
+              {/* <Button
+                bgColor={"red.200"}
+                onClick={() => {
+                  console.log("Debug Now.");
+                  console.log(localStorage.getItem("user"));
+                }}
+              >
+                DEBUG
+              </Button> */}
               <Divider marginTop="4" />
               <SimpleGrid spacing={10} py={8}>
                 {campaignList
@@ -360,61 +317,27 @@ export default function userProfile({ campaigns }) {
             flexDir={"column"}
             padding={10}
           >
-            <Center
-              bgColor={"gray.200"}
-              borderRadius={10}
-              p={5}
-              py={2}
-              justifyContent={"space-evenly"}
-            >
+            <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
               <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
                   Alvin Antony Shaju
                 </Text>
                 <Center justifyContent={"flex-start"}>
-                  <Flex
-                    h={2}
-                    w={2}
-                    borderRadius={"50%"}
-                    bgColor={"green.300"}
-                    mr={3}
-                  ></Flex>
+                  <Flex h={2} w={2} borderRadius={"50%"} bgColor={"green.300"} mr={3}></Flex>
                   <Text fontSize={16} color={"gray.500"}>
                     Online
                   </Text>
                 </Center>
               </Flex>
             </Center>
-            <Flex
-              flexDir={"column"}
-              mt={5}
-              mb={5}
-              maxH={"65vh"}
-              overflowY={"auto"}
-            >
+            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"}>
               <Text fontSize={24} fontWeight={600} mb={5} mt={2}>
                 Latest Activity
               </Text>
-              <Center
-                bgColor={"gray.200"}
-                borderRadius={20}
-                justifyContent={"flex-start"}
-                mb={5}
-                p={3}
-                h={40}
-              >
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex
-                  flexDir={"column"}
-                  justifyContent={"flex-start"}
-                  h={"100%"}
-                >
+              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
+                <Img src={"/dummy.png"} height={"95%"} borderRadius={20} mr={5} />
+                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
                   <Text fontWeight={"600"} fontSize={20}>
                     Hi alvin
                   </Text>
@@ -430,25 +353,9 @@ export default function userProfile({ campaigns }) {
                   </NextLink>
                 </Flex>
               </Center>
-              <Center
-                bgColor={"gray.200"}
-                borderRadius={20}
-                justifyContent={"flex-start"}
-                mb={5}
-                p={3}
-                h={40}
-              >
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex
-                  flexDir={"column"}
-                  justifyContent={"flex-start"}
-                  h={"100%"}
-                >
+              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
+                <Img src={"/dummy.png"} height={"95%"} borderRadius={20} mr={5} />
+                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
                   <Text fontWeight={"600"} fontSize={20}>
                     Hi alvin
                   </Text>
@@ -464,25 +371,9 @@ export default function userProfile({ campaigns }) {
                   </NextLink>
                 </Flex>
               </Center>
-              <Center
-                bgColor={"gray.200"}
-                borderRadius={20}
-                justifyContent={"flex-start"}
-                mb={5}
-                p={3}
-                h={40}
-              >
-                <Img
-                  src={"/dummy.png"}
-                  height={"95%"}
-                  borderRadius={20}
-                  mr={5}
-                />
-                <Flex
-                  flexDir={"column"}
-                  justifyContent={"flex-start"}
-                  h={"100%"}
-                >
+              <Center bgColor={"gray.200"} borderRadius={20} justifyContent={"flex-start"} mb={5} p={3} h={40}>
+                <Img src={"/dummy.png"} height={"95%"} borderRadius={20} mr={5} />
+                <Flex flexDir={"column"} justifyContent={"flex-start"} h={"100%"}>
                   <Text fontWeight={"600"} fontSize={20}>
                     Hi alvin
                   </Text>
