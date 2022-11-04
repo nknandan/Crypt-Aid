@@ -41,9 +41,7 @@ export default function NavBar() {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       setCampaignList(summary);
       return summary;
@@ -55,10 +53,7 @@ export default function NavBar() {
   const search = (data) => {
     data = data.filter((item) => {
       if (searchQuery == "") return false;
-      if (
-        item["5"].toLowerCase().includes(searchQuery) ||
-        item["6"].toLowerCase().includes(searchQuery)
-      ) {
+      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
         return true;
       } else {
         return false;
@@ -109,12 +104,7 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box
-                as={"span"}
-                color={useColorModeValue("#fefefe", "teal.300")}
-                position={"relative"}
-                zIndex={10}
-              >
+              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10}>
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
@@ -156,12 +146,7 @@ export default function NavBar() {
                 borderRightRadius={10}
                 onClick={() => wallet.connect()}
               >
-                <Img
-                  position={"absolute"}
-                  height={"60%"}
-                  objectFit={"contain"}
-                  src={"/search.png"}
-                />
+                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
               </Button>
             </Flex>
             <Button
@@ -197,10 +182,7 @@ export default function NavBar() {
                   {wallet.account.substr(0, 4) + "..."}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => wallet.reset()}>
-                    {" "}
-                    Disconnect Wallet{" "}
-                  </MenuItem>
+                  <MenuItem onClick={() => wallet.reset()}> Disconnect Wallet </MenuItem>
                 </MenuList>
               </Menu>
             ) : (
@@ -219,12 +201,7 @@ export default function NavBar() {
                   }}
                   onClick={() => wallet.connect()}
                 >
-                  <Img
-                    position={"absolute"}
-                    height={"60%"}
-                    objectFit={"contain"}
-                    src={"/walleticon.png"}
-                  />
+                  <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/walleticon.png"} />
                 </Button>
               </div>
             )}
@@ -241,34 +218,31 @@ export default function NavBar() {
               DEBUG
             </Button>
 
-            {user ? (<Button
-              fontSize={"md"}
-              fontWeight={600}
-              color={"black"}
-              bg={"#43B0F1"}
-              borderRadius={20}
-              width={150}
-              href={"#"}
-              display={"flex"}
-              justifyContent={"space-between"}
-              _hover={{
-                bg: "#0065A1",
-                color: "white",
-              }}
-              p={0}
-              onClick={() => {
-                setUserMenu(!userMenu);
-              }}
-            >
-              <Img
-                height={10}
-                borderRadius={"50%"}
-                src={user.picture}
-              />
-              <Text mr={4}>{user.nickname}</Text>
-            </Button>)
-              :
-              (<Button
+            {user ? (
+              <Button
+                fontSize={"md"}
+                fontWeight={600}
+                color={"black"}
+                bg={"#43B0F1"}
+                borderRadius={20}
+                width={150}
+                href={"#"}
+                display={"flex"}
+                justifyContent={"space-between"}
+                _hover={{
+                  bg: "#0065A1",
+                  color: "white",
+                }}
+                p={0}
+                onClick={() => {
+                  setUserMenu(!userMenu);
+                }}
+              >
+                <Img height={10} borderRadius={"50%"} src={user.picture} />
+                <Text mr={4}>{user.nickname}</Text>
+              </Button>
+            ) : (
+              <Button
                 fontSize={"md"}
                 fontWeight={600}
                 color={"black"}
@@ -283,22 +257,34 @@ export default function NavBar() {
                 p={0}
               >
                 <NextLink href="/api/auth/login">Login</NextLink>
-              </Button>)}
+              </Button>
+            )}
 
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>
-            {/* <DarkModeSwitch /> */}
-          </Flex>
+          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
       {userMenu ? (
-        <Flex position={"fixed"} top={"59px"} right={20} w={"17%"} bgColor={"gray.300"} p={5} zIndex={9999} flexDirection={"column"} borderBottomRadius={10}>
+        <Flex
+          position={"fixed"}
+          top={"59px"}
+          right={20}
+          w={"17%"}
+          bgColor={"gray.300"}
+          p={5}
+          zIndex={9999}
+          flexDirection={"column"}
+          borderBottomRadius={10}
+        >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
-            <Center flexDirection={'column'} ml={2} maxW={"70%"} justifyContent={"center"} ml={5}>
-              <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>{user.nickname}</Text>
+            <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
+              {/* Above ml={2} */}
+              <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
+                {user.nickname}
+              </Text>
               <Text alignSelf={"flex-start"}>{user.name}</Text>
               <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
                 <NextLink href="/api/auth/logout">Manage your account</NextLink>
@@ -310,7 +296,10 @@ export default function NavBar() {
               <NextLink href="/api/auth/logout">Logout</NextLink>
             </Button>
           </Center>
-        </Flex>) : (<></>)}
+        </Flex>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 }
