@@ -281,7 +281,7 @@ export default function UserProfile({ campaigns, users }) {
           break;
         }
       }
-      console.log(user);
+      console.log(JSON.stringify(user));
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
