@@ -306,9 +306,9 @@ export default function NavBar() {
                     color={"blue.800"}
                     onClick={() => {
                       localStorage.setItem("user", JSON.stringify(user));
+                      localStorage.setItem("email", user.email);
                       setUserMenu(!userMenu);
-                    }
-                    }
+                    }}
                   >
                     Manage your account
                   </Text>
@@ -330,7 +330,12 @@ export default function NavBar() {
                   {wallet.account.substr(0, 9) + "..."}
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => { wallet.reset(); setUserMenu(!userMenu); }}>
+                  <MenuItem
+                    onClick={() => {
+                      wallet.reset();
+                      setUserMenu(!userMenu);
+                    }}
+                  >
                     {" "}
                     Disconnect Wallet{" "}
                   </MenuItem>
@@ -346,7 +351,10 @@ export default function NavBar() {
                   borderWidth={1}
                   borderRadius={20}
                   href={"#"}
-                  onClick={() => { wallet.connect(); setUserMenu(!userMenu); }}
+                  onClick={() => {
+                    wallet.connect();
+                    setUserMenu(!userMenu);
+                  }}
                 >
                   <Center>
                     <Text>Connect wallet</Text>
@@ -362,7 +370,11 @@ export default function NavBar() {
               borderWidth={1}
               mt={5}
               borderRadius={20}
-              onClick={() => { localStorage.removeItem("user"); setUserMenu(!userMenu); }}
+              onClick={() => {
+                localStorage.removeItem("user");
+                localStorage.removeItem("email");
+                setUserMenu(!userMenu);
+              }}
             >
               <NextLink href="/api/auth/logout">Logout</NextLink>
             </Button>
