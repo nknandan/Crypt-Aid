@@ -31,9 +31,9 @@ export const getServerSideProps = withPageAuthRequired({
     const campaigns = await factory.methods.getDeployedCampaigns().call();
     await connectMongo();
     const users = await User.find();
-    console.log("IN GSSP");
-    console.log(JSON.stringify(users));
-    console.log(campaigns);
+    // console.log("IN GSSP");
+    // console.log(JSON.stringify(users));
+    // console.log(campaigns);
 
     return {
       props: { campaign: campaigns, users: JSON.parse(JSON.stringify(users)) },
@@ -305,6 +305,7 @@ export default function UserProfile({ campaigns, users }) {
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
   const [user, setUser] = useState({});
+  const [obj, setObj] = useState({});
 
   async function getSummary() {
     try {
@@ -325,17 +326,20 @@ export default function UserProfile({ campaigns, users }) {
 
   function getUser() {
     try {
-      console.log("Fetched users list");
-      console.log(users);
-      const obj = localStorage.getItem("user");
-      const u = JSON.parse(obj);
+      // console.log("Fetched users list");
+      // console.log(users);
+      const u = localStorage.getItem("email");
+      const o = JSON.parse(localStorage.getItem("user"));
+      console.log(o);
+      setObj(o);
       for (var i = 0; i < users.length; i++) {
-        if (users[i].email == u.email) {
+        if (users[i].email == u) {
+          console.log(users[i]);
           setUser(users[i]);
           break;
         }
+        console.log(JSON.stringify(user));
       }
-      console.log(JSON.stringify(user));
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
@@ -394,7 +398,7 @@ export default function UserProfile({ campaigns, users }) {
               left={"25vw"}
             >
               <Img
-                src={user.picture}
+                src={obj.picture}
                 alt="Profile Picture"
                 h={"19vh"}
                 w={"19vh"}
