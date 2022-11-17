@@ -31,6 +31,7 @@ import { withPageAuthRequired, WithPageAuthRequired } from "@auth0/nextjs-auth0"
 
 import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3";
+import axios from "axios";
 
 export default function NewCampaign() {
   const {
@@ -56,19 +57,19 @@ export default function NewCampaign() {
   }, []);
   async function onSubmit(data) {
     try {
-      fetch("api/campaign/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.campaignName,
-          description: data.description,
-          imageUrl: data.imageUrl,
-          minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
-          targetAmount: web3.utils.toWei(data.target, "ether"),
-        }),
-      });
+      // fetch("api/campaign/create", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     name: data.campaignName,
+      //     description: data.description,
+      //     imageUrl: data.imageUrl,
+      //     minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
+      //     targetAmount: web3.utils.toWei(data.target, "ether"),
+      //   }),
+      // });
       const accounts = await web3.eth.getAccounts();
       await factory.methods
         .createCampaign(
@@ -90,6 +91,22 @@ export default function NewCampaign() {
     }
 
     // TODO Add Campaign to MongoDB also.
+    await axios
+      .post(process.env.PATH_LINK + "api/campaign/create", {
+        name: data.campaignName,
+        description: data.description,
+        imageUrl: data.imageUrl,
+        minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
+        targetAmount: web3.utils.toWei(data.target, "ether"),
+      })
+      .then((res) => {
+        console.log("result ==   " + res.data);
+        // setResult(res.data.result);
+      })
+      .catch((error) => {
+        console.log("ERROR in NOW");
+        console.log(error);
+      });
   }
 
   return (
