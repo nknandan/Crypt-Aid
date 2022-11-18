@@ -39,7 +39,7 @@ export const getServerSideProps = withPageAuthRequired({
     // console.log(campaigns);
 
     return {
-      props: { campaign: campaigns, users: JSON.parse(JSON.stringify(users)) },
+      props: { campaigns: campaigns, users: JSON.parse(JSON.stringify(users)) },
     };
   },
 });
@@ -47,6 +47,21 @@ export const getServerSideProps = withPageAuthRequired({
 function SettingsPage({ setSettingsScreen, users }) {
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+
+  async function getSummary() {
+    try {
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      const ETHPrice = await getETHPrice();
+      updateEthPrice(ETHPrice);
+      setCampaignList(summary);
+      setCampaignListNumber(3);
+      return summary;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   function getUser() {
     try {
@@ -72,7 +87,7 @@ function SettingsPage({ setSettingsScreen, users }) {
 
   useEffect(() => {
     getUser();
-    // getSummary();
+    getSummary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -378,7 +393,7 @@ function ActiveCampaigns({
 }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
-      <Flex>
+      <Flex mb={3}>
         <Heading fontSize={30} mr={10}>
           Active Campaigns
         </Heading>
