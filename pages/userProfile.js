@@ -48,6 +48,13 @@ function SettingsPage({ setSettingsScreen, users }) {
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
 
+  useEffect(() => {
+    getUser();
+    getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   async function getSummary() {
     try {
       const summary = await Promise.all(
