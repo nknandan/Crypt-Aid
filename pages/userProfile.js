@@ -44,9 +44,64 @@ export const getServerSideProps = withPageAuthRequired({
   },
 });
 
-function SettingsPage({ setSettingsScreen, users }) {
-  const [user, setUser] = useState({});
+function SettingsPage({ setSettingsScreen, user }) {
+  // const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+  const [username, setUsername] = useState({});
+  const [firstName, setFirstName] = useState({});
+  const [lastName, setLastName] = useState({});
+
+  async function updateUsername() {
+    user["username"] = username;
+    console.log(user);
+    try {
+      fetch("/api/user", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
+  async function updateFirstname() {
+    console.log(firstName);
+    user["firstname"] = firstName;
+    console.log(user);
+    try {
+      fetch("/api/user", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
+  async function updateLastname() {
+    user["lastname"] = lastName;
+    console.log(user);
+    try {
+      fetch("/api/user", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     getUser();
@@ -58,7 +113,9 @@ function SettingsPage({ setSettingsScreen, users }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -72,26 +129,15 @@ function SettingsPage({ setSettingsScreen, users }) {
 
   function getUser() {
     try {
-      // console.log("Fetched users list");
-      // console.log(users);
       const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
-      console.log(o);
       setObj(o);
-      for (var i = 0; i < users.length; i++) {
-        if (users[i].email == u) {
-          //console.log(users[i]);
-          setUser(users[i]);
-          break;
-        }
-        //console.log(JSON.stringify(user));
-      }
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
     }
   }
-  
+
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
       <Center
@@ -141,7 +187,7 @@ function SettingsPage({ setSettingsScreen, users }) {
               color={"gray.600"}
               justifyContent={"space-between"}
             >
-              {obj.email}
+              {user.email}
               <Img height={7} src={"/mail.png"} />
             </Flex>
           </Flex>
@@ -153,10 +199,13 @@ function SettingsPage({ setSettingsScreen, users }) {
               <Input
                 type="string"
                 borderColor={"gray.300"}
-                placeholder={obj.nickname}
+                placeholder={user.username}
+                onChange={(e) => {
+                  setUsername(e.currentTarget.value);
+                }}
               />
               <InputRightAddon bgColor={"#9ed1f0"}>
-                <Img src="/edit.png" h={6} />
+                <Img src="/edit.png" h={6} onClick={updateUsername} />
               </InputRightAddon>
             </InputGroup>
           </Flex>
@@ -169,10 +218,13 @@ function SettingsPage({ setSettingsScreen, users }) {
                 <Input
                   type="string"
                   borderColor={"gray.300"}
-                  placeholder={"First Name"}
+                  placeholder={user.firstname}
+                  onChange={(e) => {
+                    setFirstName(e.currentTarget.value);
+                  }}
                 />
                 <InputRightAddon bgColor={"#9ed1f0"}>
-                  <Img src="/edit.png" h={6} />
+                  <Img src="/edit.png" h={6} onClick={updateFirstname} />
                 </InputRightAddon>
               </InputGroup>
             </Flex>
@@ -184,10 +236,13 @@ function SettingsPage({ setSettingsScreen, users }) {
                 <Input
                   type="string"
                   borderColor={"gray.300"}
-                  placeholder={"Last Name"}
+                  placeholder={user.lastname}
+                  onChange={(e) => {
+                    setLastName(e.currentTarget.value);
+                  }}
                 />
                 <InputRightAddon bgColor={"#9ed1f0"}>
-                  <Img src="/edit.png" h={6} />
+                  <Img src="/edit.png" h={6} onClick={updateLastname} />
                 </InputRightAddon>
               </InputGroup>
             </Flex>
@@ -630,7 +685,7 @@ export default function UserProfile({ campaigns, users }) {
               left={"35vw"}
             >
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {obj.nickname}
+                {user.username}
               </Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
@@ -653,7 +708,10 @@ export default function UserProfile({ campaigns, users }) {
             </Button>
             {settingsScreen ? (
               <Flex>
-                <SettingsPage setSettingsScreen={setSettingsScreen} />
+                <SettingsPage
+                  setSettingsScreen={setSettingsScreen}
+                  user={user}
+                />
               </Flex>
             ) : (
               <Flex flexDirection={"column"}>
