@@ -47,6 +47,13 @@ export const getServerSideProps = withPageAuthRequired({
 function SettingsPage({ setSettingsScreen, users }) {
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+  
+  useEffect(() => {
+    getUser();
+    getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   async function getSummary() {
     try {
@@ -84,7 +91,7 @@ function SettingsPage({ setSettingsScreen, users }) {
       console.log(e);
     }
   }
-  
+
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
       <Center
