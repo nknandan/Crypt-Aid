@@ -84,13 +84,7 @@ function SettingsPage({ setSettingsScreen, users }) {
       console.log(e);
     }
   }
-
-  useEffect(() => {
-    getUser();
-    getSummary();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
       <Center
