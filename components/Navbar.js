@@ -15,10 +15,11 @@ import {
   InputGroup,
   Input,
   Img,
+  useOutsideClick,
   MenuItem,
   Center,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import NextLink from "next/link";
 import DarkModeSwitch from "./DarkModeSwitch";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -35,6 +36,11 @@ export default function NavBar() {
   const [searchData, setsearchData] = useState([]);
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
+  const ref = useRef()
+  useOutsideClick({
+    ref: ref,
+    handler: () => setUserMenu(0),
+  })
 
   const getCampaigns = async () => {
     try {
@@ -281,6 +287,7 @@ export default function NavBar() {
           zIndex={9999}
           flexDirection={"column"}
           borderBottomRadius={10}
+          ref={ref}
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
