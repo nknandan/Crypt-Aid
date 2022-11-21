@@ -47,18 +47,30 @@ export const getServerSideProps = withPageAuthRequired({
 function SettingsPage({ setSettingsScreen, users }) {
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
-  
+  const [image, setImage] = useState(obj.picture);
+  const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  const uploadToClient = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const i = event.target.files[0];
+      setImage(i);
+      console.log(image);
+      setCreateObjectURL(URL.createObjectURL(i));
+    }
+  };
+
   useEffect(() => {
     getUser();
     getSummary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -195,7 +207,9 @@ function SettingsPage({ setSettingsScreen, users }) {
               </InputGroup>
             </Flex>
           </Flex>
-          <Button mt={10} bgColor={"blue.200"}>Submit</Button>
+          <Button mt={10} bgColor={"blue.200"}>
+            Submit
+          </Button>
         </Flex>
         <Flex w={"40%"} flexDir={"column"} pl={10}>
           <Text fontSize={24} fontWeight={"400"} mt={4}>
@@ -219,6 +233,19 @@ function SettingsPage({ setSettingsScreen, users }) {
                 right={0}
               >
                 <Img src="/edit.png" objectFit={"cover"} h={7} />
+                <Input
+                  type={"file"}
+                  name="myImage"
+                  onChange={uploadToClient}
+                  display={"inline-block"}
+                  visibility={"visible"}
+                  opacity={"0%"}
+                  w={"100%"}
+                  h={"100%"}
+                  bgColor={"transparent"}
+                  border={"0px"}
+                  position={"absolute"}
+                />
               </Button>
             </Center>
           </Center>
