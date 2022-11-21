@@ -28,6 +28,7 @@ import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context) {
@@ -53,6 +54,17 @@ function SettingsPage({ setSettingsScreen, user }) {
 
   const [image, setImage] = useState("");
   const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  const router = useRouter();
+
+  function multiFunct() {
+    updateDetails();
+    redirect();
+  }
+
+  const redirect = () => {
+    router.push("userProfile");
+  };
 
   async function updateDetails() {
     console.log(user.username);
@@ -262,7 +274,7 @@ function SettingsPage({ setSettingsScreen, user }) {
             </Flex>
           </Flex>
 
-          <Button mt={10} bgColor={"blue.200"} onClick={updateDetails}>
+          <Button mt={10} bgColor={"blue.200"} onClick={multiFunct}>
             Submit
           </Button>
         </Flex>
