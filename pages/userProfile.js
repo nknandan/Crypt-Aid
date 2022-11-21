@@ -153,7 +153,8 @@ function SettingsPage({ setSettingsScreen, users }) {
               <Input
                 type="string"
                 borderColor={"gray.300"}
-                placeholder={obj.nickname}
+                placeholder={"Enter a new username"}
+                defaultValue={obj.nickname}
               />
               <InputRightAddon bgColor={"#9ed1f0"}>
                 <Img src="/edit.png" h={6} />
@@ -169,7 +170,8 @@ function SettingsPage({ setSettingsScreen, users }) {
                 <Input
                   type="string"
                   borderColor={"gray.300"}
-                  placeholder={"First Name"}
+                  placeholder={"Enter a new First Name"}
+                  defaultValue={obj.nickname}
                 />
                 <InputRightAddon bgColor={"#9ed1f0"}>
                   <Img src="/edit.png" h={6} />
@@ -184,7 +186,8 @@ function SettingsPage({ setSettingsScreen, users }) {
                 <Input
                   type="string"
                   borderColor={"gray.300"}
-                  placeholder={"Last Name"}
+                  placeholder={"Enter a new Second Name"}
+                  defaultValue={obj.nickname}
                 />
                 <InputRightAddon bgColor={"#9ed1f0"}>
                   <Img src="/edit.png" h={6} />
@@ -192,6 +195,7 @@ function SettingsPage({ setSettingsScreen, users }) {
               </InputGroup>
             </Flex>
           </Flex>
+          <Button mt={10} bgColor={"blue.200"}>Submit</Button>
         </Flex>
         <Flex w={"40%"} flexDir={"column"} pl={10}>
           <Text fontSize={24} fontWeight={"400"} mt={4}>
