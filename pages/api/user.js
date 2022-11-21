@@ -41,12 +41,13 @@ export default async function addUser(req, res) {
       const un = temp.user.username;
       const fn = temp.user.firstname;
       const ln = temp.user.lastname;
+      const img = temp.user.imageURL;
       //console.log(em);
       const u = await db
         .collection("users")
         .updateOne(
           { email: em },
-          { $set: { username: un, firstname: fn, lastname: ln } }
+          { $set: { username: un, firstname: fn, lastname: ln, imageURL: img } }
         );
       console.log(u);
       res.json({ u });
