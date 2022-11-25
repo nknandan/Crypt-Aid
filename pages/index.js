@@ -32,11 +32,19 @@ import Campaign from "../smart-contract/campaign";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
+import { connectToDatabase } from "../lib/mongodb";
 
 export async function getServerSideProps(context) {
+  const { db } = await connectToDatabase();
   const campaigns = await factory.methods.getDeployedCampaigns().call();
+  const dbCampaigns = await db.collection("campaigns").find({});
+  const dbUsers = await db.collection("users").find({});
   return {
-    props: { campaigns },
+    props: {
+      campaigns,
+      users: JSON.parse(JSON.stringify(dbUsers)),
+      dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+    },
   };
 }
 
@@ -61,7 +69,16 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
+function CampaignCardNew({
+  name,
+  description,
+  creatorId,
+  imageURL,
+  id,
+  balance,
+  target,
+  ethPrice,
+}) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -104,7 +121,11 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+            <Box
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+            >
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -121,7 +142,12 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               </Box>
             </Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+            <Box
+              fontSize="2xl"
+              fontWeight="semibold"
+              as="h4"
+              lineHeight="tight"
+            >
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -131,7 +157,11 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
+                <Text as="span">
+                  {balance > 0
+                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
+                    : "Raised : 0"}
+                </Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -151,7 +181,13 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
+            <Progress
+              colorScheme="blue"
+              size="sm"
+              value={balance}
+              max={target}
+              mt="2"
+            />
           </Box>
         </Box>
       </Box>
@@ -159,7 +195,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
-export default function Home({ campaigns }) {
+export default function Home({ campaigns, users, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
@@ -167,7 +203,9 @@ export default function Home({ campaigns }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -180,10 +218,35 @@ export default function Home({ campaigns }) {
   }
 
   function handleShowMore() {
-    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
+    setCampaignListNumber(
+      campaignListNumber >= campaignList.length
+        ? campaignListNumber
+        : campaignListNumber + 1
+    );
+  }
+
+  function getUser() {
+    try {
+      const u = localStorage.getItem("email");
+      const o = JSON.parse(localStorage.getItem("user"));
+      //console.log(o);
+      setObj(o);
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].email == u) {
+          console.log(users[i]);
+          setUser(users[i]);
+          break;
+        }
+        //console.log(JSON.stringify(user));
+      }
+    } catch (e) {
+      console.log("Error in getUser().");
+      console.log(e);
+    }
   }
 
   useEffect(() => {
+    getUser();
     getSummary();
   }, []);
 
@@ -191,11 +254,19 @@ export default function Home({ campaigns }) {
     <div>
       <Head>
         <title>CryptAid</title>
-        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
+        <meta
+          name="description"
+          content="Transparent Crowdfunding in Blockchain"
+        />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}>
+        <Container
+          py={{ base: "4", md: "12" }}
+          maxW={"7xl"}
+          align={"left"}
+          position={"relative"}
+        >
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -233,7 +304,14 @@ export default function Home({ campaigns }) {
               Create Campaign
             </Button>
           </NextLink>
-          <Img position={"absolute"} right={40} top={53} src={"/landing1.png"} roundedTop="lg" objectFit="cover" />
+          <Img
+            position={"absolute"}
+            right={40}
+            top={53}
+            src={"/landing1.png"}
+            roundedTop="lg"
+            objectFit="cover"
+          />
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
           <HStack spacing={2} justifyContent={"space-between"}>
@@ -282,7 +360,8 @@ export default function Home({ campaigns }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {campaignList.length > 3 && campaignListNumber != campaignList.length ? (
+          {campaignList.length > 3 &&
+          campaignListNumber != campaignList.length ? (
             <Button
               display={{ sm: "inline-flex" }}
               w={"200px"}
@@ -324,7 +403,9 @@ export default function Home({ campaigns }) {
             <Feature
               icon={<Icon as={FcShare} w={10} h={10} />}
               title={"SHARE"}
-              text={"We let you share your favorite campaigns with your near and dear ones."}
+              text={
+                "We let you share your favorite campaigns with your near and dear ones."
+              }
             />
             <Feature
               icon={<Icon as={FcMoneyTransfer} w={10} h={10} />}
@@ -345,12 +426,19 @@ export default function Home({ campaigns }) {
           py={"20px"}
           position={"relative"}
         >
-          <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
+          <Text
+            color={"white"}
+            fontSize={"2rem"}
+            mx={"20px"}
+            fontWeight={"600"}
+            pb={"10px"}
+          >
             Feeling Inspired ?
           </Text>
           <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-            Let`s make a difference together. You can raise money or <br /> make a donation, and our platform will let
-            you do that <br /> effortlessly anywhere in the world.
+            Let`s make a difference together. You can raise money or <br /> make
+            a donation, and our platform will let you do that <br />{" "}
+            effortlessly anywhere in the world.
           </Text>
           <NextLink href="/campaign/new">
             <Button

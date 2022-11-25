@@ -1,14 +1,15 @@
 import Campaign from "../../../models/campaignModel";
 import { connectMongo } from "../../../utils/connectMongo";
+import { connectToDatabase } from "../../../lib/mongodb";
 
 export default async function addCampaign(req, res) {
   // GET
   if (req.method === "GET") {
     // Process a POST request
     try {
-      await connectMongo();
+      const { db } = await connectToDatabase();
 
-      const campaign = await Campaign.find();
+      const campaign = await db.collection("campaigns").find({});
 
       res.json({ campaign });
     } catch (error) {
@@ -19,10 +20,12 @@ export default async function addCampaign(req, res) {
   // POST
   else if (req.method == "POST") {
     try {
-      await connectMongo();
-      const campaign = await Campaign.create(req.body);
-
-      res.json({ campaign });
+      const { db } = await connectToDatabase();
+      const temp = req.body;
+      console.log(temp);
+      const u = await db.collection("campaigns").insertOne(temp);
+      console.log(u);
+      res.json({ u });
     } catch (error) {
       console.log(error);
       res.json({ error });
@@ -30,5 +33,4 @@ export default async function addCampaign(req, res) {
   } else {
     // Handle any other HTTP method
   }
-  
 }

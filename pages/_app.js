@@ -19,11 +19,11 @@ function MyApp({ Component, pageProps }) {
         {" "}
         <ChakraProvider theme={theme}>
           <UseWalletProvider
-            chainId={parseInt(process.env.CHAIN_ID)}
+            chainId={1337}
             connectors={{
               walletconnect: {
                 // rpcUrl: "https://goerli.infura.io/v3/45506ce6184f433aa07ed69c689ff539", // GOERLI END POINT
-                rpcUrl: process.env.LINK,
+                rpcUrl: "http://127.0.0.1:7545",
               },
             }}
           >
