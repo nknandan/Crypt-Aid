@@ -9,8 +9,8 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
 
-      const campaign = await db.collection("campaigns").find({});
-
+      const campaign = await db.collection("campaigns").find({}).toArray();
+      console.log(campaign);
       res.json({ campaign });
     } catch (error) {
       console.log(error);
