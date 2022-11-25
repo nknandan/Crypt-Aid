@@ -264,12 +264,13 @@ export default function NavBar() {
         borderColor={"blue.400"}
         bgColor={"white"}
         pos="fixed"
+        w={"30vw"}
         top="59px"
-        left={"21vw"}
+        left={"29vw"}
         boxShadow={"sm"}
         zIndex="999"
-        justify={"center"}
-        padding={"20px"}
+        // justify={"center"}
+        paddingLeft={"20px"}
         py={0}
         borderBottomRadius={10}
       >
