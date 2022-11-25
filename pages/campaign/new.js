@@ -246,6 +246,24 @@ export default function NewCampaign() {
                         >
                           Connect your wallet{" "}
                         </Button>
+                        {/* 
+
+
+
+                         */}
+                        <Button
+                          onClick={() => {
+                            console.log("HELLO");
+                            console.log(process.env.NEXT_PUBLIC_LINK);
+                          }}
+                        >
+                          DEBUG
+                        </Button>
+                        {/* 
+
+
+
+                         */}
                         <Alert status="warning" bgColor={"red.100"}>
                           <AlertIcon color={"red"} />
                           <AlertDescription mr={2}>Connect your wallet to create campaigns</AlertDescription>
