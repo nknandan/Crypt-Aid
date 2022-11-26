@@ -28,18 +28,20 @@ import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import CampaignModel from "../models/campaignModel";
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context) {
     const campaigns = await factory.methods.getDeployedCampaigns().call();
     await connectMongo();
     const users = await User.find();
-    // console.log("IN GSSP");
-    // console.log(JSON.stringify(users));
-    // console.log(campaigns);
-
+    const dbCamp = await CampaignModel.find();
     return {
-      props: { campaigns: campaigns, users: JSON.parse(JSON.stringify(users)) },
+      props: {
+        campaigns: campaigns,
+        users: JSON.parse(JSON.stringify(users)),
+        dbCamp: JSON.parse(JSON.stringify(dbCamp)),
+      },
     };
   },
 });
@@ -51,7 +53,9 @@ function SettingsPage({ setSettingsScreen, users }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -345,6 +349,22 @@ function PendingCard({
   target,
   ethPrice,
 }) {
+  function updateStatus() {
+    const tempObj = { name: name, isApproved: true };
+    try {
+      fetch("/api/campaign/create", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempObj }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -407,20 +427,30 @@ function PendingCard({
           </Box>
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
-              <Box maxW={{ base: "	15rem", sm: "sm" }}>
-              </Box>
+              <Box maxW={{ base: "	15rem", sm: "sm" }}></Box>
               <Text fontSize={"md"} fontWeight="normal">
                 Target : {web3.utils.fromWei(target, "ether")} ETH ($
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
-              {approvedPending ? <> </> : <Flex w={"30%"} justifyContent={"space-between"}>
-            <Button bgColor={"green.200"} fontSize={12} p={3} h={2}>
-              Approve
-            </Button>
-            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>
-              Explore
-            </Button>
-          </Flex>}
+              {approvedPending ? (
+                <> </>
+              ) : (
+                <Flex w={"30%"} justifyContent={"space-between"}>
+                  <Button
+                    bgColor={"green.200"}
+                    fontSize={12}
+                    p={3}
+                    h={2}
+                    zIndex={99}
+                    onClick={updateStatus}
+                  >
+                    Approve
+                  </Button>
+                  {/* <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>
+                    Explore
+                  </Button> */}
+                </Flex>
+              )}
             </Flex>
           </Box>
         </Box>
@@ -483,6 +513,7 @@ function LatestActivity({ name, description, imageURL }) {
 function ApprovedCampaigns({
   setApprovedPending,
   campaignList,
+  campaignList1,
   campaigns,
   ethPrice,
 }) {
@@ -506,20 +537,28 @@ function ApprovedCampaigns({
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
           {campaignList.map((el, i) => {
-            return (
-              <div key={i}>
-                <PendingCard
-                  name={el[5]}
-                  description={el[6]}
-                  creatorId={el[4]}
-                  imageURL={el[7]}
-                  id={campaigns[campaignList.length - 1 - i]}
-                  target={el[8]}
-                  balance={el[1]}
-                  ethPrice={ethPrice}
-                />
-              </div>
-            );
+            for (var k = 0; k < campaignList1.length; k++) {
+              if (
+                campaignList1[k].isApproved == false &&
+                campaignList1[k].name == el[5]
+              ) {
+                console.log(campaignList1[k]);
+                return (
+                  <div key={i}>
+                    <PendingCard
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={campaigns[campaignList.length - 1 - i]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                    />
+                  </div>
+                );
+              }
+            }
           })}
         </SimpleGrid>
       </Flex>
@@ -530,6 +569,7 @@ function ApprovedCampaigns({
 function PendingCampaigns({
   setApprovedPending,
   campaignList,
+  campaignList1,
   campaigns,
   ethPrice,
 }) {
@@ -551,43 +591,52 @@ function PendingCampaigns({
       </Flex>
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-          {campaignList
-            .slice(0)
-            .reverse()
-            .map((el, i) => {
-              return (
-                <div key={i}>
-                  <ApprovedCard
-                    name={el[5]}
-                    description={el[6]}
-                    creatorId={el[4]}
-                    imageURL={el[7]}
-                    id={campaigns[campaignList.length - 1 - i]}
-                    target={el[8]}
-                    balance={el[1]}
-                    ethPrice={ethPrice}
-                  />
-                </div>
-              );
-            })}
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              // console.log(el[5]);
+              // console.log(campaignList1[k].name);
+              if (
+                campaignList1[k].isApproved == true &&
+                campaignList1[k].name == el[5]
+              ) {
+                return (
+                  <div key={i}>
+                    <ApprovedCard
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={campaigns[campaignList.length - 1 - i]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
         </SimpleGrid>
       </Flex>
     </Flex>
   );
 }
 
-
-export default function UserProfile({ campaigns, users }) {
+export default function UserProfile({ campaigns, users, dbCamp }) {
   const [approvedPending, setApprovedPending] = useState(false);
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
+  const [campaignList1, setCampaignList1] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+  const [approvedNumber, setApprovedNumber] = useState();
+  const [notApprovedNumber, setNotApprovedNumber] = useState();
 
   async function getSummary() {
     try {
+      // getCampaigns();
       const summary = await Promise.all(
         campaigns.map((campaign, i) =>
           Campaign(campaigns[i]).methods.getSummary().call()
@@ -613,7 +662,7 @@ export default function UserProfile({ campaigns, users }) {
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          console.log(users[i]);
+          // console.log(users[i]);
           setUser(users[i]);
           break;
         }
@@ -625,9 +674,37 @@ export default function UserProfile({ campaigns, users }) {
     }
   }
 
+  // function getCampaigns() {
+  //   var a;
+  //   const u = localStorage.getItem("email");
+  //   var arr = [];
+  //   for (var i = 0; i < dbCamp.length; i++) {
+  //     if (dbCamp[i].creatorEmail == u) arr.push(dbCamp[i]);
+  //   }
+  //   setCampaignList1(arr);
+  //   console.log(campaignList1);
+  // }
+
+  function getNumber() {
+    // console.log(dbCamp);
+    var ab;
+    const totalNumberTemp = dbCamp.length;
+    var notApprovedNumberTemp = 0;
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].isApproved == false) notApprovedNumberTemp += 1;
+    }
+    var approvedNumberTemp = totalNumberTemp - notApprovedNumberTemp;
+    setApprovedNumber(approvedNumberTemp);
+    setNotApprovedNumber(notApprovedNumberTemp);
+    // console.log(totalNumber);
+    // console.log(approvedNumber);
+    // console.log(notApprovedNumber);
+  }
+
   useEffect(() => {
     getUser();
     getSummary();
+    getNumber();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -677,7 +754,9 @@ export default function UserProfile({ campaigns, users }) {
               left={"25vw"}
             >
               <Img
-                src={obj.picture}
+                src={
+                  "https://th.bing.com/th/id/OIP.-km6Zix904lcDbUVKEy0yAHaHa?pid=ImgDet&rs=1"
+                }
                 alt="Profile Picture"
                 h={"19vh"}
                 w={"19vh"}
@@ -693,13 +772,13 @@ export default function UserProfile({ campaigns, users }) {
               left={"35vw"}
             >
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {obj.nickname}
+                Administrator
               </Text>
-              <Text fontSize={15} fontWeight={300} mt={-2}>
+              {/* <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
-              </Text>
+              </Text> */}
             </Flex>
-            <Button
+            {/* <Button
               w={"56px"}
               h={"56px"}
               bgColor={"gray.300"}
@@ -713,7 +792,7 @@ export default function UserProfile({ campaigns, users }) {
               }}
             >
               <Img objectFit={"contain"} src={"/settings.png"} />
-            </Button>
+            </Button> */}
             {settingsScreen ? (
               <Flex>
                 <SettingsPage setSettingsScreen={setSettingsScreen} />
@@ -748,7 +827,7 @@ export default function UserProfile({ campaigns, users }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Campaigns to approve</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          8
+                          {notApprovedNumber}
                         </Text>
                       </Flex>
                     </Center>
@@ -765,7 +844,7 @@ export default function UserProfile({ campaigns, users }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total Campaigns Approved</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          50
+                          {approvedNumber}
                         </Text>
                       </Flex>
                     </Center>
@@ -776,6 +855,7 @@ export default function UserProfile({ campaigns, users }) {
                     <PendingCampaigns
                       setApprovedPending={setApprovedPending}
                       campaignList={campaignList}
+                      campaignList1={dbCamp}
                       campaigns={campaigns}
                       ethPrice={ethPrice}
                     />
@@ -783,6 +863,7 @@ export default function UserProfile({ campaigns, users }) {
                     <ApprovedCampaigns
                       setApprovedPending={setApprovedPending}
                       campaignList={campaignList}
+                      campaignList1={dbCamp}
                       campaigns={campaigns}
                       ethPrice={ethPrice}
                     />

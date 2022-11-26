@@ -29,18 +29,26 @@ import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
+import CampaignModel from "../models/campaignModel";
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context) {
     const campaigns = await factory.methods.getDeployedCampaigns().call();
     await connectMongo();
     const users = await User.find();
+    const dbCamp = await CampaignModel.find();
+    // console.log("HELLO");
+    // console.log(dbCamp);
     // console.log("IN GSSP");
     // console.log(JSON.stringify(users));
     // console.log(campaigns);
 
     return {
-      props: { campaigns: campaigns, users: JSON.parse(JSON.stringify(users)) },
+      props: {
+        campaigns: campaigns,
+        users: JSON.parse(JSON.stringify(users)),
+        dbCamp: JSON.parse(JSON.stringify(dbCamp)),
+      },
     };
   },
 });
@@ -487,9 +495,12 @@ function LatestActivity({ name, description, imageURL }) {
 function ActiveCampaigns({
   setActivePending,
   campaignList,
+  campaignList1,
   campaigns,
   ethPrice,
 }) {
+  var ab;
+  // console.log(campaignList1);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
@@ -510,20 +521,29 @@ function ActiveCampaigns({
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
           {campaignList.map((el, i) => {
-            return (
-              <div key={i}>
-                <CampaignCardNew
-                  name={el[5]}
-                  description={el[6]}
-                  creatorId={el[4]}
-                  imageURL={el[7]}
-                  id={campaigns[campaignList.length - 1 - i]}
-                  target={el[8]}
-                  balance={el[1]}
-                  ethPrice={ethPrice}
-                />
-              </div>
-            );
+            for (var k = 0; k < campaignList1.length; k++) {
+              // console.log(el[5]);
+              // console.log(campaignList1[k].name);
+              if (
+                el[5] == campaignList1[k].name &&
+                campaignList1[k].isApproved == true
+              ) {
+                return (
+                  <div key={i}>
+                    <CampaignCardNew
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={campaigns[campaignList.length - 1 - i - k]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                    />
+                  </div>
+                );
+              }
+            }
           })}
         </SimpleGrid>
       </Flex>
@@ -534,6 +554,7 @@ function ActiveCampaigns({
 function PendingCampaigns({
   setActivePending,
   campaignList,
+  campaignList1,
   campaigns,
   ethPrice,
 }) {
@@ -555,25 +576,31 @@ function PendingCampaigns({
       </Flex>
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-          {campaignList
-            .slice(0)
-            .reverse()
-            .map((el, i) => {
-              return (
-                <div key={i}>
-                  <CampaignCardNew
-                    name={el[5]}
-                    description={el[6]}
-                    creatorId={el[4]}
-                    imageURL={el[7]}
-                    id={campaigns[campaignList.length - 1 - i]}
-                    target={el[8]}
-                    balance={el[1]}
-                    ethPrice={ethPrice}
-                  />
-                </div>
-              );
-            })}
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              // console.log(el[5]);
+              // console.log(campaignList1[k].name);
+              if (
+                el[5] == campaignList1[k].name &&
+                campaignList1[k].isApproved == false
+              ) {
+                return (
+                  <div key={i}>
+                    <CampaignCardNew
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={campaigns[campaignList.length - 1 - i + k]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
         </SimpleGrid>
       </Flex>
     </Flex>
@@ -612,17 +639,20 @@ function PendingCampaigns({
 //   </Flex>);
 // }
 
-export default function UserProfile({ campaigns, users }) {
+export default function UserProfile({ campaigns, users, dbCamp }) {
   const [activePending, setActivePending] = useState(false);
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
+  const [campaignList1, setCampaignList1] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+  var ab;
 
   async function getSummary() {
     try {
+      getCampaigns();
       const summary = await Promise.all(
         campaigns.map((campaign, i) =>
           Campaign(campaigns[i]).methods.getSummary().call()
@@ -648,7 +678,7 @@ export default function UserProfile({ campaigns, users }) {
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          console.log(users[i]);
+          // console.log(users[i]);
           setUser(users[i]);
           break;
         }
@@ -660,9 +690,20 @@ export default function UserProfile({ campaigns, users }) {
     }
   }
 
+  function getCampaigns() {
+    const u = localStorage.getItem("email");
+    var arr = [];
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].creatorEmail == u) arr.push(dbCamp[i]);
+    }
+    setCampaignList1(arr);
+    console.log(campaignList1);
+  }
+
   useEffect(() => {
     getUser();
     getSummary();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -831,6 +872,7 @@ export default function UserProfile({ campaigns, users }) {
                     <PendingCampaigns
                       setActivePending={setActivePending}
                       campaignList={campaignList}
+                      campaignList1={campaignList1}
                       campaigns={campaigns}
                       ethPrice={ethPrice}
                     />
@@ -838,6 +880,7 @@ export default function UserProfile({ campaigns, users }) {
                     <ActiveCampaigns
                       setActivePending={setActivePending}
                       campaignList={campaignList}
+                      campaignList1={campaignList1}
                       campaigns={campaigns}
                       ethPrice={ethPrice}
                     />

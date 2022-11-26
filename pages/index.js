@@ -1,4 +1,5 @@
 import Head from "next/head";
+import React from "react";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
@@ -32,11 +33,22 @@ import Campaign from "../smart-contract/campaign";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
+import { connectToDatabase } from "../lib/mongodb";
+import { connectMongo } from "../utils/connectMongo";
 
 export async function getServerSideProps(context) {
+  const { db } = await connectToDatabase();
+  await connectMongo();
   const campaigns = await factory.methods.getDeployedCampaigns().call();
+  const dbCampaigns = await db.collection("campaigns").find().toArray();
+  const dbUsers = await db.collection("users").find().toArray();
+
   return {
-    props: { campaigns },
+    props: {
+      campaigns,
+      users: JSON.parse(JSON.stringify(dbUsers)),
+      dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+    },
   };
 }
 
@@ -61,7 +73,45 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
+  var emmmmmmm = "";
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  async function findEmail() {
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) {
+        // console.log("IN IF");
+        setEmail(dbCamp[i].creatorEmail);
+        // console.log("EMAIL:");
+        // console.log(email);
+        return dbCamp[i].creatorEmail;
+      }
+    }
+    return;
+  }
+  async function findUsername(tempEmail) {
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].email == tempEmail) {
+        const tempUsername = users[i].username;
+        setUsername(tempUsername);
+        return tempUsername;
+        break;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tempEmail = await findEmail();
+      setEmail(tempEmail);
+      const tempUsername = await findUsername(tempEmail);
+      setUsername(tempUsername);
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -110,7 +160,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                   c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {creatorId} ✅
+                  7 hours ago by {username} ✅
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
@@ -159,7 +209,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
-export default function Home({ campaigns }) {
+export default function Home({ campaigns, users, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
@@ -183,7 +233,31 @@ export default function Home({ campaigns }) {
     setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
   }
 
+  function getUser() {
+    try {
+      // const u = localStorage.getItem("email");
+      // const o = JSON.parse(localStorage.getItem("user"));
+      // //console.log(o);
+      // setObj(o);
+      // for (var i = 0; i < users.length; i++) {
+      //   if (users[i].email == u) {
+      //     console.log(users[i]);
+      //     setUser(users[i]);
+      //     break;
+      //   }
+      //   //console.log(JSON.stringify(user));
+      // }
+      // console.log("IN getUser");
+      // console.log(users);
+      // console.log(dbCamp);
+    } catch (e) {
+      console.log("Error in getUser().");
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
+    getUser();
     getSummary();
   }, []);
 
@@ -270,6 +344,8 @@ export default function Home({ campaigns }) {
                         target={el[8]}
                         balance={el[1]}
                         ethPrice={ethPrice}
+                        users={users}
+                        dbCamp={dbCamp}
                       />
                     </div>
                   );

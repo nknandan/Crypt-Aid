@@ -34,11 +34,13 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      const approval = temp.tempObj.isApproved;
+      //   console.log(temp);
+      const mail = temp.tempObj.donatorEmail;
+      console.log(mail);
       const nm = temp.tempObj.name;
       const u = await db
         .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { isApproved: approval } });
+        .updateOne({ name: nm }, { $set: { donatorEmail: mail } });
       console.log(u);
       res.json({ u });
     } catch (error) {
