@@ -96,22 +96,23 @@ export default function NewCampaign() {
     }
 
     // TODO Add Campaign to MongoDB also.
-    await axios
-      .post(process.env.PATH_LINK + "api/campaign/create", {
-        name: data.campaignName,
-        description: data.description,
-        imageUrl: data.imageUrl,
-        minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
-        targetAmount: web3.utils.toWei(data.target, "ether"),
-      })
-      .then((res) => {
-        console.log("result ==   " + res.data);
-        // setResult(res.data.result);
-      })
-      .catch((error) => {
-        console.log("ERROR in NOW");
-        console.log(error);
-      });
+    // !!! DELETE BELOW LINES...
+    // await axios
+    //   .post(process.env.PATH_LINK + "api/campaign/create", {
+    //     name: data.campaignName,
+    //     description: data.description,
+    //     imageUrl: data.imageUrl,
+    //     minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
+    //     targetAmount: web3.utils.toWei(data.target, "ether"),
+    //   })
+    //   .then((res) => {
+    //     console.log("result ==   " + res.data);
+    //     // setResult(res.data.result);
+    //   })
+    //   .catch((error) => {
+    //     console.log("ERROR in NOW");
+    //     console.log(error);
+    //   });
   }
 
   return (
@@ -128,25 +129,13 @@ export default function NewCampaign() {
               <ArrowBackIcon mr={2} />
               <NextLink href="/"> Back to Home</NextLink>
             </Text>
-            <Image
-              src={"/new2.png"}
-              alt=""
-              objectFit="contain"
-              w="30vw"
-              h="60vh"
-              my={"auto"}
-            />
+            <Image src={"/new2.png"} alt="" objectFit="contain" w="30vw" h="60vh" my={"auto"} />
           </Box>
           <Stack spacing={8} py={12} px={6} w={"40vw"}>
             <Stack>
               <Heading fontSize={"4xl"}>Create a campaign</Heading>
             </Stack>
-            <Box
-              rounded={"2xl"}
-              bg={useColorModeValue("white", "gray.700")}
-              boxShadow={"lg"}
-              p={8}
-            >
+            <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={4}>
                   <FormControl id="campaignName">
@@ -195,9 +184,7 @@ export default function NewCampaign() {
                       </InputRightAddon>
                     </InputGroup>
                     {minContriInUSD ? (
-                      <FormHelperText>
-                        ~$ {getETHPriceInUSD(ETHPrice, minContriInUSD)}
-                      </FormHelperText>
+                      <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, minContriInUSD)}</FormHelperText>
                     ) : null}
                   </FormControl>
                   <FormControl id="target">
@@ -217,11 +204,7 @@ export default function NewCampaign() {
                         <span>ETH</span>
                       </InputRightAddon>
                     </InputGroup>
-                    {targetInUSD ? (
-                      <FormHelperText>
-                        ~$ {getETHPriceInUSD(ETHPrice, targetInUSD)}
-                      </FormHelperText>
-                    ) : null}
+                    {targetInUSD ? <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, targetInUSD)}</FormHelperText> : null}
                   </FormControl>
 
                   {error ? (
@@ -237,10 +220,7 @@ export default function NewCampaign() {
                   errors.target ? (
                     <Alert status="error">
                       <AlertIcon color={"red"} />
-                      <AlertDescription mr={2}>
-                        {" "}
-                        All Fields are Required
-                      </AlertDescription>
+                      <AlertDescription mr={2}> All Fields are Required</AlertDescription>
                     </Alert>
                   ) : null}
                   <Stack spacing={10}>
@@ -274,9 +254,7 @@ export default function NewCampaign() {
                         </Button>
                         <Alert status="warning" bgColor={"red.100"}>
                           <AlertIcon color={"red"} />
-                          <AlertDescription mr={2}>
-                            Connect your wallet to create campaigns
-                          </AlertDescription>
+                          <AlertDescription mr={2}>Connect your wallet to create campaigns</AlertDescription>
                         </Alert>
                       </Stack>
                     )}
