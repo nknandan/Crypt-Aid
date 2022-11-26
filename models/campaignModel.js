@@ -8,6 +8,6 @@ const campaignSchema = new Schema({
   targetAmount: String,
 });
 
-const Campaign = models.Campaign || model("Campaign", campaignSchema);
+const CampaignModel = models.Campaign || model("Campaign", campaignSchema);
 
-export default Campaign;
+export default CampaignModel;

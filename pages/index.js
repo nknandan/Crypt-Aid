@@ -85,7 +85,7 @@ function CampaignCardNew({
   users,
   dbCamp,
 }) {
-  var em = "";
+  var e;
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -103,7 +103,7 @@ function CampaignCardNew({
     }
     //console.log(email);
   }
-  function findUsername() {
+  async function findUsername() {
     for (var i = 0; i < users.length; i++) {
       if (users[i].email == email) {
         setUsername(users[i].username);
@@ -113,8 +113,11 @@ function CampaignCardNew({
   }
 
   useEffect(() => {
-    findEmail();
-    findUsername();
+    const fetchData = async () => {
+      await findEmail();
+      await findUsername();
+    };
+    fetchData();
   }, []);
 
   return (
