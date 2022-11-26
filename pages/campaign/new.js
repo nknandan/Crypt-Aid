@@ -85,6 +85,7 @@ export default function NewCampaign() {
           creatorEmail: o.email,
           isApproved: false,
           isActive: false,
+          donatorEmail: [],
         }),
       });
 
@@ -94,24 +95,6 @@ export default function NewCampaign() {
       setError(err.message);
       console.log(err);
     }
-
-    // TODO Add Campaign to MongoDB also.
-    await axios
-      .post(process.env.PATH_LINK + "api/campaign/create", {
-        name: data.campaignName,
-        description: data.description,
-        imageUrl: data.imageUrl,
-        minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
-        targetAmount: web3.utils.toWei(data.target, "ether"),
-      })
-      .then((res) => {
-        console.log("result ==   " + res.data);
-        // setResult(res.data.result);
-      })
-      .catch((error) => {
-        console.log("ERROR in NOW");
-        console.log(error);
-      });
   }
 
   return (

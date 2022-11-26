@@ -6,7 +6,11 @@ import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useWindowSize } from "react-use";
-import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getETHPrice";
+import {
+  getETHPrice,
+  getETHPriceInUSD,
+  getWEIPriceInUSD,
+} from "../../lib/getETHPrice";
 import {
   Box,
   Image,
@@ -52,12 +56,21 @@ import web3 from "../../smart-contract/web3";
 import Campaign from "../../smart-contract/campaign";
 import factory from "../../smart-contract/factory";
 import { redirect } from "next/dist/server/api-utils";
+import { connectMongo } from "../../utils/connectMongo";
+import User from "../../models/user";
+import CampaignModel from "../../models/campaignModel";
 
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
   const campaign = Campaign(campaignId);
   const summary = await campaign.methods.getSummary().call();
   const ETHPrice = await getETHPrice();
+  await connectMongo();
+  const users = await User.find();
+  const dbCamp = await CampaignModel.find();
+
+  // console.log(users);
+  // console.log(dbCamp);
 
   return {
     props: {
@@ -72,6 +85,8 @@ export async function getServerSideProps({ params }) {
       image: summary[7],
       target: summary[8],
       ETHPrice,
+      users: JSON.parse(JSON.stringify(users)),
+      dbCamp: JSON.parse(JSON.stringify(dbCamp)),
     },
   };
 }
@@ -102,7 +117,11 @@ function StatsCard(props) {
         <Flex justifyContent={"space-between"}>
           <Box pl={{ base: 2, md: 4 }}>
             <StatLabel fontWeight={"medium"}>{title}</StatLabel>
-            <StatNumber fontSize={"base"} fontWeight={"bold"} maxW={{ base: "	10rem", sm: "sm" }}>
+            <StatNumber
+              fontSize={"base"}
+              fontWeight={"bold"}
+              maxW={{ base: "	10rem", sm: "sm" }}
+            >
               {stat}
             </StatNumber>
           </Box>
@@ -124,6 +143,8 @@ export default function CampaignSingle({
   image,
   target,
   ETHPrice,
+  users,
+  dbCamp,
 }) {
   const { handleSubmit, register, formState, reset, getValues } = useForm({
     mode: "onChange",
@@ -142,6 +163,25 @@ export default function CampaignSingle({
         from: accounts[0],
         value: web3.utils.toWei(data.value, "ether"),
       });
+      const u = localStorage.getItem("email");
+      // console.log(u);
+      var tempObj = {};
+      for (var i = 0; i < dbCamp.length; i++) {
+        if (dbCamp[i].name == name) tempObj = dbCamp[i];
+      }
+      tempObj["donatorEmail"].push(u);
+      try {
+        fetch("/api/campaign/update", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ tempObj }),
+        });
+      } catch (err) {
+        setError(err.message);
+        console.log(err);
+      }
       router.push(`/campaign/${id}`);
       setAmountInUSD(null);
       reset("", {
@@ -419,26 +459,66 @@ export default function CampaignSingle({
             </Stack>
           </Container>
         </Box> */}
-        <Flex px={"17.5vw"} direction={"column"} justifyContent={"space-evenly"} gap={"3vw"} marginTop={"5vh"}>
+        <Flex
+          px={"17.5vw"}
+          direction={"column"}
+          justifyContent={"space-evenly"}
+          gap={"3vw"}
+          marginTop={"5vh"}
+        >
           {isSubmitted ? (
-            <Container maxW={"7xl"} columns={{ base: 1, md: 2 }} spacing={{ base: 10, lg: 32 }} py={{ base: 6 }}>
+            <Container
+              maxW={"7xl"}
+              columns={{ base: 1, md: 2 }}
+              spacing={{ base: 10, lg: 32 }}
+              py={{ base: 6 }}
+            >
               <Alert status="success" mt="2">
                 <AlertIcon />
-                <AlertDescription mr={2}> Thank You for your Contribution 🙏</AlertDescription>
-                <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsSubmitted(false)} />
+                <AlertDescription mr={2}>
+                  {" "}
+                  Thank You for your Contribution 🙏
+                </AlertDescription>
+                <CloseButton
+                  position="absolute"
+                  right="8px"
+                  top="8px"
+                  onClick={() => setIsSubmitted(false)}
+                />
               </Alert>
             </Container>
           ) : null}
           <Flex direction={"row"}>
-            <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
-            <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
-              <Heading lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
+            <Image
+              src={image}
+              alt={""}
+              fit={"fill"}
+              borderRadius={"20px"}
+              maxW={"25vw"}
+              maxH={"50vh"}
+            />
+            <Flex
+              ml={"5vw"}
+              justifyContent={"space-evenly"}
+              direction={"column"}
+            >
+              <Heading
+                lineHeight={1.1}
+                fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+              >
                 {name}
               </Heading>
-              <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
+              <Text
+                color={useColorModeValue("gray.500", "gray.200")}
+                fontSize={{ base: "lg" }}
+              >
                 {description}
               </Text>
-              <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
+              <Link
+                color="#0065A1"
+                href={`https://goerli.etherscan.io/address/${id}`}
+                isExternal
+              >
                 View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
               </Link>
             </Flex>
@@ -471,9 +551,16 @@ export default function CampaignSingle({
               <StatNumber>
                 <Box fontSize={"2xl"} maxW={{ base: "	15rem", sm: "sm" }} pt="2">
                   <Text as="span" fontWeight={"bold"}>
-                    {balance > 0 ? web3.utils.fromWei(balance, "ether") : "0, Become a Donor 😄"}
+                    {balance > 0
+                      ? web3.utils.fromWei(balance, "ether")
+                      : "0, Become a Donor 😄"}
                   </Text>
-                  <Text as="span" display={balance > 0 ? "inline" : "none"} pr={2} fontWeight={"bold"}>
+                  <Text
+                    as="span"
+                    display={balance > 0 ? "inline" : "none"}
+                    pr={2}
+                    fontWeight={"bold"}
+                  >
                     {" "}
                     ETH
                   </Text>
@@ -528,7 +615,11 @@ export default function CampaignSingle({
                   </Button>
                 </NextLink>
 
-                <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+                <AlertDialog
+                  isOpen={isOpen}
+                  leastDestructiveRef={cancelRef}
+                  onClose={onClose}
+                >
                   <AlertDialogOverlay>
                     <AlertDialogContent>
                       <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -536,7 +627,8 @@ export default function CampaignSingle({
                       </AlertDialogHeader>
 
                       <AlertDialogBody>
-                        This feature is currently being developed and is not ready for use.
+                        This feature is currently being developed and is not
+                        ready for use.
                       </AlertDialogBody>
 
                       <AlertDialogFooter>
@@ -550,8 +642,8 @@ export default function CampaignSingle({
               </>
 
               <Text fontSize={"sm"}>
-                * You can see where these funds are being used & if you have contributed you can also approve those
-                Withdrawal Requests :)
+                * You can see where these funds are being used & if you have
+                contributed you can also approve those Withdrawal Requests :)
               </Text>
             </Stack>
             <Stack
@@ -573,7 +665,9 @@ export default function CampaignSingle({
               <Box mt={5}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <FormControl id="value">
-                    <FormLabel>Amount in Ether you want to contribute</FormLabel>
+                    <FormLabel>
+                      Amount in Ether you want to contribute
+                    </FormLabel>
                     <InputGroup>
                       {" "}
                       <Input
@@ -588,7 +682,11 @@ export default function CampaignSingle({
                       />{" "}
                       <InputRightAddon children="ETH" />
                     </InputGroup>
-                    {amountInUSD ? <FormHelperText>~$ {getETHPriceInUSD(ETHPrice, amountInUSD)}</FormHelperText> : null}
+                    {amountInUSD ? (
+                      <FormHelperText>
+                        ~$ {getETHPriceInUSD(ETHPrice, amountInUSD)}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
 
                   {error ? (
@@ -619,7 +717,9 @@ export default function CampaignSingle({
                     ) : (
                       <Alert status="warning" mt={4} bgColor={"red.100"}>
                         <AlertIcon color={"red"} />
-                        <AlertDescription mr={2}>Please Connect Your Wallet to Contribute</AlertDescription>
+                        <AlertDescription mr={2}>
+                          Please Connect Your Wallet to Contribute
+                        </AlertDescription>
                       </Alert>
                     )}
                   </Stack>
@@ -630,26 +730,34 @@ export default function CampaignSingle({
           <SimpleGrid columns={{ base: 2 }} spacing={{ base: 5 }}>
             <StatsCard
               title={"Minimum Contribution"}
-              stat={`${web3.utils.fromWei(minimumContribution, "ether")} ETH ($${getWEIPriceInUSD(
-                ETHPrice,
-                minimumContribution
-              )})`}
-              info={"You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"}
+              stat={`${web3.utils.fromWei(
+                minimumContribution,
+                "ether"
+              )} ETH ($${getWEIPriceInUSD(ETHPrice, minimumContribution)})`}
+              info={
+                "You must contribute at least this much in Wei ( 1 ETH = 10 ^ 18 Wei) to become an approver"
+              }
             />
             <StatsCard
               title={"Wallet Address of Campaign Creator"}
               stat={manager}
-              info={"The Campaign Creator created the campaign and can create requests to withdraw money."}
+              info={
+                "The Campaign Creator created the campaign and can create requests to withdraw money."
+              }
             />
             <StatsCard
               title={"Number of Requests"}
               stat={requestsCount}
-              info={"A request tries to withdraw money from the contract. Requests must be approved by approvers"}
+              info={
+                "A request tries to withdraw money from the contract. Requests must be approved by approvers"
+              }
             />
             <StatsCard
               title={"Number of Approvers"}
               stat={approversCount}
-              info={"Number of people who have already donated to this campaign"}
+              info={
+                "Number of people who have already donated to this campaign"
+              }
             />
           </SimpleGrid>
         </Flex>
