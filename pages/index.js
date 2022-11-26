@@ -73,19 +73,8 @@ const Feature = ({ title, text, icon }) => {
   );
 };
 
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-  users,
-  dbCamp,
-}) {
-  var e;
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
+  var emmmmmmm = "";
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -94,19 +83,20 @@ function CampaignCardNew({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) {
         // console.log("IN IF");
-        // console.log(dbCamp[i].creatorEmail);
         setEmail(dbCamp[i].creatorEmail);
-        console.log("EMAIL:");
-        console.log(email);
-        break;
+        // console.log("EMAIL:");
+        // console.log(email);
+        return dbCamp[i].creatorEmail;
       }
     }
-    //console.log(email);
+    return;
   }
-  async function findUsername() {
+  async function findUsername(tempEmail) {
     for (var i = 0; i < users.length; i++) {
-      if (users[i].email == email) {
-        setUsername(users[i].username);
+      if (users[i].email == tempEmail) {
+        const tempUsername = users[i].username;
+        setUsername(tempUsername);
+        return tempUsername;
         break;
       }
     }
@@ -114,11 +104,13 @@ function CampaignCardNew({
 
   useEffect(() => {
     const fetchData = async () => {
-      await findEmail();
-      await findUsername();
+      const tempEmail = await findEmail();
+      setEmail(tempEmail);
+      const tempUsername = await findUsername(tempEmail);
+      setUsername(tempUsername);
     };
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <NextLink href={`/campaign/${id}`}>
@@ -162,17 +154,13 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {username} ✅
+                  7 hours ago by {username} ✅
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
@@ -183,12 +171,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -198,11 +181,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -222,13 +201,7 @@ function CampaignCardNew({
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress
-              colorScheme="blue"
-              size="sm"
-              value={balance}
-              max={target}
-              mt="2"
-            />
+            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
           </Box>
         </Box>
       </Box>
@@ -244,9 +217,7 @@ export default function Home({ campaigns, users, dbCamp }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -259,11 +230,7 @@ export default function Home({ campaigns, users, dbCamp }) {
   }
 
   function handleShowMore() {
-    setCampaignListNumber(
-      campaignListNumber >= campaignList.length
-        ? campaignListNumber
-        : campaignListNumber + 1
-    );
+    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
   }
 
   function getUser() {
@@ -298,19 +265,11 @@ export default function Home({ campaigns, users, dbCamp }) {
     <div>
       <Head>
         <title>CryptAid</title>
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container
-          py={{ base: "4", md: "12" }}
-          maxW={"7xl"}
-          align={"left"}
-          position={"relative"}
-        >
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}>
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -348,14 +307,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               Create Campaign
             </Button>
           </NextLink>
-          <Img
-            position={"absolute"}
-            right={40}
-            top={53}
-            src={"/landing1.png"}
-            roundedTop="lg"
-            objectFit="cover"
-          />
+          <Img position={"absolute"} right={40} top={53} src={"/landing1.png"} roundedTop="lg" objectFit="cover" />
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
           <HStack spacing={2} justifyContent={"space-between"}>
@@ -406,8 +358,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {campaignList.length > 3 &&
-          campaignListNumber != campaignList.length ? (
+          {campaignList.length > 3 && campaignListNumber != campaignList.length ? (
             <Button
               display={{ sm: "inline-flex" }}
               w={"200px"}
@@ -449,9 +400,7 @@ export default function Home({ campaigns, users, dbCamp }) {
             <Feature
               icon={<Icon as={FcShare} w={10} h={10} />}
               title={"SHARE"}
-              text={
-                "We let you share your favorite campaigns with your near and dear ones."
-              }
+              text={"We let you share your favorite campaigns with your near and dear ones."}
             />
             <Feature
               icon={<Icon as={FcMoneyTransfer} w={10} h={10} />}
@@ -472,19 +421,12 @@ export default function Home({ campaigns, users, dbCamp }) {
           py={"20px"}
           position={"relative"}
         >
-          <Text
-            color={"white"}
-            fontSize={"2rem"}
-            mx={"20px"}
-            fontWeight={"600"}
-            pb={"10px"}
-          >
+          <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
             Feeling Inspired ?
           </Text>
           <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-            Let`s make a difference together. You can raise money or <br /> make
-            a donation, and our platform will let you do that <br />{" "}
-            effortlessly anywhere in the world.
+            Let`s make a difference together. You can raise money or <br /> make a donation, and our platform will let
+            you do that <br /> effortlessly anywhere in the world.
           </Text>
           <NextLink href="/campaign/new">
             <Button
