@@ -40,6 +40,8 @@ export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
   await connectMongo();
   const campaigns = await factory.methods.getDeployedCampaigns().call();
+
+  // ! FETCHING FROM DATABASE...
   const dbCampaigns = await db.collection("campaigns").find().toArray();
   const dbUsers = await db.collection("users").find().toArray();
 
@@ -82,7 +84,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   async function findEmail() {
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) {
-        // console.log("IN IF");
+        // console.log("IN IF");3333333333333
         setEmail(dbCamp[i].creatorEmail);
         // console.log("EMAIL:");
         // console.log(email);

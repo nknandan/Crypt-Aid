@@ -44,17 +44,62 @@ import Campaign from "../smart-contract/campaign";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
+import { connectToDatabase } from "../lib/mongodb";
+import { connectMongo } from "../utils/connectMongo";
 
 export async function getServerSideProps(context) {
+  const { db } = await connectToDatabase();
+  await connectMongo();
   const campaigns = await factory.methods.getDeployedCampaigns().call();
-  console.log(campaigns);
+
+  // ! FETCHING FROM DATABASE...
+  const dbCampaigns = await db.collection("campaigns").find().toArray();
+  const dbUsers = await db.collection("users").find().toArray();
 
   return {
-    props: { campaigns },
+    props: {
+      campaigns,
+      dbUsers: JSON.parse(JSON.stringify(dbUsers)),
+      dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+    },
   };
 }
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
+  var emmmmmmm = "";
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  async function findEmail() {
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) {
+        setEmail(dbCamp[i].creatorEmail);
+        return dbCamp[i].creatorEmail;
+      }
+    }
+    return;
+  }
+  async function findUsername(tempEmail) {
+    for (var i = 0; i < dbUsers.length; i++) {
+      if (dbUsers[i].email == tempEmail) {
+        const tempUsername = dbUsers[i].username;
+        setUsername(tempUsername);
+        return tempUsername;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tempEmail = await findEmail();
+      setEmail(tempEmail);
+      const tempUsername = await findUsername(tempEmail);
+      setUsername(tempUsername);
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -103,7 +148,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                   c/CommunityName
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {creatorId} ✅
+                  6 hours ago by {username} ✅
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
@@ -159,7 +204,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
-export default function Home({ campaigns }) {
+export default function Home({ campaigns, dbUsers, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [newButton, setNewButton] = useState(1);
@@ -256,6 +301,8 @@ export default function Home({ campaigns }) {
                             target={el[8]}
                             balance={el[1]}
                             ethPrice={ethPrice}
+                            dbUsers={dbUsers}
+                            dbCamp={dbCamp}
                           />
                         </div>
                       );
@@ -277,6 +324,8 @@ export default function Home({ campaigns }) {
                             target={el[8]}
                             balance={el[1]}
                             ethPrice={ethPrice}
+                            dbUsers={dbUsers}
+                            dbCamp={dbCamp}
                           />
                         </div>
                       );
