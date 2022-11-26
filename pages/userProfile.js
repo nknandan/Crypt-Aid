@@ -554,6 +554,7 @@ function ActiveCampaigns({
 function PendingCampaigns({
   setActivePending,
   campaignList,
+  campaignList1,
   campaigns,
   ethPrice,
 }) {
@@ -575,25 +576,31 @@ function PendingCampaigns({
       </Flex>
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-          {campaignList
-            .slice(0)
-            .reverse()
-            .map((el, i) => {
-              return (
-                <div key={i}>
-                  <CampaignCardNew
-                    name={el[5]}
-                    description={el[6]}
-                    creatorId={el[4]}
-                    imageURL={el[7]}
-                    id={campaigns[campaignList.length - 1 - i]}
-                    target={el[8]}
-                    balance={el[1]}
-                    ethPrice={ethPrice}
-                  />
-                </div>
-              );
-            })}
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              // console.log(el[5]);
+              // console.log(campaignList1[k].name);
+              if (
+                el[5] == campaignList1[k].name &&
+                campaignList1[k].isApproved == false
+              ) {
+                return (
+                  <div key={i}>
+                    <CampaignCardNew
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={campaigns[campaignList.length - 1 - i]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
         </SimpleGrid>
       </Flex>
     </Flex>
@@ -865,6 +872,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                     <PendingCampaigns
                       setActivePending={setActivePending}
                       campaignList={campaignList}
+                      campaignList1={campaignList1}
                       campaigns={campaigns}
                       ethPrice={ethPrice}
                     />
