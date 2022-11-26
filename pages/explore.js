@@ -57,9 +57,11 @@ export async function getServerSideProps(context) {
   const dbUsers = await db.collection("users").find().toArray();
 
   return {
-    props: { campaigns },
-    dbUsers: JSON.parse(JSON.stringify(dbUsers)),
-    dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+    props: {
+      campaigns,
+      dbUsers: JSON.parse(JSON.stringify(dbUsers)),
+      dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+    },
   };
 }
 
@@ -79,9 +81,9 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
     return;
   }
   async function findUsername(tempEmail) {
-    for (var i = 0; i < users.length; i++) {
+    for (var i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == tempEmail) {
-        const tempUsername = users[i].username;
+        const tempUsername = dbUsers[i].username;
         setUsername(tempUsername);
         return tempUsername;
       }
