@@ -538,9 +538,11 @@ function ApprovedCampaigns({
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              // console.log(el[5]);
-              // console.log(campaignList1[k].name);
-              if (campaignList1[k].isApproved == false) {
+              if (
+                campaignList1[k].isApproved == false &&
+                campaignList1[k].name == el[5]
+              ) {
+                console.log(campaignList1[k]);
                 return (
                   <div key={i}>
                     <PendingCard
@@ -593,7 +595,10 @@ function PendingCampaigns({
             for (var k = 0; k < campaignList1.length; k++) {
               // console.log(el[5]);
               // console.log(campaignList1[k].name);
-              if (campaignList1[k].isApproved == true) {
+              if (
+                campaignList1[k].isApproved == true &&
+                campaignList1[k].name == el[5]
+              ) {
                 return (
                   <div key={i}>
                     <ApprovedCard
@@ -657,7 +662,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          console.log(users[i]);
+          // console.log(users[i]);
           setUser(users[i]);
           break;
         }
@@ -692,8 +697,8 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     setApprovedNumber(approvedNumberTemp);
     setNotApprovedNumber(notApprovedNumberTemp);
     // console.log(totalNumber);
-    console.log(approvedNumber);
-    console.log(notApprovedNumber);
+    // console.log(approvedNumber);
+    // console.log(notApprovedNumber);
   }
 
   useEffect(() => {
