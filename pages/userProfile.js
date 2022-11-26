@@ -535,7 +535,7 @@ function ActiveCampaigns({
                       description={el[6]}
                       creatorId={el[4]}
                       imageURL={el[7]}
-                      id={campaigns[campaignList.length - 1 - i]}
+                      id={campaigns[campaignList.length - 1 - i - k]}
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
@@ -591,7 +591,7 @@ function PendingCampaigns({
                       description={el[6]}
                       creatorId={el[4]}
                       imageURL={el[7]}
-                      id={campaigns[campaignList.length - 1 - i]}
+                      id={campaigns[campaignList.length - 1 - i + k]}
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}

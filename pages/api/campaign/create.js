@@ -30,7 +30,20 @@ export default async function addCampaign(req, res) {
       console.log(error);
       res.json({ error });
     }
-  } else {
-    // Handle any other HTTP method
+  } else if (req.method == "PUT") {
+    try {
+      const { db } = await connectToDatabase();
+      const temp = req.body;
+      const approval = temp.tempObj.isApproved;
+      const nm = temp.tempObj.name;
+      const u = await db
+        .collection("campaigns")
+        .updateOne({ name: nm }, { $set: { isApproved: approval } });
+      console.log(u);
+      res.json({ u });
+    } catch (error) {
+      console.log(error);
+      res.json({ error });
+    }
   }
 }
