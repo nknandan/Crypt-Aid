@@ -754,7 +754,9 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               left={"25vw"}
             >
               <Img
-                src={obj.picture}
+                src={
+                  "https://th.bing.com/th/id/OIP.-km6Zix904lcDbUVKEy0yAHaHa?pid=ImgDet&rs=1"
+                }
                 alt="Profile Picture"
                 h={"19vh"}
                 w={"19vh"}
@@ -770,13 +772,13 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               left={"35vw"}
             >
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {obj.nickname}
+                Administrator
               </Text>
-              <Text fontSize={15} fontWeight={300} mt={-2}>
+              {/* <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
-              </Text>
+              </Text> */}
             </Flex>
-            <Button
+            {/* <Button
               w={"56px"}
               h={"56px"}
               bgColor={"gray.300"}
@@ -790,7 +792,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               }}
             >
               <Img objectFit={"contain"} src={"/settings.png"} />
-            </Button>
+            </Button> */}
             {settingsScreen ? (
               <Flex>
                 <SettingsPage setSettingsScreen={setSettingsScreen} />
