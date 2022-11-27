@@ -676,6 +676,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       const o = JSON.parse(localStorage.getItem("user"));
       //console.log(o);
       setObj(o);
+      console.log(obj);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
           // console.log(users[i]);
@@ -684,6 +685,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
         }
         //console.log(JSON.stringify(user));
       }
+      console.log(user);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
