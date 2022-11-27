@@ -19,6 +19,7 @@ import {
   MenuItem,
   Center,
 } from "@chakra-ui/react";
+
 import { useEffect, useState, useRef } from "react";
 import NextLink from "next/link";
 import DarkModeSwitch from "./DarkModeSwitch";
@@ -41,6 +42,7 @@ export default function NavBar() {
     ref: ref,
     handler: () => setUserMenu(0),
   })
+
 
   const getCampaigns = async () => {
     try {

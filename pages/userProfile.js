@@ -755,7 +755,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               left={"25vw"}
             >
               <Img
-                src={user.imageURL}
+                src={user.imageURL ? user.imageURL : obj.picture}
                 alt="Profile Picture"
                 h={"19vh"}
                 w={"19vh"}
@@ -771,7 +771,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               left={"35vw"}
             >
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {user.username}
+                {user.username ? user.username : obj.nickname}
               </Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
@@ -910,7 +910,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
-                  {user.username}
+                  {user.username ? user.username : obj.nickname}
                 </Text>
                 <Center justifyContent={"flex-start"}>
                   <Flex
