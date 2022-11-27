@@ -4,6 +4,7 @@ import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
+import NavBarAdmin from "../components/NavBarAdmin";
 import {
   Heading,
   useColorModeValue,
@@ -14,6 +15,8 @@ import {
   SimpleGrid,
   InputRightAddon,
   Box,
+  FormControl,
+  FormLabel,
   InputGroup,
   Input,
   Img,
@@ -459,57 +462,6 @@ function PendingCard({
   );
 }
 
-function LatestActivity({ name, description, imageURL }) {
-  return (
-    <NextLink href={`/explore`}>
-      <Flex
-        h={"20vh"}
-        borderRadius={20}
-        p={0}
-        bgColor={"gray.200"}
-        w={"100%"}
-        transition={"transform 0.3s ease"}
-        boxShadow="sm"
-        _hover={{
-          transform: "translateY(-4px)",
-        }}
-        cursor={"pointer"}
-        my={4}
-      >
-        <Img
-          src="/dummy.png"
-          h={"100%"}
-          minW={"40%"}
-          maxW={"40%"}
-          objectFit={"cover"}
-          borderRadius={20}
-        />
-        <Flex
-          flexDirection={"column"}
-          p={"4%"}
-          justifyContent={"space-between"}
-        >
-          <Flex flexDirection={"column"}>
-            <Text fontSize={24} fontWeight={"500"}>
-              {name}
-            </Text>
-            <Text noOfLines={3} lineHeight={"20px"}>
-              {description}
-              {description}
-              {description}
-            </Text>
-          </Flex>
-          <Flex w={"100%"} justifyContent={"flex-end"}>
-            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>
-              Read More
-            </Button>
-          </Flex>
-        </Flex>
-      </Flex>
-    </NextLink>
-  );
-}
-
 function ApprovedCampaigns({
   setApprovedPending,
   campaignList,
@@ -622,17 +574,16 @@ function PendingCampaigns({
   );
 }
 
-export default function UserProfile({ campaigns, users, dbCamp }) {
+export default function adminProfile({ campaigns, users, dbCamp }) {
   const [approvedPending, setApprovedPending] = useState(false);
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
-  const [campaignList1, setCampaignList1] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
-  const [campaignListNumber, setCampaignListNumber] = useState(0);
-  const [user, setUser] = useState({});
-  const [obj, setObj] = useState({});
   const [approvedNumber, setApprovedNumber] = useState();
   const [notApprovedNumber, setNotApprovedNumber] = useState();
+  const [adminLogIn, setAdminLogIn] = useState(1);
+  const adminmails = ["admin1", "admin2", "admin3", "admin4"];
+  const adminpass = ["admin1pass", "admin2pass", "admin3pass", "admin4pass"];
 
   async function getSummary() {
     try {
@@ -701,6 +652,10 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     // console.log(notApprovedNumber);
   }
 
+  function checkAdminCredentials() {
+    
+  }
+
   useEffect(() => {
     getUser();
     getSummary();
@@ -719,16 +674,58 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container
-          maxWidth={"100vw"}
-          padding={0}
-          margin={0}
-          mt={-5}
-          alignItems={"flex-start"}
+        {adminLogIn ? (<Box
+          height={"80%"}
+          width={"35vw"}
+          bg={"gray.100"}
           display={"flex"}
-          flexDirection={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          border={"1px"}
+          borderColor={"gray"}
+          borderRadius={10}
         >
-          <Flex height={"200vh"} width={"20vw"} bgColor={"gray.200"}></Flex>
+          <Flex height={"60vh"} width={"30vw"} flexDirection={"column"} align={"center"} mt={"15vh"}>
+            <Heading fontSize={"50px"}>Welcome Admin !</Heading>
+            <Text fontSize={"20px"} color={"gray.500"}>
+              Help the people, make big changes
+            </Text>
+            <form>
+              <FormControl id="value" mt={"5vh"} ml={"-25%"}>
+                <FormLabel>Email</FormLabel>
+                <InputGroup mt={-2} w={"150%"}>
+                  <Input type="string" borderColor={"gray.300"} placeholder={"johnnysilverhand@gmail.com"} />
+                </InputGroup>
+              </FormControl>
+              <FormControl id="password" type="password" mt={"3vh"} ml={"-25%"}>
+                <FormLabel>Password</FormLabel>
+                <InputGroup mt={-2} w={"150%"}>
+                  <Input type="password" borderColor={"gray.300"} placeholder={"xxxxxxxx"} />
+                </InputGroup>
+              </FormControl>
+            </form>
+            <Button
+              w={"50%"}
+              bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+              color={"white"}
+              _hover={{
+                bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                boxShadow: "xl",
+              }}
+              mt={"5vh"}
+              onClick={() => {checkAdminCredentials()}}
+            >
+              Login
+            </Button>
+          </Flex>
+        </Box>) : (<Container maxW={"100vw"} minH={"100vh"} pos={"fixed"} bgColor={"white"} top={"0"} zIndex={"1000"} p={0} m={0} alignItems={"flex-start"}
+          display={"flex"}
+          flexDirection={"row"}>
+          <NavBarAdmin />
+          <Flex height={"200vh"} width={"20vw"} bgColor={"gray.100"}
+            borderRightWidth={1}
+            borderRightColor={"gray.500"}>
+          </Flex>
           <Flex
             height={"200vh"}
             width={"55vw"}
@@ -881,34 +878,8 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             flexDir={"column"}
             padding={10}
           >
-            <Center
-              bgColor={"gray.200"}
-              borderRadius={10}
-              p={5}
-              py={2}
-              justifyContent={"space-evenly"}
-            >
-              <Img src={"/user.png"} height={10} mr={5} />
-              <Flex flexDir={"column"}>
-                <Text fontSize={22} fontWeight={600} noOfLines={1}>
-                  {user.username}
-                </Text>
-                <Center justifyContent={"flex-start"}>
-                  <Flex
-                    h={2}
-                    w={2}
-                    borderRadius={"50%"}
-                    bgColor={"green.300"}
-                    mr={3}
-                  ></Flex>
-                  <Text fontSize={16} color={"gray.500"}>
-                    Online
-                  </Text>
-                </Center>
-              </Flex>
-            </Center>
           </Flex>
-        </Container>
+        </Container>)}
       </main>
     </div>
   );

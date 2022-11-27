@@ -62,6 +62,7 @@ function SettingsPage({ setSettingsScreen, user }) {
 
   const [image, setImage] = useState("");
   const [createObjectURL, setCreateObjectURL] = useState(null);
+  const o = JSON.parse(localStorage.getItem("user"));
 
   const router = useRouter();
 
@@ -135,39 +136,20 @@ function SettingsPage({ setSettingsScreen, user }) {
     }
   }
 
-  useEffect(() => {
-    getUser();
-    getSummary();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getSummary() {
-    try {
-      const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
-      );
-      const ETHPrice = await getETHPrice();
-      updateEthPrice(ETHPrice);
-      setCampaignList(summary);
-      setCampaignListNumber(3);
-      return summary;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   function getUser() {
     try {
-      const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
+      console.log(o);
       setObj(o);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
@@ -218,7 +200,7 @@ function SettingsPage({ setSettingsScreen, user }) {
               color={"gray.600"}
               justifyContent={"space-between"}
             >
-              {user.email}
+              {o.email}
               <Img height={7} src={"/mail.png"} />
             </Flex>
           </Flex>
@@ -231,7 +213,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                 type="string"
                 borderColor={"gray.300"}
                 placeholder={"Enter a Username"}
-                defaultValue={user.username}
+                defaultValue={o.nickname}
                 onChange={(e) => {
                   setUsername(e.currentTarget.value);
                 }}
@@ -251,7 +233,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter a First Name"}
-                  defaultValue={user.firstname}
+                  defaultValue={o.firstname}
                   onChange={(e) => {
                     setFirstName(e.currentTarget.value);
                   }}
@@ -270,7 +252,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter a Last Name"}
-                  defaultValue={user.lastname}
+                  defaultValue={o.lastname}
                   onChange={(e) => {
                     setLastName(e.currentTarget.value);
                   }}
@@ -293,7 +275,7 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Center w={"100%"}>
             <Center mt={8} ml={8} pos="relative">
               <Img
-                src={user.imageURL}
+                src={o.picture}
                 h={"25vh"}
                 borderRadius={"50%"}
                 objectFit={"cover"}
