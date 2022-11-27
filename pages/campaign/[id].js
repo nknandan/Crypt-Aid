@@ -157,13 +157,35 @@ export default function CampaignSingle({
   const { width, height } = useWindowSize();
   async function onSubmit(data) {
     try {
+      const u = localStorage.getItem("email");
+      var tempUser = {};
+      for (var k = 0; k < users.length; k++) {
+        if (users[k].email == u) tempUser = users[k];
+      }
+      if (tempUser["donatedCampaigns"] == undefined)
+        tempUser["donatedCampaigns"] = [name];
+      else if (tempUser["donatedCampaigns"].includes(name) == false)
+        tempUser["donatedCampaigns"].push(name);
+      try {
+        fetch("/api/user2", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ tempUser }),
+        });
+      } catch (err) {
+        setError(err.message);
+        console.log(err);
+      }
+
       const campaign = Campaign(id);
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contibute().send({
         from: accounts[0],
         value: web3.utils.toWei(data.value, "ether"),
       });
-      const u = localStorage.getItem("email");
+
       // console.log(u);
       var tempObj = {};
       for (var i = 0; i < dbCamp.length; i++) {
