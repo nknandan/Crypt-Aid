@@ -582,6 +582,9 @@ export default function adminProfile({ campaigns, users, dbCamp }) {
   const [approvedNumber, setApprovedNumber] = useState();
   const [notApprovedNumber, setNotApprovedNumber] = useState();
   const [adminLogIn, setAdminLogIn] = useState(1);
+  const [invalidAdminLogIn, setInvalidAdminLogIn] = useState(0);
+  const [adminEnteredMail, setAdminEnteredMail] = useState("");
+  const [adminEnteredPass, setAdminEnteredPass] = useState("");
   const adminmails = ["admin1", "admin2", "admin3", "admin4"];
   const adminpass = ["admin1pass", "admin2pass", "admin3pass", "admin4pass"];
 
@@ -653,7 +656,13 @@ export default function adminProfile({ campaigns, users, dbCamp }) {
   }
 
   function checkAdminCredentials() {
-    
+    if(adminmails.includes(adminEnteredMail) && adminpass.includes(adminEnteredPass)){
+      setAdminLogIn(0);
+      setInvalidAdminLogIn(0);
+    }
+    else{
+      setInvalidAdminLogIn(1);
+    }
   }
 
   useEffect(() => {
@@ -694,13 +703,17 @@ export default function adminProfile({ campaigns, users, dbCamp }) {
               <FormControl id="value" mt={"5vh"} ml={"-25%"}>
                 <FormLabel>Email</FormLabel>
                 <InputGroup mt={-2} w={"150%"}>
-                  <Input type="string" borderColor={"gray.300"} placeholder={"johnnysilverhand@gmail.com"} />
+                  <Input type="string" borderColor={"gray.300"} placeholder={"johnnysilverhand@gmail.com"} onChange={(e) => {
+                    setAdminEnteredMail(e.currentTarget.value);
+                  }} />
                 </InputGroup>
               </FormControl>
               <FormControl id="password" type="password" mt={"3vh"} ml={"-25%"}>
                 <FormLabel>Password</FormLabel>
                 <InputGroup mt={-2} w={"150%"}>
-                  <Input type="password" borderColor={"gray.300"} placeholder={"xxxxxxxx"} />
+                  <Input type="password" borderColor={"gray.300"} placeholder={"xxxxxxxx"} onChange={(e) => {
+                    setAdminEnteredPass(e.currentTarget.value); 
+                  }} />
                 </InputGroup>
               </FormControl>
             </form>
@@ -713,10 +726,11 @@ export default function adminProfile({ campaigns, users, dbCamp }) {
                 boxShadow: "xl",
               }}
               mt={"5vh"}
-              onClick={() => {checkAdminCredentials()}}
+              onClick={() => { checkAdminCredentials() }}
             >
               Login
             </Button>
+            {invalidAdminLogIn ? (<Text color={"red"} mt={10}>The credentials you entered is incorrect. Try again !</Text>) : (<></>)}
           </Flex>
         </Box>) : (<Container maxW={"100vw"} minH={"100vh"} pos={"fixed"} bgColor={"white"} top={"0"} zIndex={"1000"} p={0} m={0} alignItems={"flex-start"}
           display={"flex"}
