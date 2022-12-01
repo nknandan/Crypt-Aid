@@ -55,6 +55,7 @@ function SettingsPage({ setSettingsScreen, user }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [createObjectURL, setCreateObjectURL] = useState(null);
+  const o = JSON.parse(localStorage.getItem("user"));
 
   const router = useRouter();
 
@@ -135,14 +136,18 @@ function SettingsPage({ setSettingsScreen, user }) {
 
   function getUser() {
     try {
-      const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
+      console.log(o);
       setObj(o);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
     }
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
@@ -188,7 +193,7 @@ function SettingsPage({ setSettingsScreen, user }) {
               color={"gray.600"}
               justifyContent={"space-between"}
             >
-              {user.email}
+              {o.email}
               <Img height={7} src={"/mail.png"} />
             </Flex>
           </Flex>
@@ -201,7 +206,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                 type="string"
                 borderColor={"gray.300"}
                 placeholder={"Enter a Username"}
-                defaultValue={user.username}
+                defaultValue={o.nickname}
                 onChange={(e) => {
                   setUsername(e.currentTarget.value);
                 }}
@@ -221,7 +226,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter a First Name"}
-                  defaultValue={user.firstname}
+                  defaultValue={o.firstname}
                   onChange={(e) => {
                     setFirstName(e.currentTarget.value);
                   }}
@@ -240,7 +245,7 @@ function SettingsPage({ setSettingsScreen, user }) {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter a Last Name"}
-                  defaultValue={user.lastname}
+                  defaultValue={o.lastname}
                   onChange={(e) => {
                     setLastName(e.currentTarget.value);
                   }}
@@ -585,6 +590,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       const o = JSON.parse(localStorage.getItem("user"));
       //console.log(o);
       setObj(o);
+      console.log(obj);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
           // console.log(users[i]);
@@ -593,6 +599,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
         }
         //console.log(JSON.stringify(user));
       }
+      console.log(user);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
@@ -656,7 +663,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               left={"25vw"}
             >
               <Img
-                src={user.imageURL}
+                src={user.imageURL ? user.imageURL : obj.picture}
                 alt="Profile Picture"
                 h={"19vh"}
                 w={"19vh"}
@@ -666,7 +673,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             </Center>
             <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
               <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {user.username}
+                {user.username ? user.username : obj.nickname}
               </Text>
               <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
@@ -786,7 +793,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               <Img src={"/user.png"} height={10} mr={5} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
-                  {user.username}
+                  {user.username ? user.username : obj.nickname}
                 </Text>
                 <Center justifyContent={"flex-start"}>
                   <Flex h={2} w={2} borderRadius={"50%"} bgColor={"green.300"} mr={3}></Flex>
