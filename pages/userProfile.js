@@ -422,6 +422,7 @@ function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campai
     console.log("in ACTIVE");
     console.log(campaignList);
     console.log(campaignList1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
@@ -475,6 +476,7 @@ function PendingCampaigns({ setActivePending, campaignList, campaignList1, campa
     console.log("in PENDING");
     console.log(campaignList);
     console.log(campaignList1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
