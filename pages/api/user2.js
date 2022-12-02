@@ -39,9 +39,13 @@ export default async function addUser(req, res) {
       console.log(temp);
       const em = temp.tempUser.email;
       const dc = temp.tempUser.donatedCampaigns;
+      const da = temp.tempUser.donatedAmount;
       const u = await db
         .collection("users")
-        .updateOne({ email: em }, { $set: { donatedCampaigns: dc } });
+        .updateOne(
+          { email: em },
+          { $set: { donatedCampaigns: dc, donatedAmount: da } }
+        );
       console.log(u);
       res.json({ u });
     } catch (error) {

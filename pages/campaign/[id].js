@@ -166,6 +166,11 @@ export default function CampaignSingle({
         tempUser["donatedCampaigns"] = [name];
       else if (tempUser["donatedCampaigns"].includes(name) == false)
         tempUser["donatedCampaigns"].push(name);
+      var amount = getETHPriceInUSD(ETHPrice, amountInUSD);
+      // console.log(amount);
+      if (tempUser["donatedAmount"] == undefined)
+        tempUser["donatedAmount"] = parseFloat(amount);
+      else tempUser["donatedAmount"] += parseFloat(amount);
       try {
         fetch("/api/user2", {
           method: "PUT",
