@@ -33,8 +33,7 @@ import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import CampaignModel from "../models/campaignModel";
 
-export const getServerSideProps = withPageAuthRequired({
-  async getServerSideProps(context) {
+export async function getServerSideProps(context){
     const campaigns = await factory.methods.getDeployedCampaigns().call();
     await connectMongo();
     const users = await User.find();
@@ -46,8 +45,7 @@ export const getServerSideProps = withPageAuthRequired({
         dbCamp: JSON.parse(JSON.stringify(dbCamp)),
       },
     };
-  },
-});
+  };
 
 function SettingsPage({ setSettingsScreen, users }) {
   const [user, setUser] = useState({});
