@@ -426,54 +426,46 @@ function CampaignCardNew({
   );
 }
 
-function LatestActivity({ name, description, imageURL }) {
+function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
+  // console.log(user.donatedCampaigns);
+  // console.log(chainCampaign);
   return (
-    <NextLink href={`/explore`}>
-      <Flex
-        h={"20vh"}
-        borderRadius={20}
-        p={0}
-        bgColor={"gray.200"}
-        w={"100%"}
-        transition={"transform 0.3s ease"}
-        boxShadow="sm"
-        _hover={{
-          transform: "translateY(-4px)",
-        }}
-        cursor={"pointer"}
-        my={4}
-      >
-        <Img
-          src="/dummy.png"
-          h={"100%"}
-          minW={"40%"}
-          maxW={"40%"}
-          objectFit={"cover"}
-          borderRadius={20}
-        />
-        <Flex
-          flexDirection={"column"}
-          p={"4%"}
-          justifyContent={"space-between"}
-        >
-          <Flex flexDirection={"column"}>
-            <Text fontSize={24} fontWeight={"500"}>
-              {name}
-            </Text>
-            <Text noOfLines={3} lineHeight={"20px"}>
-              {description}
-              {description}
-              {description}
-            </Text>
-          </Flex>
-          <Flex w={"100%"} justifyContent={"flex-end"}>
-            <Button bgColor={"blue.200"} fontSize={12} p={3} h={2}>
-              Read More
-            </Button>
-          </Flex>
-        </Flex>
-      </Flex>
-    </NextLink>
+    <Flex
+      h={"20vh"}
+      borderRadius={20}
+      p={0}
+      bgColor={"gray.200"}
+      w={"100%"}
+      transition={"transform 0.3s ease"}
+      boxShadow="sm"
+      _hover={{
+        transform: "translateY(-4px)",
+      }}
+      cursor={"pointer"}
+      my={4}
+    >
+      <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+        {chainCampaign.map((el, i) => {
+          var donatedArr = user.donatedCampaigns;
+          for (var ele in donatedArr) {
+            var camp = donatedArr[ele];
+            for (var j = 0; j < dbCampaign.length; j++) {
+              if (dbCampaign[j].name == camp) {
+                if (el[5] == camp) {
+                  return (
+                    <div>
+                      <p>Name:{el[5]}</p>
+                      <p>Description:{el[6]}</p>
+                      <p>Image:{dbCampaign[j].imageUrl}</p>
+                    </div>
+                  );
+                }
+              }
+            }
+          }
+        })}
+      </SimpleGrid>
+    </Flex>
   );
 }
 
@@ -487,9 +479,9 @@ function ActiveCampaigns({
   var ab;
   // console.log(campaignList1);
   useEffect(() => {
-    console.log("in ACTIVE");
-    console.log(campaignList);
-    console.log(campaignList1);
+    // console.log("in ACTIVE");
+    // console.log(campaignList);
+    // console.log(campaignList1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -663,6 +655,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     try {
       const tempArr = getCampaigns();
       setCampaignList1(tempArr);
+      // console.log(tempArr);
       const summary = await Promise.all(
         campaigns.map((campaign, i) =>
           Campaign(campaigns[i]).methods.getSummary().call()
@@ -686,7 +679,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       const o = JSON.parse(localStorage.getItem("user"));
       //console.log(o);
       setObj(o);
-      console.log(obj);
+      // console.log(obj);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
           // console.log(users[i]);
@@ -695,7 +688,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
         }
         //console.log(JSON.stringify(user));
       }
-      console.log(user);
+      // console.log(user);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
@@ -709,8 +702,8 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       if (dbCamp[i].creatorEmail == u) arr.push(dbCamp[i]);
     }
     setCampaignList1(arr);
-    console.log("HERE");
-    console.log(arr);
+    // console.log("HERE");
+    // console.log(arr);
     return arr;
   }
 
@@ -953,6 +946,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                 dbCampaign={campaignList1}
                 chainCampaign={campaignList}
                 campaigns={campaigns}
+                user={user}
               />
               {/* <LatestActivity
                 name={"Hi alvin"}
