@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import NoSSR from 'react-no-ssr';
 import {
   Heading,
   useBreakpointValue,
@@ -51,9 +52,11 @@ export default function Home({ campaigns }) {
           <Heading as="h2" size="lg" marginBottom={"5vh"}>
             About CryptAid
           </Heading>
-          <PDFDownloadLink document={<PDFFile/>} fileName="FORM">
-            {({loading}) => (loading ? <button>Loading document...</button> : <button>Download</button>)}
-          </PDFDownloadLink>
+          <NoSSR>
+            <PDFDownloadLink document={<PDFFile />} fileName='Donation'>
+              {({ loading }) => (loading ? <button>Loading document...</button> : <button>Download</button>)}
+            </PDFDownloadLink>
+          </NoSSR>
           {/* <PDFFile />    */}
         </Container>
       </main>
