@@ -46,6 +46,7 @@ import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectToDatabase } from "../lib/mongodb";
 import { connectMongo } from "../utils/connectMongo";
+import User from "../models/user";
 
 export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
@@ -54,7 +55,9 @@ export async function getServerSideProps(context) {
 
   // ! FETCHING FROM DATABASE...
   const dbCampaigns = await db.collection("campaigns").find().toArray();
-  const dbUsers = await db.collection("users").find().toArray();
+  const dbUsers = await User.find();
+
+  // console.log(dbUsers);
 
   return {
     props: {
@@ -65,7 +68,18 @@ export async function getServerSideProps(context) {
   };
 }
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
+function CampaignCardNew({
+  name,
+  description,
+  creatorId,
+  imageURL,
+  id,
+  balance,
+  target,
+  ethPrice,
+  dbUsers,
+  dbCamp,
+}) {
   var emmmmmmm = "";
 
   const [username, setUsername] = useState("");
@@ -81,6 +95,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
     return;
   }
   async function findUsername(tempEmail) {
+    // console.log(dbUsers);
     for (var i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == tempEmail) {
         const tempUsername = dbUsers[i].username;
@@ -142,7 +157,11 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+            <Box
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+            >
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -159,7 +178,12 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               </Box>
             </Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+            <Box
+              fontSize="2xl"
+              fontWeight="semibold"
+              as="h4"
+              lineHeight="tight"
+            >
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -169,7 +193,11 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
+                <Text as="span">
+                  {balance > 0
+                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
+                    : "Raised : 0"}
+                </Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -211,10 +239,14 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
 
+  // console.log(dbUsers);
+
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -234,7 +266,10 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
       <Head>
         <title>Explore Campaigns | CryptAid</title>
 
-        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
+        <meta
+          name="description"
+          content="Transparent Crowdfunding in Blockchain"
+        />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -290,22 +325,30 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     .slice(0)
                     .reverse()
                     .map((el, i) => {
-                      return (
-                        <div key={i}>
-                          <CampaignCardNew
-                            name={el[5]}
-                            description={el[6]}
-                            creatorId={el[4]}
-                            imageURL={el[7]}
-                            id={campaigns[campaignList.length - 1 - i]}
-                            target={el[8]}
-                            balance={el[1]}
-                            ethPrice={ethPrice}
-                            dbUsers={dbUsers}
-                            dbCamp={dbCamp}
-                          />
-                        </div>
-                      );
+                      for (var j = 0; j < dbCamp.length; j++) {
+                        // console.log(dbCamp[j].isApproved);
+                        if (
+                          dbCamp[j].name == el[5] &&
+                          dbCamp[j].isApproved == true
+                        ) {
+                          return (
+                            <div key={i}>
+                              <CampaignCardNew
+                                name={el[5]}
+                                description={el[6]}
+                                creatorId={el[4]}
+                                imageURL={el[7]}
+                                id={campaigns[campaignList.length - 1 - i]}
+                                target={el[8]}
+                                balance={el[1]}
+                                ethPrice={ethPrice}
+                                dbUsers={dbUsers}
+                                dbCamp={dbCamp}
+                              />
+                            </div>
+                          );
+                        }
+                      }
                     })
                 : trendingButton == 1
                 ? campaignList
@@ -313,22 +356,30 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                       return b[1] - a[1];
                     })
                     .map((el, i) => {
-                      return (
-                        <div key={i}>
-                          <CampaignCardNew
-                            name={el[5]}
-                            description={el[6]}
-                            creatorId={el[4]}
-                            imageURL={el[7]}
-                            id={campaigns[campaignList.length - 1 - i]}
-                            target={el[8]}
-                            balance={el[1]}
-                            ethPrice={ethPrice}
-                            dbUsers={dbUsers}
-                            dbCamp={dbCamp}
-                          />
-                        </div>
-                      );
+                      for (var j = 0; j < dbCamp.length; j++) {
+                        // console.log(dbCamp[j].isApproved);
+                        if (
+                          dbCamp[j].name == el[5] &&
+                          dbCamp[j].isApproved == true
+                        ) {
+                          return (
+                            <div key={i}>
+                              <CampaignCardNew
+                                name={el[5]}
+                                description={el[6]}
+                                creatorId={el[4]}
+                                imageURL={el[7]}
+                                id={campaigns[campaignList.length - 1 - i]}
+                                target={el[8]}
+                                balance={el[1]}
+                                ethPrice={ethPrice}
+                                dbUsers={dbUsers}
+                                dbCamp={dbCamp}
+                              />
+                            </div>
+                          );
+                        }
+                      }
                     })
                 : {}}
             </SimpleGrid>

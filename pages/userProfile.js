@@ -278,7 +278,7 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Center w={"100%"}>
             <Center mt={8} ml={8} pos="relative">
               <Img
-                src={user.imageURL}
+                src={user.imageURL ? user.imageURL : o.picture}
                 h={"25vh"}
                 borderRadius={"50%"}
                 objectFit={"cover"}
@@ -660,7 +660,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     try {
       const tempArr = getCampaigns();
       setCampaignList1(tempArr);
-      console.log(tempArr);
+      // console.log(tempArr);
       const summary = await Promise.all(
         campaigns.map((campaign, i) =>
           Campaign(campaigns[i]).methods.getSummary().call()
