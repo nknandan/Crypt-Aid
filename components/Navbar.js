@@ -30,6 +30,8 @@ import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
 import { useUser } from "@auth0/nextjs-auth0";
 
+var cName2Id = {};
+
 export default function NavBar() {
   const wallet = useWallet();
   const [campaignList, setCampaignList] = useState([]);
@@ -43,7 +45,6 @@ export default function NavBar() {
     handler: () => setUserMenu(0),
   });
 
-
   const getCampaigns = async () => {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -51,6 +52,13 @@ export default function NavBar() {
         campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
+      console.log("In navbar");
+      console.log(cName2Id);
       return summary;
     } catch (e) {
       console.log(e);
@@ -58,6 +66,8 @@ export default function NavBar() {
   };
 
   const search = (data) => {
+    // console.log("HELLLO");
+    // console.log(data);
     data = data.filter((item) => {
       if (searchQuery == "") return false;
       if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
@@ -152,15 +162,6 @@ export default function NavBar() {
                   placeholder={"Search for campaigns"}
                   onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
-
-                {/* <ul className="list">
-                  {search(campaignList).map((user) => (
-                    <li className="listItem" key={user.id}>
-                      {user["5"]}
-                    </li>
-                  ))}
-                </ul> */}
-                {/* {<SearchTable searchData={search(campaignList)} />} */}
               </InputGroup>
 
               <Button

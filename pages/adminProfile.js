@@ -33,6 +33,8 @@ import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import CampaignModel from "../models/campaignModel";
 
+var cName2Id = {};
+
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
   await connectMongo();
@@ -59,6 +61,11 @@ function SettingsPage({ setSettingsScreen, users }) {
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
       setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
       setCampaignListNumber(3);
       return summary;
     } catch (e) {
@@ -412,7 +419,7 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
                       description={el[6]}
                       creatorId={el[4]}
                       imageURL={el[7]}
-                      id={campaigns[campaignList.length - 1 - i]}
+                      id={cName2Id[el[5]]}
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
@@ -459,7 +466,7 @@ function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, cam
                       description={el[6]}
                       creatorId={el[4]}
                       imageURL={el[7]}
-                      id={campaigns[campaignList.length - 1 - i]}
+                      id={cName2Id[el[5]]}
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
@@ -499,6 +506,11 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
       const ethPrice = await getETHPrice();
       updateEthPrice(ethPrice);
       setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
       setCampaignListNumber(3);
       return summary;
     } catch (e) {
