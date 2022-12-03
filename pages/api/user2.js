@@ -23,11 +23,16 @@ export default async function addUser(req, res) {
   //
   else if (req.method == "POST") {
     try {
-      await connectMongo();
-
-      const user = await User.create(req.body);
-
-      res.json({ user });
+      const { db } = await connectToDatabase();
+      const temp = req.body;
+      console.log(temp);
+      const em = temp.tempUser.email;
+      const cc = temp.tempUser.createdCampaigns;
+      const u = await db
+        .collection("users")
+        .updateOne({ email: em }, { $set: { createdCampaigns: cc } });
+      console.log(u);
+      res.json({ u });
     } catch (error) {
       console.log(error);
       res.json({ error });
@@ -39,9 +44,13 @@ export default async function addUser(req, res) {
       console.log(temp);
       const em = temp.tempUser.email;
       const dc = temp.tempUser.donatedCampaigns;
+      const da = temp.tempUser.donatedAmount;
       const u = await db
         .collection("users")
-        .updateOne({ email: em }, { $set: { donatedCampaigns: dc } });
+        .updateOne(
+          { email: em },
+          { $set: { donatedCampaigns: dc, donatedAmount: da } }
+        );
       console.log(u);
       res.json({ u });
     } catch (error) {
