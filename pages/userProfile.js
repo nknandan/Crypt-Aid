@@ -449,9 +449,14 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
           var donatedArr = user.donatedCampaigns;
           for (var ele in donatedArr) {
             var camp = donatedArr[ele];
+            // console.log(camp);
+            // console.log(dbCampaign);
             for (var j = 0; j < dbCampaign.length; j++) {
+              // console.log(camp);
               if (dbCampaign[j].name == camp) {
+                // console.log(camp);
                 if (el[5] == camp) {
+                  // console.log(el);
                   return (
                     <div>
                       <p>Name:{el[5]}</p>
@@ -655,7 +660,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     try {
       const tempArr = getCampaigns();
       setCampaignList1(tempArr);
-      // console.log(tempArr);
+      console.log(tempArr);
       const summary = await Promise.all(
         campaigns.map((campaign, i) =>
           Campaign(campaigns[i]).methods.getSummary().call()
@@ -943,7 +948,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                 Recent Donations
               </Text>
               <LatestActivity
-                dbCampaign={campaignList1}
+                dbCampaign={dbCamp}
                 chainCampaign={campaignList}
                 campaigns={campaigns}
                 user={user}
