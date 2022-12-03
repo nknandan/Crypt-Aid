@@ -591,134 +591,137 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        {adminLogIn ? (
-          <Box
-            height={"80%"}
-            width={"35vw"}
-            bg={"gray.100"}
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            border={"1px"}
-            borderColor={"gray"}
-            borderRadius={10}
-          >
-            <Flex height={"60vh"} width={"30vw"} flexDirection={"column"} align={"center"} mt={"15vh"}>
-              <Heading fontSize={"50px"}>Welcome Admin !</Heading>
-              <Text fontSize={"20px"} color={"gray.500"}>
-                Help the people, make big changes
-              </Text>
-              <form>
-                <FormControl id="value" mt={"5vh"} ml={"-25%"}>
-                  <FormLabel>Email</FormLabel>
-                  <InputGroup mt={-2} w={"150%"}>
-                    <Input
-                      type="string"
-                      borderColor={"gray.300"}
-                      placeholder={"johnnysilverhand@gmail.com"}
-                      onChange={(e) => {
-                        setAdminEnteredMail(e.currentTarget.value);
-                      }}
-                    />
-                  </InputGroup>
-                </FormControl>
-                <FormControl id="password" type="password" mt={"3vh"} ml={"-25%"}>
-                  <FormLabel>Password</FormLabel>
-                  <InputGroup mt={-2} w={"150%"}>
-                    <Input
-                      type="password"
-                      borderColor={"gray.300"}
-                      placeholder={"xxxxxxxx"}
-                      onChange={(e) => {
-                        setAdminEnteredPass(e.currentTarget.value);
-                      }}
-                    />
-                  </InputGroup>
-                </FormControl>
-              </form>
-              <Button
-                w={"50%"}
-                bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
-                color={"white"}
-                _hover={{
-                  bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
-                  boxShadow: "xl",
-                }}
-                mt={"5vh"}
-                onClick={() => {
-                  checkAdminCredentials();
-                }}
-              >
-                Login
-              </Button>
-              {invalidAdminLogIn ? (
-                <Text color={"red"} mt={10}>
-                  The credentials you entered is incorrect. Try again !
+        <Flex minH={"100vh"}> 
+          {adminLogIn ? (
+            <Box
+              height={"80%"}
+              width={"35vw"}
+              bg={"gray.100"}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              border={"1px"}
+              borderColor={"gray"}
+              borderRadius={10}
+            >
+              <Flex height={"60vh"} width={"30vw"} flexDirection={"column"} align={"center"} mt={"15vh"}>
+                <Heading fontSize={"50px"}>Welcome Admin !</Heading>
+                <Text fontSize={"20px"} color={"gray.500"}>
+                  Help the people, make big changes
                 </Text>
-              ) : (
-                <></>
-              )}
-            </Flex>
-          </Box>
-        ) : (
-          <Container
-            maxW={"100vw"}
-            minH={"100vh"}
-            pos={"fixed"}
-            bgColor={"white"}
-            top={"0"}
-            zIndex={"1000"}
-            p={0}
-            m={0}
-            alignItems={"flex-start"}
-            display={"flex"}
-            flexDirection={"row"}
-          >
-            <NavBarAdmin />
-            <Flex
-              height={"200vh"}
-              width={"20vw"}
-              bgColor={"gray.100"}
-              borderRightWidth={1}
-              borderRightColor={"gray.500"}
-            ></Flex>
-            <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+                <form>
+                  <FormControl id="value" mt={"5vh"} ml={"-25%"}>
+                    <FormLabel>Email</FormLabel>
+                    <InputGroup mt={-2} w={"150%"}>
+                      <Input
+                        type="string"
+                        borderColor={"gray.300"}
+                        placeholder={"johnnysilverhand@gmail.com"}
+                        onChange={(e) => {
+                          setAdminEnteredMail(e.currentTarget.value);
+                        }}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl id="password" type="password" mt={"3vh"} ml={"-25%"}>
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup mt={-2} w={"150%"}>
+                      <Input
+                        type="password"
+                        borderColor={"gray.300"}
+                        placeholder={"xxxxxxxx"}
+                        onChange={(e) => {
+                          setAdminEnteredPass(e.currentTarget.value);
+                        }}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                </form>
+                <Button
+                  w={"50%"}
+                  bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+                  color={"white"}
+                  _hover={{
+                    bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                    boxShadow: "xl",
+                  }}
+                  mt={"5vh"}
+                  onClick={() => {
+                    checkAdminCredentials();
+                  }}
+                >
+                  Login
+                </Button>
+                {invalidAdminLogIn ? (
+                  <Text color={"red"} mt={10}>
+                    The credentials you entered is incorrect. Try again !
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </Flex>
+            </Box>
+          ) : (
+            <Container
+              maxW={"100vw"}
+              minH={"100vh"}
+              scrollBehavior={"auto"}
+              bgColor={"white"}
+              zIndex={"1000"}
+              p={0}
+              m={0}
+              alignItems={"flex-start"}
+              display={"flex"}
+              flexDirection={"row"}
+              position={"absolute"}
+              top={0}
+              left={0}
+            >
+              <NavBarAdmin />
               <Flex
-                w={"90%"}
-                h={"20vh"}
-                bgColor={"white"}
-                borderBottomRadius={20}
-                alignSelf={"center"}
-                bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
+                height={"200vh"}
+                width={"20vw"}
+                bgColor={"gray.100"}
+                borderRightWidth={1}
+                borderRightColor={"gray.500"}
               ></Flex>
-              <Center
-                borderRadius={"50%"}
-                borderWidth={5}
-                borderColor={"white"}
-                h={"20vh"}
-                w={"20vh"}
-                pos={"absolute"}
-                top={"15vh"}
-                left={"25vw"}
-              >
-                <Img
-                  src={"https://th.bing.com/th/id/OIP.-km6Zix904lcDbUVKEy0yAHaHa?pid=ImgDet&rs=1"}
-                  alt="Profile Picture"
-                  h={"19vh"}
-                  w={"19vh"}
-                  objectFit={"fill"}
+              <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+                <Flex
+                  w={"90%"}
+                  h={"20vh"}
+                  bgColor={"white"}
+                  borderBottomRadius={20}
+                  alignSelf={"center"}
+                  bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
+                ></Flex>
+                <Center
                   borderRadius={"50%"}
-                ></Img>
-              </Center>
-              <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
-                <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                  Administrator
-                </Text>
-                {/* <Text fontSize={15} fontWeight={300} mt={-2}>
+                  borderWidth={5}
+                  borderColor={"white"}
+                  h={"20vh"}
+                  w={"20vh"}
+                  pos={"absolute"}
+                  top={"10vh"}
+                  left={"25vw"}
+                >
+                  <Img
+                    src={"https://th.bing.com/th/id/OIP.-km6Zix904lcDbUVKEy0yAHaHa?pid=ImgDet&rs=1"}
+                    alt="Profile Picture"
+                    h={"19vh"}
+                    w={"19vh"}
+                    objectFit={"fill"}
+                    borderRadius={"50%"}
+                  ></Img>
+                </Center>
+                <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"22vh"} left={"36vw"}>
+                  <Text fontSize={30} fontWeight={800} color={"blue.800"}>
+                    Administrator
+                  </Text>
+                  {/* <Text fontSize={15} fontWeight={300} mt={-2}>
                 {obj.email}
               </Text> */}
-              </Flex>
-              {/* <Button
+                </Flex>
+                {/* <Button
               w={"56px"}
               h={"56px"}
               bgColor={"gray.300"}
@@ -733,86 +736,88 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
             >
               <Img objectFit={"contain"} src={"/settings.png"} />
             </Button> */}
-              {settingsScreen ? (
-                <Flex>
-                  <SettingsPage setSettingsScreen={setSettingsScreen} />
-                </Flex>
-              ) : (
-                <Flex flexDirection={"column"}>
-                  <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
-                    <Heading mb={6} fontSize={30}>
-                      Dashboard
-                    </Heading>
-                    <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
-                      <Center
-                        bgColor={"gray.200"}
-                        borderRadius={10}
-                        p={5}
-                        py={2}
-                        _hover={{
-                          transform: "translateX(8px)",
-                        }}
-                      >
-                        <Img src={"/totalamount.png"} height={10} mr={5} />
-                        <Flex flexDir={"column"}>
-                          <Text fontSize={16}>Campaigns to approve</Text>
-                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                            {notApprovedNumber}
-                          </Text>
-                        </Flex>
-                      </Center>
-                      <Center
-                        bgColor={"gray.200"}
-                        borderRadius={10}
-                        p={5}
-                        py={2}
-                        _hover={{
-                          transform: "translateX(8px)",
-                        }}
-                      >
-                        <Img src={"/totalcreated.png"} height={10} mr={5} />
-                        <Flex flexDir={"column"}>
-                          <Text fontSize={16}>Total Campaigns Approved</Text>
-                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                            {approvedNumber}
-                          </Text>
-                        </Flex>
-                      </Center>
+                {settingsScreen ? (
+                  <Flex>
+                    <SettingsPage setSettingsScreen={setSettingsScreen} />
+                  </Flex>
+                ) : (
+                  <Flex flexDirection={"column"}>
+                    <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
+                      <Heading mb={6} fontSize={30}>
+                        Dashboard
+                      </Heading>
+                      <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
+                        <Center
+                          bgColor={"gray.200"}
+                          borderRadius={10}
+                          p={5}
+                          py={2}
+                          _hover={{
+                            transform: "translateX(8px)",
+                          }}
+                        >
+                          <Img src={"/totalamount.png"} height={10} mr={5} />
+                          <Flex flexDir={"column"}>
+                            <Text fontSize={16}>Campaigns to approve</Text>
+                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                              {notApprovedNumber}
+                            </Text>
+                          </Flex>
+                        </Center>
+                        <Center
+                          bgColor={"gray.200"}
+                          borderRadius={10}
+                          p={5}
+                          py={2}
+                          _hover={{
+                            transform: "translateX(8px)",
+                          }}
+                        >
+                          <Img src={"/totalcreated.png"} height={10} mr={5} />
+                          <Flex flexDir={"column"}>
+                            <Text fontSize={16}>Total Campaigns Approved</Text>
+                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                              {approvedNumber}
+                            </Text>
+                          </Flex>
+                        </Center>
+                      </Flex>
+                    </Flex>
+                    <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
+                      {approvedPending ? (
+                        <PendingCampaigns
+                          setApprovedPending={setApprovedPending}
+                          campaignList={campaignList}
+                          campaignList1={dbCamp}
+                          campaigns={campaigns}
+                          ethPrice={ethPrice}
+                        />
+                      ) : (
+                        <ApprovedCampaigns
+                          setApprovedPending={setApprovedPending}
+                          campaignList={campaignList}
+                          campaignList1={dbCamp}
+                          campaigns={campaigns}
+                          ethPrice={ethPrice}
+                        />
+                      )}
                     </Flex>
                   </Flex>
-                  <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-                    {approvedPending ? (
-                      <PendingCampaigns
-                        setApprovedPending={setApprovedPending}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                      />
-                    ) : (
-                      <ApprovedCampaigns
-                        setApprovedPending={setApprovedPending}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                      />
-                    )}
-                  </Flex>
-                </Flex>
-              )}
-            </Flex>
-            <Flex
-              height={"200vh"}
-              width={"25vw"}
-              bgColor={"gray.100"}
-              borderLeftWidth={1}
-              borderLeftColor={"gray.500"}
-              flexDir={"column"}
-              padding={10}
-            ></Flex>
-          </Container>
-        )}
+                )}
+              </Flex>
+              <Flex
+                height={"200vh"}
+                width={"25vw"}
+                bgColor={"gray.100"}
+                borderLeftWidth={1}
+                borderLeftColor={"gray.500"}
+                flexDir={"column"}
+                padding={10}
+              ></Flex>
+            </Container>
+          )}
+        </Flex>
+
       </main>
     </div>
   );
