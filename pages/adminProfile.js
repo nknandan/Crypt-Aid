@@ -580,6 +580,9 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     getUser();
     getSummary();
     getNumber();
+    if (localStorage.getItem("adminAuth") === "true") {
+      setAdminLogIn(0);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -591,7 +594,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Flex minH={"100vh"}> 
+        <Flex minH={"100vh"}>
           {adminLogIn ? (
             <Box
               height={"80%"}
@@ -817,7 +820,6 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
             </Container>
           )}
         </Flex>
-
       </main>
     </div>
   );

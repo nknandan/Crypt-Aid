@@ -199,7 +199,7 @@ export default function NavBar() {
                 localStorage.setItem("adminAuth", "false");
               }}
             >
-              <NextLink href="/about">About</NextLink>
+              <NextLink href="/">Ad LGT</NextLink>
             </Button>
 
             {/* <DarkModeSwitch /> */}
