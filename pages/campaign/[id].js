@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import Head from "next/head";
 import React from "react";
 import ReactDOM from "react-dom";
