@@ -48,6 +48,8 @@ import { connectToDatabase } from "../lib/mongodb";
 import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 
+var cName2Id = {};
+
 export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -68,18 +70,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-function CampaignCardNew({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-  dbUsers,
-  dbCamp,
-}) {
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
   var emmmmmmm = "";
 
   const [username, setUsername] = useState("");
@@ -157,11 +148,7 @@ function CampaignCardNew({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            >
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
@@ -178,12 +165,7 @@ function CampaignCardNew({
               </Box>
             </Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -193,11 +175,7 @@ function CampaignCardNew({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -244,13 +222,17 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
       setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
+
       return summary;
     } catch (e) {
       console.log(e);
@@ -266,10 +248,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
       <Head>
         <title>Explore Campaigns | CryptAid</title>
 
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -327,10 +306,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {
                         // console.log(dbCamp[j].isApproved);
-                        if (
-                          dbCamp[j].name == el[5] &&
-                          dbCamp[j].isApproved == true
-                        ) {
+                        if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
                           return (
                             <div key={i}>
                               <CampaignCardNew
@@ -338,7 +314,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                                 description={el[6]}
                                 creatorId={el[4]}
                                 imageURL={el[7]}
-                                id={campaigns[campaignList.length - 1 - i]}
+                                id={cName2Id[el[5]]}
                                 target={el[8]}
                                 balance={el[1]}
                                 ethPrice={ethPrice}
@@ -358,10 +334,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {
                         // console.log(dbCamp[j].isApproved);
-                        if (
-                          dbCamp[j].name == el[5] &&
-                          dbCamp[j].isApproved == true
-                        ) {
+                        if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
                           return (
                             <div key={i}>
                               <CampaignCardNew
