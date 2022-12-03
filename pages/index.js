@@ -36,6 +36,8 @@ import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectToDatabase } from "../lib/mongodb";
 import { connectMongo } from "../utils/connectMongo";
 
+var cName2Id = {};
+
 export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -225,6 +227,11 @@ export default function Home({ campaigns, users, dbCamp }) {
       updateEthPrice(ETHPrice);
       setCampaignList(summary);
       setCampaignListNumber(3);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
       return summary;
     } catch (e) {
       console.log(e);
@@ -235,31 +242,7 @@ export default function Home({ campaigns, users, dbCamp }) {
     setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
   }
 
-  function getUser() {
-    try {
-      // const u = localStorage.getItem("email");
-      // const o = JSON.parse(localStorage.getItem("user"));
-      // //console.log(o);
-      // setObj(o);
-      // for (var i = 0; i < users.length; i++) {
-      //   if (users[i].email == u) {
-      //     console.log(users[i]);
-      //     setUser(users[i]);
-      //     break;
-      //   }
-      //   //console.log(JSON.stringify(user));
-      // }
-      // console.log("IN getUser");
-      // console.log(users);
-      // console.log(dbCamp);
-    } catch (e) {
-      console.log("Error in getUser().");
-      console.log(e);
-    }
-  }
-
   useEffect(() => {
-    getUser();
     getSummary();
   }, []);
 
@@ -344,7 +327,7 @@ export default function Home({ campaigns, users, dbCamp }) {
                             description={el[6]}
                             creatorId={el[4]}
                             imageURL={el[7]}
-                            id={campaigns[campaignList.length - 1 - i]}
+                            id={cName2Id[el[5]]}
                             target={el[8]}
                             balance={el[1]}
                             ethPrice={ethPrice}
