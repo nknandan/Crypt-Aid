@@ -37,20 +37,17 @@ export default function NavBar() {
   const [searchData, setsearchData] = useState([]);
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
-  const ref = useRef()
+  const ref = useRef();
   useOutsideClick({
     ref: ref,
     handler: () => setUserMenu(0),
-  })
-
+  });
 
   const getCampaigns = async () => {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       setCampaignList(summary);
       return summary;
@@ -62,10 +59,7 @@ export default function NavBar() {
   const search = (data) => {
     data = data.filter((item) => {
       if (searchQuery == "") return false;
-      if (
-        item["5"].toLowerCase().includes(searchQuery) ||
-        item["6"].toLowerCase().includes(searchQuery)
-      ) {
+      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
         return true;
       } else {
         return false;
@@ -172,12 +166,7 @@ export default function NavBar() {
                 width={"10%"}
                 borderRightRadius={10}
               >
-                <Img
-                  position={"absolute"}
-                  height={"60%"}
-                  objectFit={"contain"}
-                  src={"/search.png"}
-                />
+                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
               </Button>
             </Flex>
             <Button
@@ -198,21 +187,25 @@ export default function NavBar() {
             >
               <NextLink href="/about">About</NextLink>
             </Button>
-            {/* <Button
+            <Button
+              fontSize={"md"}
+              fontWeight={200}
+              variant={"link"}
+              display={{ base: "none", md: "inline-flex" }}
+              color={"white"}
               onClick={() => {
                 console.log("Debug Now.");
                 console.log(campaignList);
+                localStorage.setItem("adminAuth", "false");
               }}
             >
-              DEBUG
-            </Button> */}
+              <NextLink href="/about">About</NextLink>
+            </Button>
 
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>
-            {/* <DarkModeSwitch /> */}
-          </Flex>
+          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
 
@@ -252,12 +245,7 @@ export default function NavBar() {
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
-            <Center
-              flexDirection={"column"}
-              maxW={"70%"}
-              justifyContent={"center"}
-              ml={5}
-            >
+            <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
               {/* Above ml={2} */}
               <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
                 {user.nickname}

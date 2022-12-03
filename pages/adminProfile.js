@@ -570,6 +570,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     if (adminmails.includes(adminEnteredMail) && adminpass.includes(adminEnteredPass)) {
       setAdminLogIn(0);
       setInvalidAdminLogIn(0);
+      localStorage.setItem("adminAuth", "true");
     } else {
       setInvalidAdminLogIn(1);
     }
