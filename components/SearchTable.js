@@ -1,16 +1,8 @@
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from '@chakra-ui/react'
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from "@chakra-ui/react";
 
-const SearchTable = ({ searchData }) => {
+// mapping is a {} with  {item["5"] : id}
+
+const SearchTable = ({ searchData, mapping }) => {
   const data = searchData ?? [];
   return (
     <>
