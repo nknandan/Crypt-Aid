@@ -57,8 +57,6 @@ export default function NavBar() {
         cName2Id[summary[i]["5"]] = ele;
         i++;
       }
-      console.log("In navbar");
-      console.log(cName2Id);
       return summary;
     } catch (e) {
       console.log(e);

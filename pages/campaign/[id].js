@@ -17,6 +17,7 @@ import {
   Text,
   Container,
   Input,
+  Img,
   Button,
   SimpleGrid,
   InputRightAddon,
@@ -56,6 +57,8 @@ import { redirect } from "next/dist/server/api-utils";
 import { connectMongo } from "../../utils/connectMongo";
 import User from "../../models/user";
 import CampaignModel from "../../models/campaignModel";
+import axios from "axios";
+import RecommendedCampaigns from "../../components/RecommendedCampaigns";
 
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
@@ -470,6 +473,7 @@ export default function CampaignSingle({
               info={"Number of people who have already donated to this campaign"}
             />
           </SimpleGrid>
+          <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>
     </div>
