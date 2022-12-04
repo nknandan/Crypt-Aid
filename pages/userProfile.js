@@ -546,6 +546,9 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
   const [campaignListNumber, setCampaignListNumber] = useState(0);
   const [user, setUser] = useState({});
   const [obj, setObj] = useState({});
+  const [donatedAmount, setDonatedAmount] = useState(0.0);
+  const [noCreatedCampaigns, setNoCreatedCampigns] = useState(0);
+  const [noDonatedCampaigns, setNoDonatedCampigns] = useState(0);
   var ab;
 
   async function getSummary() {
@@ -584,6 +587,9 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
         if (users[i].email == u) {
           // console.log(users[i]);
           setUser(users[i]);
+          setDonatedAmount(users[i].donatedAmount);
+          setNoCreatedCampigns(users[i].createdCampaigns.length);
+          setNoDonatedCampigns(users[i].donatedCampaigns.length);
           break;
         }
         //console.log(JSON.stringify(user));
@@ -707,7 +713,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total amount contributed</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          $ 69.99
+                          ${donatedAmount}
                         </Text>
                       </Flex>
                     </Center>
@@ -724,7 +730,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total campaigns created</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          0
+                          {noCreatedCampaigns}
                         </Text>
                       </Flex>
                     </Center>
@@ -741,7 +747,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total campaigns funded</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          7
+                          {noDonatedCampaigns}
                         </Text>
                       </Flex>
                     </Center>

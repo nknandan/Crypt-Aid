@@ -23,11 +23,16 @@ export default async function addUser(req, res) {
   //
   else if (req.method == "POST") {
     try {
-      await connectMongo();
-
-      const user = await User.create(req.body);
-
-      res.json({ user });
+      const { db } = await connectToDatabase();
+      const temp = req.body;
+      console.log(temp);
+      const em = temp.tempUser.email;
+      const cc = temp.tempUser.createdCampaigns;
+      const u = await db
+        .collection("users")
+        .updateOne({ email: em }, { $set: { createdCampaigns: cc } });
+      console.log(u);
+      res.json({ u });
     } catch (error) {
       console.log(error);
       res.json({ error });
