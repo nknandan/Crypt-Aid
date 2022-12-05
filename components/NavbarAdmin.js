@@ -30,7 +30,7 @@ import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
 import { useUser } from "@auth0/nextjs-auth0";
 
-export default function NavBar() {
+export default function NavbarAdmin() {
   const wallet = useWallet();
   const [campaignList, setCampaignList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,7 +47,9 @@ export default function NavBar() {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+        campaigns.map((campaign, i) =>
+          Campaign(campaigns[i]).methods.getSummary().call()
+        )
       );
       setCampaignList(summary);
       return summary;
@@ -59,7 +61,10 @@ export default function NavBar() {
   const search = (data) => {
     data = data.filter((item) => {
       if (searchQuery == "") return false;
-      if (item["5"].toLowerCase().includes(searchQuery) || item["6"].toLowerCase().includes(searchQuery)) {
+      if (
+        item["5"].toLowerCase().includes(searchQuery) ||
+        item["6"].toLowerCase().includes(searchQuery)
+      ) {
         return true;
       } else {
         return false;
@@ -166,7 +171,12 @@ export default function NavBar() {
                 width={"10%"}
                 borderRightRadius={10}
               >
-                <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
+                <Img
+                  position={"absolute"}
+                  height={"60%"}
+                  objectFit={"contain"}
+                  src={"/search.png"}
+                />
               </Button>
             </Flex>
             <Button
@@ -189,23 +199,30 @@ export default function NavBar() {
             </Button>
             <Button
               fontSize={"md"}
-              fontWeight={200}
+              fontWeight={400}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={"white"}
+              color={"black"}
               onClick={() => {
                 console.log("Debug Now.");
                 console.log(campaignList);
                 localStorage.setItem("adminAuth", "false");
               }}
+              bgColor={"blue.300"}
+              padding={10}
+              py={0}
             >
-              <NextLink href="/">Ad LGT</NextLink>
+              <NextLink href="/" color="black">
+                Logout
+              </NextLink>
             </Button>
 
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
+          <Flex display={{ base: "flex", md: "none" }}>
+            {/* <DarkModeSwitch /> */}
+          </Flex>
         </Container>
       </Flex>
 
@@ -245,7 +262,12 @@ export default function NavBar() {
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
-            <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
+            <Center
+              flexDirection={"column"}
+              maxW={"70%"}
+              justifyContent={"center"}
+              ml={5}
+            >
               {/* Above ml={2} */}
               <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
                 {user.nickname}
