@@ -47,22 +47,6 @@ function PendingCard({
   target,
   ethPrice,
 }) {
-  function updateStatus() {
-    const tempObj = { name: name, isApproved: true };
-    try {
-      fetch("/api/campaign/create", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tempObj }),
-      });
-    } catch (err) {
-      setError(err.message);
-      console.log(err);
-    }
-  }
-
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -121,15 +105,6 @@ function PendingCard({
                 Target : {web3.utils.fromWei(target, "ether")} ETH ($
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
-              {approvedPending ? (
-                <> </>
-              ) : (
-                <Flex w={"30%"} justifyContent={"space-between"}>
-                  <Button bgColor={"green.200"} fontSize={12} p={3} h={2} zIndex={99} onClick={updateStatus}>
-                    Approve
-                  </Button>
-                </Flex>
-              )}
             </Flex>
           </Box>
         </Box>
