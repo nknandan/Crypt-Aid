@@ -390,21 +390,8 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
   // console.log(user.donatedCampaigns);
   // console.log(chainCampaign);
   return (
-    <Flex
-      h={"20vh"}
-      borderRadius={20}
-      p={0}
-      bgColor={"gray.200"}
-      w={"100%"}
-      transition={"transform 0.3s ease"}
-      boxShadow="sm"
-      _hover={{
-        transform: "translateY(-4px)",
-      }}
-      cursor={"pointer"}
-      my={4}
-    >
-      <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+    <Flex h={"100vh"} p={0} w={"100%"} maxW={"100%"}>
+      <SimpleGrid row={{ base: 1, md: 3 }} spacing={10}>
         {chainCampaign.map((el, i) => {
           var donatedArr = user.donatedCampaigns;
           for (var ele in donatedArr) {
@@ -418,11 +405,108 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
                 if (el[5] == camp) {
                   // console.log(el);
                   return (
-                    <div>
-                      <p>Name:{el[5]}</p>
-                      <p>Description:{el[6]}</p>
-                      <p>Image:{dbCampaign[j].imageUrl}</p>
-                    </div>
+                    <NextLink href={``}>
+                      <Box
+                        h={"17vh"}
+                        w={"100%"}
+                        minW={"100%"}
+                        maxW={"55%"}
+                        display={"flex"}
+                        flexDirection={"row"}
+                        position="relative"
+                        cursor="pointer"
+                        bgColor={"#ffffff"}
+                        borderRadius={"20"}
+                        transition={"transform 0.3s ease"}
+                        boxShadow="sm"
+                        _hover={{
+                          transform: "translateY(-8px)",
+                        }}
+                      >
+                        <Box h={"100%"} maxW={"40%"} borderRadius={"20"} borderRightRadius={"0"}>
+                          <Img
+                            src={dbCampaign[j].imageUrl}
+                            alt={`Picture of ${el[5]}`}
+                            objectFit="cover"
+                            w="full"
+                            h="full"
+                            display="block"
+                            borderRadius={"20"}
+                            borderRightRadius={"0"}
+                          />
+                        </Box>
+                        <Box
+                          h={"100%"}
+                          minW={"60%"}
+                          maxW={"60%"}
+                          borderRadius={"20"}
+                          borderLeftRadius={"0"}
+                          padding={"1rem"}
+                          px={"0.5rem"}
+                          display={"flex"}
+                          flexDirection={"column"}
+                          justifyContent={"space-between"}
+                          pb={"1.5rem"}
+                        >
+                          <Box minW={"100%"} maxW={"100%"}>
+                            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" noOfLines={1}>
+                              {el[5]}
+                            </Box>
+                            <Box minW={"100%"} maxW={"100%"}>
+                              <Text noOfLines={3}>{el[6]}</Text>
+                            </Box>
+                          </Box>
+                          {/* <Box>
+                            <Flex
+                              direction={"row"}
+                              justifyContent={"space-between"}
+                            >
+                              <Box maxW={{ base: "	15rem", sm: "sm" }}>
+                                <Text as="span">
+                                  {balance > 0
+                                    ? "Raised : " +
+                                      web3.utils.fromWei(balance, "ether")
+                                    : "Raised : 0"}
+                                </Text>
+                                <Text as="span" pr={2}>
+                                  {" "}
+                                  ETH
+                                </Text>
+                                <Text
+                                  as="span"
+                                  fontSize="lg"
+                                  display={balance > 0 ? "inline" : "none"}
+                                  fontWeight={"normal"}
+                                  color={useColorModeValue(
+                                    "gray.500",
+                                    "gray.200"
+                                  )}
+                                >
+                                  (${getWEIPriceInUSD(ethPrice, balance)})
+                                </Text>
+                              </Box>
+                              <Text fontSize={"md"} fontWeight="normal">
+                                Target : {web3.utils.fromWei(target, "ether")}{" "}
+                                ETH ($
+                                {getWEIPriceInUSD(ethPrice, target)})
+                              </Text>
+                            </Flex>
+                            <Progress
+                              colorScheme="blue"
+                              size="sm"
+                              value={balance}
+                              max={target}
+                              mt="2"
+                            />
+                          </Box> */}
+                        </Box>
+                      </Box>
+                    </NextLink>
+                    // <div>
+                    //   <p>Name:{el[5]}</p>
+                    //   <p>Description:{el[6]}</p>
+                    //   <p>Image:{dbCampaign[j].imageUrl}</p>
+                    // </div>
                   );
                 }
               }
@@ -713,7 +797,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total amount contributed</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          ${donatedAmount}
+                          ${donatedAmount.toFixed(2)}
                         </Text>
                       </Flex>
                     </Center>
@@ -783,6 +867,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             borderLeftColor={"gray.500"}
             flexDir={"column"}
             padding={10}
+            px={5}
           >
             <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
               <Img src={"/user.png"} height={10} mr={5} />
@@ -798,7 +883,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                 </Center>
               </Flex>
             </Center>
-            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"} w={"100%"}>
+            <Flex flexDir={"column"} mt={5} mb={5} maxH={"65vh"} overflowY={"auto"} overflowX={"hidden"} w={"100%"}>
               <Text fontSize={24} fontWeight={600} mb={5} mt={2}>
                 Recent Donations
               </Text>
