@@ -188,7 +188,7 @@ export default function RecommendedCampaigns({ name, description }) {
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
         <Heading fontSize={30} mr={10}>
-          Pending Campaigns
+          Campaigns recommended for you
         </Heading>
       </Flex>
       <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
