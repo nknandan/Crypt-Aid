@@ -189,17 +189,22 @@ export default function NavbarAdmin() {
             </Button>
             <Button
               fontSize={"md"}
-              fontWeight={200}
+              fontWeight={400}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={"white"}
+              color={"black"}
               onClick={() => {
                 console.log("Debug Now.");
                 console.log(campaignList);
                 localStorage.setItem("adminAuth", "false");
               }}
+              bgColor={"blue.300"}
+              padding={10}
+              py={0}
             >
-              <NextLink href="/">Logout</NextLink>
+              <NextLink href="/" color="black">
+                Logout
+              </NextLink>
             </Button>
 
             {/* <DarkModeSwitch /> */}

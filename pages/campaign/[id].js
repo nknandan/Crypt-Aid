@@ -167,10 +167,13 @@ export default function CampaignSingle({
       }
       if (tempUser["donatedCampaigns"] == undefined) tempUser["donatedCampaigns"] = [name];
       else if (tempUser["donatedCampaigns"].includes(name) == false) tempUser["donatedCampaigns"].push(name);
-      var amount = getETHPriceInUSD(ETHPrice, amountInUSD);
-      // console.log(amount);
-      if (tempUser["donatedAmount"] == undefined) tempUser["donatedAmount"] = parseFloat(amount);
-      else tempUser["donatedAmount"] += parseFloat(amount);
+
+      // console.log(parseFloat(getETHPriceInUSD(ETHPrice, amountInUSD)));
+      if (tempUser["donatedAmount"] == undefined)
+        tempUser["donatedAmount"] = parseFloat(getETHPriceInUSD(ETHPrice, amountInUSD));
+      else
+        tempUser["donatedAmount"] =
+          parseFloat(tempUser["donatedAmount"]) + parseFloat(getETHPriceInUSD(ETHPrice, amountInUSD));
       try {
         fetch("/api/user2", {
           method: "PUT",
@@ -196,7 +199,7 @@ export default function CampaignSingle({
       for (var i = 0; i < dbCamp.length; i++) {
         if (dbCamp[i].name == name) tempObj = dbCamp[i];
       }
-      tempObj["donatorEmail"].push(u);
+      if (tempObj["donatorEmail"].includes(u) == false) tempObj["donatorEmail"].push(u);
       try {
         fetch("/api/campaign/update", {
           method: "PUT",
