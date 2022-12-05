@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
-import NavBarAdmin from "../components/NavBarAdmin";
+import NavbarAdmin from "../components/NavbarAdmin";
 import {
   Heading,
   useColorModeValue,
@@ -679,7 +679,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               top={0}
               left={0}
             >
-              <NavBarAdmin />
+              <NavbarAdmin />
               <Flex
                 height={"200vh"}
                 width={"20vw"}

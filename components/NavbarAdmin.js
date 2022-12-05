@@ -30,7 +30,7 @@ import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
 import { useUser } from "@auth0/nextjs-auth0";
 
-export default function NavBar() {
+export default function NavbarAdmin() {
   const wallet = useWallet();
   const [campaignList, setCampaignList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -199,7 +199,7 @@ export default function NavBar() {
                 localStorage.setItem("adminAuth", "false");
               }}
             >
-              <NextLink href="/">Ad LGT</NextLink>
+              <NextLink href="/">Logout</NextLink>
             </Button>
 
             {/* <DarkModeSwitch /> */}
