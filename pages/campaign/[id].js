@@ -8,6 +8,9 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useWindowSize } from "react-use";
 import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getETHPrice";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import NoSSR from 'react-no-ssr';
+import PDFFile from "../pdfFile";
 import {
   Box,
   Image,
@@ -246,6 +249,7 @@ export default function CampaignSingle({
                 <AlertDescription mr={2}> Thank You for your Contribution 🙏</AlertDescription>
                 <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsSubmitted(false)} />
               </Alert>
+              <PDFFile/>
             </Container>
           ) : null}
           <Flex direction={"row"}>

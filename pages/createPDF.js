@@ -57,7 +57,7 @@ export default function Home({ campaigns }) {
               {({ loading }) => (loading ? <button>Loading document...</button> : <button>Download</button>)}
             </PDFDownloadLink>
           </NoSSR>
-          {/* <PDFFile />    */}
+          <PDFFile />   
         </Container>
       </main>
     </div>
