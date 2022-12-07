@@ -1,8 +1,9 @@
 import "../styles/globals.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, Flex } from "@chakra-ui/react";
 import { UseWalletProvider } from "use-wallet";
-import NavBar from "../components/Navbar";
+import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
+import DarkModeSwitch from "../components/DarkModeSwitch";
 import { UserProvider } from "@auth0/nextjs-auth0";
 
 const theme = extendTheme({
@@ -31,6 +32,10 @@ function MyApp({ Component, pageProps }) {
           >
             <NavBar />
             <Component {...pageProps} />
+            {/* <Flex pos={"fixed"} top={"10px"} right={"8vh"} zIndex={1000}>
+              <DarkModeSwitch />
+            </Flex> */}
+
             <Footer />{" "}
           </UseWalletProvider>
         </ChakraProvider>

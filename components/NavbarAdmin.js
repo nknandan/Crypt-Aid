@@ -22,13 +22,14 @@ import {
 
 import { useEffect, useState, useRef } from "react";
 import NextLink from "next/link";
-import DarkModeSwitch from "./DarkModeSwitch";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useWallet } from "use-wallet";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
 import SearchTable from "./searchTable";
 import { useUser } from "@auth0/nextjs-auth0";
+
+var cName2Id = {};
 
 export default function NavbarAdmin() {
   const wallet = useWallet();
@@ -37,10 +38,15 @@ export default function NavbarAdmin() {
   const [searchData, setsearchData] = useState([]);
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
+  const [searchMenu, setSearchMenu] = useState(0);
   const ref = useRef();
   useOutsideClick({
     ref: ref,
-    handler: () => setUserMenu(0),
+    handler: () => {
+      setUserMenu(0);
+      setSearchMenu(0);
+      console.log(searchMenu);
+    },
   });
 
   const getCampaigns = async () => {
@@ -50,6 +56,11 @@ export default function NavbarAdmin() {
         campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
       return summary;
     } catch (e) {
       console.log(e);
@@ -207,11 +218,7 @@ export default function NavbarAdmin() {
                 Logout
               </NextLink>
             </Button>
-
-            {/* <DarkModeSwitch /> */}
           </Stack>
-
-          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
         </Container>
       </Flex>
 
@@ -233,7 +240,7 @@ export default function NavbarAdmin() {
         py={0}
         borderBottomRadius={10}
       >
-        {<SearchTable searchData={search(campaignList)} />}
+        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref}/>}
       </Flex>
 
       {userMenu ? (

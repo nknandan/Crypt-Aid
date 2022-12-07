@@ -41,10 +41,10 @@ const SearchTable = ({ searchData, mapping }) => {
                     }}>
                     <Img h={"80px"} w={"80px"} borderRadius={"20%"} src={item["7"]} mr={"30px"} fill={"contain"} />
                     <Text
-                      color={"blue.600"}
+                      color={useColorModeValue("blue.600", "gray.300")}
                       cursor={"pointer"}
                       _hover={{
-                        color: "blue.800",
+                        color: useColorModeValue("blue.800", "white")
                       }}
                       fontSize={20}
                     >

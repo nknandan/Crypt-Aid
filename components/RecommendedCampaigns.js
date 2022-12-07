@@ -2,40 +2,21 @@ import {
   Box,
   Flex,
   Text,
-  IconButton,
-  Button,
   SimpleGrid,
-  Stack,
-  useColorModeValue,
-  useBreakpointValue,
-  Container,
   Heading,
-  Menu,
-  MenuButton,
-  MenuList,
-  InputGroup,
-  Input,
   Img,
-  useOutsideClick,
-  MenuItem,
   Spinner,
   Center,
 } from "@chakra-ui/react";
 
 import { useEffect, useState, useRef } from "react";
 import NextLink from "next/link";
-import DarkModeSwitch from "./DarkModeSwitch";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useWallet } from "use-wallet";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
-import SearchTable from "./searchTable";
-import { useUser } from "@auth0/nextjs-auth0";
 import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../lib/getETHPrice";
 import web3 from "../smart-contract/web3";
 
 var cName2Id = {};
-// var dataDispNames = [];
 
 function PendingCard({
   name,

@@ -125,7 +125,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         flexDirection={"row"}
         position="relative"
         cursor="pointer"
-        bgColor={"#ffffff"}
+        bgColor={useColorModeValue("white", "#303030")}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
         boxShadow="sm"
@@ -160,14 +160,14 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
-                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
+                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"} color={useColorModeValue("gray.600", "gray.400")}>
                   c/CommunityName
                 </Box>{" "}
-                <Box color={"gray.600"} fontSize={"14px"}>
+                <Box color={useColorModeValue("gray.600", "gray.400")} fontSize={"14px"}>
                   7 hours ago by {username} ✅
                 </Box>
               </Box>
-              <Box display={"flex"} flexDirection={"row"}>
+              <Box display={"flex"} flexDirection={"row"} color={useColorModeValue("gray.600", "gray.400")}>
                 <Text fontWeight={"bold"} paddingRight={"5px"}>
                   19
                 </Text>
@@ -178,7 +178,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
-            <Box maxW={"60%"}>
+            <Box maxW={"60%"} color={useColorModeValue("gray.600", "gray.200")}>
               <Text noOfLines={3}>{description}</Text>
             </Box>
           </Box>
@@ -259,8 +259,8 @@ export default function Home({ campaigns, users, dbCamp }) {
         <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
-      <main className={styles.main}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}>
+      <Flex p={"5rem"} className={styles.main} bgColor={useColorModeValue("gray.100", "#252525")}>
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}> 
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -287,7 +287,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               w={"200px"}
               fontSize={"md"}
               fontWeight={600}
-              color={"white"}
+              color={useColorModeValue("white", "#252525")}
               borderRadius={"20"}
               bg={"#43B0F1"}
               _hover={{
@@ -310,7 +310,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               fontWeight={200}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
-              color={"black"}
+              color={useColorModeValue("#252525", "gray.200")}
               pt={"20px"}
             >
               <NextLink href="/explore">View all ➡️</NextLink>
@@ -359,10 +359,11 @@ export default function Home({ campaigns, users, dbCamp }) {
               w={"200px"}
               fontSize={"md"}
               fontWeight={600}
-              color={"black"}
+              color={useColorModeValue("gray.900", "gray.100")}
               borderRadius={"20"}
-              bg={"#ffffff"}
-              border={"1px solid #0065A1"}
+              bg={useColorModeValue("white", "blue.400")}
+              border={"1px solid"}
+              borderColor={useColorModeValue("#0065A1", "#0065A1")}
               marginLeft={"50%"}
               transform={"translate(-50%, 0)"}
               onClick={handleShowMore}
@@ -444,7 +445,7 @@ export default function Home({ campaigns, users, dbCamp }) {
             </Button>
           </NextLink>
         </Container>
-      </main>
+      </Flex>
     </div>
   );
 }
