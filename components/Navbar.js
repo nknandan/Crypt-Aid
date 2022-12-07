@@ -170,7 +170,7 @@ export default function NavBar() {
                   borderColor={"blue.400"}
                   bgColor={"white"}
                   w={"30vw"}
-                  h={"40vh"}
+                  maxH={"40vh"}
                   overflowY={"auto"}
                   pos={"absolute"}
                   top={"60px"}
