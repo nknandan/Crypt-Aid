@@ -18,6 +18,7 @@ import {
   Img,
   useOutsideClick,
   MenuItem,
+  Spinner,
   Center,
 } from "@chakra-ui/react";
 
@@ -61,7 +62,7 @@ function PendingCard({
         transition={"transform 0.3s ease"}
         boxShadow="sm"
         _hover={{
-          transform: "translateX(8px)",
+          transform: "translateY(-8px)",
         }}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
@@ -102,8 +103,7 @@ function PendingCard({
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}></Box>
               <Text fontSize={"md"} fontWeight="normal">
-                Target : {web3.utils.fromWei(target, "ether")} ETH ($
-                {getWEIPriceInUSD(ethPrice, target)})
+                Target : {web3.utils.fromWei(target, "ether")} ETH{" "}
               </Text>
             </Flex>
           </Box>
@@ -118,6 +118,7 @@ export default function RecommendedCampaigns({ name, description }) {
   const [sortedRecomm, setSortedRecomm] = useState([]);
   const [dataDispNames, setDataDispNames] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
+  const [loadingRecom, setLoadingRecom] = useState(1);
 
   const fetchRecommendedCampaigns = async (summary) => {
     try {
@@ -136,6 +137,7 @@ export default function RecommendedCampaigns({ name, description }) {
           console.log(summary);
           let disp = [];
           let reqArr = data["dsArr"];
+          setLoadingRecom(0);
           console.log(reqArr);
           let i = 0;
           for (let ele of reqArr) {
@@ -155,6 +157,12 @@ export default function RecommendedCampaigns({ name, description }) {
   useEffect(() => {
     setDataDispNames(dataDispNames);
   }, [dataDispNames]);
+
+  useEffect(() => {
+    let summaryTemp = getCampaigns();
+    fetchRecommendedCampaigns(summaryTemp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, description]);
 
   useEffect(() => {
     let summaryTemp = getCampaigns();
@@ -185,40 +193,46 @@ export default function RecommendedCampaigns({ name, description }) {
 
   return (
     // <></>
-    <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
+    <Flex w={"100%"} flexDir={"column"}>
       <Flex mb={3}>
         <Heading fontSize={30} mr={10}>
-          Campaigns recommended for you
+          Similar Campaigns that you may like...
         </Heading>
       </Flex>
-      <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
-        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-          {dataDispNames.map((ele, i) => {
-            for (var k = 0; k < campaignList.length; k++) {
-              if (ele === campaignList[k][5]) {
-                let el = campaignList[k];
-                console.log("RANGE");
-                console.log(el[5]);
-                {
-                  return (
-                    <div key={i}>
-                      <PendingCard
-                        name={el[5]}
-                        description={el[6]}
-                        creatorId={el[4]}
-                        imageURL={el[7]}
-                        id={cName2Id[el[5]]}
-                        target={el[8]}
-                        balance={el[1]}
-                      />
-                    </div>
-                  );
+      {loadingRecom ? (
+        <Center w={"100%"} p={"10vh"}>
+          <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+        </Center>
+      ) : (
+        <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+          <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+            {dataDispNames.map((ele, i) => {
+              for (var k = 0; k < campaignList.length; k++) {
+                if (ele === campaignList[k][5]) {
+                  let el = campaignList[k];
+                  console.log("RANGE");
+                  console.log(el[5]);
+                  {
+                    return (
+                      <div key={i}>
+                        <PendingCard
+                          name={el[5]}
+                          description={el[6]}
+                          creatorId={el[4]}
+                          imageURL={el[7]}
+                          id={cName2Id[el[5]]}
+                          target={el[8]}
+                          balance={el[1]}
+                        />
+                      </div>
+                    );
+                  }
                 }
               }
-            }
-          })}
-        </SimpleGrid>
-      </Flex>
+            })}
+          </SimpleGrid>
+        </Flex>
+      )}
     </Flex>
   );
 }

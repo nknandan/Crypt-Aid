@@ -32,6 +32,7 @@ import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import CampaignModel from "../models/campaignModel";
+import { useRouter } from "next/router";
 
 var cName2Id = {};
 
@@ -259,7 +260,7 @@ function ApprovedCard({
         transition={"transform 0.3s ease"}
         boxShadow="sm"
         _hover={{
-          transform: "translateX(8px)",
+          transform: "translateY(-8px)",
         }}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
@@ -356,7 +357,20 @@ function PendingCard({
   balance,
   target,
   ethPrice,
+  setCampaignList,
+  campaignList
 }) {
+  const router = useRouter();
+  function multiFunct() {
+    updateStatus();
+    setCampaignList(campaignList);
+    redirect();
+  }
+
+  const redirect = () => {
+    router.push("adminProfile");
+  };
+
   function updateStatus() {
     const tempObj = { name: name, isApproved: true };
     try {
@@ -374,23 +388,24 @@ function PendingCard({
   }
 
   return (
-    <NextLink href={`/campaign/${id}`}>
-      <Box
-        h={"20vh"}
-        w={"100%"}
-        display={"flex"}
-        flexDirection={"row"}
-        position="relative"
-        cursor="pointer"
-        bgColor={"#ffffff"}
-        borderRadius={"20"}
-        transition={"transform 0.3s ease"}
-        boxShadow="sm"
-        _hover={{
-          transform: "translateX(8px)",
-        }}
-      >
-        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+    <Box
+      h={"20vh"}
+      w={"100%"}
+      display={"flex"}
+      flexDirection={"row"}
+      position="relative"
+      cursor="pointer"
+      bgColor={"#ffffff"}
+      borderRadius={"20"}
+      transition={"transform 0.3s ease"}
+      boxShadow="sm"
+      _hover={{
+        transform: "translateY(-8px)",
+      }}
+      zIndex={1}
+    >
+      <NextLink href={`/campaign/${id}`}>
+        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"} zIndex={1}>
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
@@ -402,6 +417,8 @@ function PendingCard({
             borderRightRadius={"0"}
           />
         </Box>
+      </NextLink>
+      <NextLink href={`/campaign/${id}`}>
         <Box
           h={"100%"}
           w={"75%"}
@@ -413,6 +430,7 @@ function PendingCard({
           flexDirection={"column"}
           justifyContent={"space-between"}
           pb={"1.5rem"}
+          zIndex={1}
         >
           <Box>
             <Box
@@ -434,33 +452,33 @@ function PendingCard({
             </Box>
           </Box>
           <Box>
-            <Flex direction={"row"} justifyContent={"space-between"}>
+            <Flex>
               <Box maxW={{ base: "	15rem", sm: "sm" }}></Box>
               <Text fontSize={"md"} fontWeight="normal">
                 Target : {web3.utils.fromWei(target, "ether")} ETH ($
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
-              {approvedPending ? (
-                <> </>
-              ) : (
-                <Flex w={"30%"} justifyContent={"space-between"}>
-                  <Button
-                    bgColor={"green.200"}
-                    fontSize={12}
-                    p={3}
-                    h={2}
-                    zIndex={99}
-                    onClick={updateStatus}
-                  >
-                    Approve
-                  </Button>
-                </Flex>
-              )}
             </Flex>
           </Box>
         </Box>
-      </Box>
-    </NextLink>
+      </NextLink>
+      {approvedPending ? (
+        <> </>
+      ) : (
+        <Flex justifyContent={"space-between"} zIndex={99} marginRight={"5%"} pos={"absolute"} right={"1%"} bottom={"15%"}>
+          <Button
+            bgColor={"green.200"}
+            fontSize={12}
+            p={3}
+            h={2}
+            onClick={multiFunct}
+            component="a"
+          >
+            Approve
+          </Button>
+        </Flex>
+      )}
+    </Box>
   );
 }
 
@@ -470,6 +488,7 @@ function ApprovedCampaigns({
   campaignList1,
   campaigns,
   ethPrice,
+  setCampaignList,
 }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
@@ -488,8 +507,8 @@ function ApprovedCampaigns({
           Approved Campaigns
         </Heading>
       </Flex>
-      <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
-        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+      <Flex>
+        <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
               if (
@@ -508,6 +527,8 @@ function ApprovedCampaigns({
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
+                      setCampaignList={setCampaignList}
+                      campaignList={campaignList}
                     />
                   </div>
                 );
@@ -543,8 +564,8 @@ function PendingCampaigns({
         </Heading>
         <Heading fontSize={30}>Approved Campaigns</Heading>
       </Flex>
-      <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
-        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+      <Flex>
+        <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
               // console.log(el[5]);
@@ -795,9 +816,8 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               <NavbarAdmin />
               <Flex
                 height={"200vh"}
-                width={"20vw"}
+                width={"25vw"}
                 bgColor={"gray.100"}
-                borderRightWidth={1}
                 borderRightColor={"gray.500"}
               ></Flex>
               <Flex
@@ -809,61 +829,29 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                 <Flex
                   w={"90%"}
                   h={"20vh"}
-                  bgColor={"white"}
                   borderBottomRadius={20}
                   alignSelf={"center"}
                   bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
                 ></Flex>
-                <Center
-                  borderRadius={"50%"}
-                  borderWidth={5}
-                  borderColor={"white"}
-                  h={"20vh"}
-                  w={"20vh"}
-                  pos={"absolute"}
-                  top={"10vh"}
-                  left={"25vw"}
-                >
-                  <Img
-                    src={
-                      "https://th.bing.com/th/id/OIP.-km6Zix904lcDbUVKEy0yAHaHa?pid=ImgDet&rs=1"
-                    }
-                    alt="Profile Picture"
-                    h={"19vh"}
-                    w={"19vh"}
-                    objectFit={"fill"}
-                    borderRadius={"50%"}
-                  ></Img>
-                </Center>
-                <Flex
-                  flexDir={"column"}
-                  w={"20vw"}
-                  pos={"absolute"}
-                  top={"22vh"}
-                  left={"36vw"}
-                >
-                  <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                    Administrator
-                  </Text>
-                  {/* <Text fontSize={15} fontWeight={300} mt={-2}>
-                {obj.email}
-              </Text> */}
+                <Flex flexDir={"row"} justifyContent={"flex-start"} pl={"10%"} mt={"-8%"}>
+                  <Center mr={"2%"} minW={"19%"}>
+                    <Img
+                      src={"https://contentstatic.techgig.com/photo/76920096/career-as-system-administrator-skills-required-certifications-and-salaries.jpg?186038"}
+                      alt="Profile Picture"
+                      h={"9vw"}
+                      w={"9vw"}
+                      objectFit={"cover"}
+                      borderRadius={"50%"}
+                    ></Img>
+                  </Center>
+                  <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
+                    <Flex flexDir={"column"}>
+                      <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"30%"}>
+                        Administrator
+                      </Text>
+                    </Flex>
+                  </Flex>
                 </Flex>
-                {/* <Button
-              w={"56px"}
-              h={"56px"}
-              bgColor={"gray.300"}
-              pos={"absolute"}
-              left={"65vw"}
-              top={"28vh"}
-              borderRadius={"56px"}
-              onClick={() => {
-                setSettingsScreen(!settingsScreen);
-                //console.log(settingsScreen);
-              }}
-            >
-              <Img objectFit={"contain"} src={"/settings.png"} />
-            </Button> */}
                 {settingsScreen ? (
                   <Flex>
                     <SettingsPage setSettingsScreen={setSettingsScreen} />
@@ -872,7 +860,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   <Flex flexDirection={"column"}>
                     <Flex
                       w={"100%"}
-                      mt={"12%"}
+                      mt={"5%"}
                       px={"10%"}
                       py={5}
                       flexDirection={"column"}
@@ -890,6 +878,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           borderRadius={10}
                           p={5}
                           py={2}
+                          transition={"transform 0.3s ease"}
                           _hover={{
                             transform: "translateX(8px)",
                           }}
@@ -911,6 +900,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           borderRadius={10}
                           p={5}
                           py={2}
+                          transition={"transform 0.3s ease"}
                           _hover={{
                             transform: "translateX(8px)",
                           }}
@@ -945,6 +935,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           campaignList1={dbCamp}
                           campaigns={campaigns}
                           ethPrice={ethPrice}
+                          setCampaignList={setCampaignList}
                         />
                       )}
                     </Flex>
@@ -955,7 +946,6 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                 height={"200vh"}
                 width={"25vw"}
                 bgColor={"gray.100"}
-                borderLeftWidth={1}
                 borderLeftColor={"gray.500"}
                 flexDir={"column"}
                 padding={10}

@@ -39,10 +39,15 @@ export default function NavBar() {
   const [searchData, setsearchData] = useState([]);
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
+  const [searchMenu, setSearchMenu] = useState(0);
   const ref = useRef();
   useOutsideClick({
     ref: ref,
-    handler: () => setUserMenu(0),
+    handler: () => {
+      setUserMenu(0);
+      setSearchMenu(0);
+      console.log(searchMenu);
+    },
   });
 
   const getCampaigns = async () => {
@@ -95,30 +100,22 @@ export default function NavBar() {
     <Box>
       <Flex
         color={useColorModeValue("gray.600", "white")}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        borderBottom={1}
         borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
         bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
-        align={"center"}
         pos="fixed"
         top="0"
         w={"full"}
         minH={"60px"}
-        boxShadow={"sm"}
+        maxH={"60px"}
+        boxShadow={"2xl"}
         zIndex="999"
-        justify={"center"}
         css={{
           backdropFilter: "saturate(180%) blur(5px)",
-          // backgroundColor: useColorModeValue(
-          //   "#162F44",
-          //   "rgba(26, 32, 44, 0.8)"
-          // ),
         }}
       >
-        <Container as={Flex} maxW={"7xl"} align={"center"}>
-          <Flex flex={{ base: 1 }} justify="start">
+        <Flex as={Flex} align={"center"} w={"100vw"} px={"10%"} justifyContent={"space-between"}>
+          <Flex>
             <Heading
               textAlign="left"
               // fontFamily={"heading"}
@@ -126,25 +123,12 @@ export default function NavBar() {
               as="h2"
               size="lg"
             >
-              <Box
-                as={"span"}
-                color={useColorModeValue("#fefefe", "teal.300")}
-                position={"relative"}
-                zIndex={10}
-                ml={-100}
-                mr={10}
-              >
+              <Box as={"span"} color={useColorModeValue("#fefefe", "teal.300")} position={"relative"} zIndex={10}>
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
           </Flex>
-          <Stack
-            flex={{ base: 1, md: 0 }}
-            justify={"flex-end"}
-            direction={"row"}
-            spacing={20}
-            display={{ base: "none", md: "flex" }}
-          >
+          <Stack direction={"row"} gap={20}>
             <Flex
               backgroundColor={"gray.100"}
               width={"30vw"}
@@ -152,13 +136,15 @@ export default function NavBar() {
               alignContent={"center"}
               alignItems={"center"}
             >
-              {/* TODO  */}
-              <InputGroup w={"90%"} border={"0px"}>
+              <InputGroup w={"100%"} border={"0px"}>
                 <Input
                   type="string"
                   border={"0px"}
                   placeholder={"Search for campaigns"}
-                  onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value.toLowerCase());
+                    setSearchMenu(1);
+                  }}
                 />
               </InputGroup>
 
@@ -194,13 +180,6 @@ export default function NavBar() {
             >
               <NextLink href="/about">About</NextLink>
             </Button>
-            {/* <Button
-              onClick={() => {
-                console.log("Debug Now.");
-              }}
-            >
-              DEBUG
-            </Button> */}
 
             {user ? (
               <Button
@@ -247,36 +226,42 @@ export default function NavBar() {
             {/* <DarkModeSwitch /> */}
           </Stack>
 
-          <Flex display={{ base: "flex", md: "none" }}>{/* <DarkModeSwitch /> */}</Flex>
-        </Container>
+          {/* <Flex display={{ base: "flex", md: "none" }}>
+            <DarkModeSwitch />
+          </Flex> */}
+        </Flex>
       </Flex>
-
-      <Flex
-        borderBottom={1}
-        borderLeft={1}
-        borderRight={1}
-        borderStyle={"solid"}
-        borderColor={"blue.400"}
-        bgColor={"white"}
-        pos="fixed"
-        w={"30vw"}
-        top="59px"
-        left={"29vw"}
-        boxShadow={"sm"}
-        zIndex="999"
-        // justify={"center"}
-        paddingLeft={"20px"}
-        py={0}
-        borderBottomRadius={10}
-      >
-        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} />}
-      </Flex>
+      {searchMenu ? (
+        <Flex
+          borderBottom={1}
+          borderLeft={1}
+          borderRight={1}
+          borderStyle={"solid"}
+          borderColor={"blue.400"}
+          bgColor={"white"}
+          pos="fixed"
+          w={"30vw"}
+          top="60px"
+          left={"29vw"}
+          boxShadow={"sm"}
+          zIndex="999"
+          // justify={"center"}
+          paddingLeft={"20px"}
+          py={0}
+          borderBottomRadius={10}
+          ref={ref}
+        >
+          {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref} />}
+        </Flex>
+      ) : (
+        <></>
+      )}
 
       {userMenu ? (
         <Flex
           position={"fixed"}
-          top={"59px"}
-          right={"2vw"}
+          top={"60px"}
+          right={"60px"}
           w={"20vw"}
           bgColor={"gray.300"}
           p={5}

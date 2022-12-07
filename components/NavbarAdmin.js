@@ -189,7 +189,7 @@ export default function NavbarAdmin() {
             </Button>
             <Button
               fontSize={"md"}
-              fontWeight={400}
+              fontWeight={"bold"}
               variant={"link"}
               display={{ base: "none", md: "inline-flex" }}
               color={"black"}
@@ -201,6 +201,7 @@ export default function NavbarAdmin() {
               bgColor={"blue.300"}
               padding={10}
               py={0}
+              borderRadius={35}
             >
               <NextLink href="/" color="black">
                 Logout
