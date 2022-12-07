@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useWindowSize } from "react-use";
 import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getETHPrice";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import NoSSR from 'react-no-ssr';
+import NoSSR from "react-no-ssr";
 import PDFFile from "../pdfFile";
 import {
   Box,
@@ -153,6 +153,12 @@ export default function CampaignSingle({
   const router = useRouter();
   const { width, height } = useWindowSize();
 
+  const [donorName, setDonorName] = useState("");
+  const [creatorName, setCreatorName] = useState("");
+  const [campName, setCampName] = useState("");
+  const [donatedDate, setDonatedDate] = useState("");
+  const [donAmount, setDonAmount] = useState("");
+
   useEffect(() => {
     if (localStorage.getItem("email") == null) {
       setIsAuthenticated(false);
@@ -168,6 +174,11 @@ export default function CampaignSingle({
       for (var k = 0; k < users.length; k++) {
         if (users[k].email == u) tempUser = users[k];
       }
+      setCampName(name);
+      setDonAmount(getETHPriceInUSD(ETHPrice, amountInUSD));
+      var tempName = tempUser.firstname + " " + tempUser.lastname;
+      setDonorName(tempName);
+      setDonatedDate(new Date().toJSON().slice(0, 10));
       if (tempUser["donatedCampaigns"] == undefined) tempUser["donatedCampaigns"] = [name];
       else if (tempUser["donatedCampaigns"].includes(name) == false) tempUser["donatedCampaigns"].push(name);
 
@@ -202,6 +213,13 @@ export default function CampaignSingle({
       for (var i = 0; i < dbCamp.length; i++) {
         if (dbCamp[i].name == name) tempObj = dbCamp[i];
       }
+      var tempEmail = tempObj.creatorEmail;
+      var tempUser = {};
+      for (var k = 0; k < users.length; k++) {
+        if (users[k].email == tempEmail) tempUser = users[k];
+      }
+      var tempName = tempUser.firstname + " " + tempUser.lastname;
+      setCreatorName(tempName);
       if (tempObj["donatorEmail"].includes(u) == false) tempObj["donatorEmail"].push(u);
       try {
         fetch("/api/campaign/update", {
@@ -249,7 +267,13 @@ export default function CampaignSingle({
                 <AlertDescription mr={2}> Thank You for your Contribution 🙏</AlertDescription>
                 <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsSubmitted(false)} />
               </Alert>
-              <PDFFile/>
+              <PDFFile
+                donName={donorName}
+                donAm={donAmount}
+                donDate={donatedDate}
+                campName={campName}
+                creName={creatorName}
+              />
             </Container>
           ) : null}
           <Flex direction={"row"}>
