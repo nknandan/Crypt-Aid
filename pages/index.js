@@ -217,6 +217,7 @@ export default function Home({ campaigns, users, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
+  const [showViewMore, setShowViewMore] = useState(1);
 
   async function getSummary() {
     try {
@@ -239,7 +240,12 @@ export default function Home({ campaigns, users, dbCamp }) {
   }
 
   function handleShowMore() {
-    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + 1);
+    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + (campaignList.length-campaignListNumber));
+    console.log("showing" + campaignListNumber);
+    console.log("total" + campaignList.length);
+    if(campaignListNumber == campaignList.length){
+      setShowViewMore(0);
+    }
   }
 
   useEffect(() => {
@@ -347,7 +353,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {campaignList.length > 3 && campaignListNumber != campaignList.length ? (
+          {showViewMore ? (
             <Button
               display={{ sm: "inline-flex" }}
               w={"200px"}
