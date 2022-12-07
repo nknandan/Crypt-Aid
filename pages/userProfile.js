@@ -916,7 +916,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       <Flex flexDir={"column"}>
                         <Text fontSize={16}>Total amount contributed</Text>
                         <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                          ${donatedAmount.toFixed(2)}
+                          ${donatedAmount ? donatedAmount.toFixed(2) : "0.00"}
                         </Text>
                       </Flex>
                     </Center>
