@@ -160,7 +160,7 @@ export default function RecommendedCampaigns({ name, description }) {
     let summaryTemp = getCampaigns();
     fetchRecommendedCampaigns(summaryTemp);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [name, description]);
 
   const getCampaigns = async () => {
     try {
