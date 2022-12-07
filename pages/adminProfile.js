@@ -358,7 +358,7 @@ function PendingCard({
   target,
   ethPrice,
   setCampaignList,
-  campaignList
+  campaignList,
 }) {
   const router = useRouter();
   function multiFunct() {
@@ -368,7 +368,7 @@ function PendingCard({
   }
 
   const redirect = () => {
-    router.push("adminProfile");
+    router.reload("/");
   };
 
   function updateStatus() {
@@ -405,7 +405,13 @@ function PendingCard({
       zIndex={1}
     >
       <NextLink href={`/campaign/${id}`}>
-        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"} zIndex={1}>
+        <Box
+          h={"100%"}
+          w={"25%"}
+          borderRadius={"20"}
+          borderRightRadius={"0"}
+          zIndex={1}
+        >
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
@@ -465,7 +471,14 @@ function PendingCard({
       {approvedPending ? (
         <> </>
       ) : (
-        <Flex justifyContent={"space-between"} zIndex={99} marginRight={"5%"} pos={"absolute"} right={"1%"} bottom={"15%"}>
+        <Flex
+          justifyContent={"space-between"}
+          zIndex={99}
+          marginRight={"5%"}
+          pos={"absolute"}
+          right={"1%"}
+          bottom={"15%"}
+        >
           <Button
             bgColor={"green.200"}
             fontSize={12}
@@ -833,10 +846,17 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   alignSelf={"center"}
                   bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
                 ></Flex>
-                <Flex flexDir={"row"} justifyContent={"flex-start"} pl={"10%"} mt={"-8%"}>
+                <Flex
+                  flexDir={"row"}
+                  justifyContent={"flex-start"}
+                  pl={"10%"}
+                  mt={"-8%"}
+                >
                   <Center mr={"2%"} minW={"19%"}>
                     <Img
-                      src={"https://contentstatic.techgig.com/photo/76920096/career-as-system-administrator-skills-required-certifications-and-salaries.jpg?186038"}
+                      src={
+                        "https://contentstatic.techgig.com/photo/76920096/career-as-system-administrator-skills-required-certifications-and-salaries.jpg?186038"
+                      }
                       alt="Profile Picture"
                       h={"9vw"}
                       w={"9vw"}
@@ -844,9 +864,19 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                       borderRadius={"50%"}
                     ></Img>
                   </Center>
-                  <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
+                  <Flex
+                    w={"79%"}
+                    justifyContent={"space-between"}
+                    pr={"10%"}
+                    alignItems={"center"}
+                  >
                     <Flex flexDir={"column"}>
-                      <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"30%"}>
+                      <Text
+                        fontSize={30}
+                        fontWeight={800}
+                        color={"blue.800"}
+                        mt={"30%"}
+                      >
                         Administrator
                       </Text>
                     </Flex>
