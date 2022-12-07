@@ -33,17 +33,24 @@ const SearchTable = ({ searchData, mapping }) => {
         <Tbody>
           {data.map((item) => (
             <Tr key={item.id}>
-              <Td>
+              <Td p={3} pl={10}>
                 <NextLink href={`/campaign/${mapping[item["5"]]}`} color={"blue"} cursor={"pointer"}>
-                  <Text
-                    color={"blue.500"}
-                    cursor={"pointer"}
+                  <Center flexDir={"row"} p={0} justifyContent={"flex-start"} transition={"transform 0.3s ease"}
                     _hover={{
-                      color: "blue.800",
-                    }}
-                  >
-                    {item["5"]}
-                  </Text>
+                      transform: "translateY(-3px)",
+                    }}>
+                    <Img h={"80px"} w={"80px"} borderRadius={"20%"} src={item["7"]} mr={"30px"} fill={"contain"} />
+                    <Text
+                      color={"blue.600"}
+                      cursor={"pointer"}
+                      _hover={{
+                        color: "blue.800",
+                      }}
+                      fontSize={20}
+                    >
+                      {item["5"]}
+                    </Text>
+                  </Center>
                 </NextLink>
               </Td>
             </Tr>

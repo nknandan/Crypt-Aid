@@ -27,7 +27,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useWallet } from "use-wallet";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
-import SearchTable from "./searchTable";
+import SearchTable from "./SearchTable";
 import { useUser } from "@auth0/nextjs-auth0";
 
 var cName2Id = {};
@@ -109,7 +109,7 @@ export default function NavBar() {
         minH={"60px"}
         maxH={"60px"}
         boxShadow={"2xl"}
-        zIndex="999"
+        zIndex="1000"
         css={{
           backdropFilter: "saturate(180%) blur(5px)",
         }}
@@ -161,6 +161,32 @@ export default function NavBar() {
               >
                 <Img position={"absolute"} height={"60%"} objectFit={"contain"} src={"/search.png"} />
               </Button>
+              {searchMenu ? (
+                <Flex
+                  borderBottom={1}
+                  borderLeft={1}
+                  borderRight={1}
+                  borderStyle={"solid"}
+                  borderColor={"blue.400"}
+                  bgColor={"white"}
+                  w={"30vw"}
+                  h={"40vh"}
+                  overflowY={"auto"}
+                  pos={"absolute"}
+                  top={"60px"}
+                  boxShadow={"sm"}
+                  zIndex="999"
+                  // justify={"center"}
+                  paddingLeft={"10px"}
+                  py={0}
+                  borderBottomRadius={10}
+                  ref={ref}
+                >
+                  {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref} />}
+                </Flex>
+              ) : (
+                <></>
+              )}
             </Flex>
             <Button
               fontSize={"md"}
@@ -231,31 +257,6 @@ export default function NavBar() {
           </Flex> */}
         </Flex>
       </Flex>
-      {searchMenu ? (
-        <Flex
-          borderBottom={1}
-          borderLeft={1}
-          borderRight={1}
-          borderStyle={"solid"}
-          borderColor={"blue.400"}
-          bgColor={"white"}
-          pos="fixed"
-          w={"30vw"}
-          top="60px"
-          left={"29vw"}
-          boxShadow={"sm"}
-          zIndex="999"
-          // justify={"center"}
-          paddingLeft={"20px"}
-          py={0}
-          borderBottomRadius={10}
-          ref={ref}
-        >
-          {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref} />}
-        </Flex>
-      ) : (
-        <></>
-      )}
 
       {userMenu ? (
         <Flex
