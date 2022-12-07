@@ -318,7 +318,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         transition={"transform 0.3s ease"}
         boxShadow="sm"
         _hover={{
-          transform: "translateX(8px)",
+          transform: "translateY(-8px)",
         }}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
@@ -520,7 +520,7 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
 
 function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campaigns, ethPrice }) {
   var ab;
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
@@ -726,60 +726,53 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             <Flex
               w={"90%"}
               h={"20vh"}
-              bgColor={"white"}
               borderBottomRadius={20}
               alignSelf={"center"}
               bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
             ></Flex>
-            <Center
-              borderRadius={"50%"}
-              borderWidth={5}
-              borderColor={"white"}
-              h={"20vh"}
-              w={"20vh"}
-              pos={"absolute"}
-              top={"15vh"}
-              left={"25vw"}
-            >
-              <Img
-                src={user.imageURL ? user.imageURL : obj.picture}
-                alt="Profile Picture"
-                h={"19vh"}
-                w={"19vh"}
-                objectFit={"fill"}
-                borderRadius={"50%"}
-              ></Img>
-            </Center>
-            <Flex flexDir={"column"} w={"20vw"} pos={"absolute"} top={"27vh"} left={"35vw"}>
-              <Text fontSize={30} fontWeight={800} color={"blue.800"}>
-                {user.username ? user.username : obj.nickname}
-              </Text>
-              <Text fontSize={15} fontWeight={300} mt={-2}>
-                {obj.email}
-              </Text>
+            <Flex flexDir={"row"} justifyContent={"flex-start"} pl={"10%"} mt={"-8%"}>
+              <Center mr={"2%"} minW={"19%"}>
+                <Img
+                  src={user.imageURL ? user.imageURL : obj.picture}
+                  alt="Profile Picture"
+                  h={"9vw"}
+                  w={"9vw"}
+                  objectFit={"fill"}
+                  borderRadius={"50%"}
+                ></Img>
+              </Center>
+              <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
+                <Flex flexDir={"column"}>
+                  <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"50%"}>
+                    {user.username ? user.username : obj.nickname}
+                  </Text>
+                  <Text fontSize={15} fontWeight={300}>
+                    {obj.email}
+                  </Text>
+                </Flex>
+                <Flex mt={"14%"}>
+                  <Button
+                    w={"56px"}
+                    h={"56px"}
+                    bgColor={"gray.300"}
+                    borderRadius={"56px"}
+                    onClick={() => {
+                      setSettingsScreen(!settingsScreen);
+                      //console.log(settingsScreen);
+                    }}
+                  >
+                    <Img objectFit={"contain"} src={"/settings.png"} />
+                  </Button>
+                </Flex>
+              </Flex>
             </Flex>
-            <Button
-              w={"56px"}
-              h={"56px"}
-              bgColor={"gray.300"}
-              pos={"absolute"}
-              left={"65vw"}
-              top={"28vh"}
-              borderRadius={"56px"}
-              onClick={() => {
-                setSettingsScreen(!settingsScreen);
-                //console.log(settingsScreen);
-              }}
-            >
-              <Img objectFit={"contain"} src={"/settings.png"} />
-            </Button>
             {settingsScreen ? (
               <Flex>
                 <SettingsPage setSettingsScreen={setSettingsScreen} user={user} />
               </Flex>
             ) : (
               <Flex flexDirection={"column"}>
-                <Flex w={"100%"} mt={"12%"} px={"10%"} py={5} flexDirection={"column"}>
+                <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
                   <Heading mb={6} fontSize={30}>
                     Dashboard
                   </Heading>
@@ -789,6 +782,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       borderRadius={10}
                       p={5}
                       py={2}
+                      transition={"transform 0.3s ease"}
                       _hover={{
                         transform: "translateX(8px)",
                       }}
@@ -806,6 +800,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       borderRadius={10}
                       p={5}
                       py={2}
+                      transition={"transform 0.3s ease"}
                       _hover={{
                         transform: "translateX(8px)",
                       }}
@@ -823,6 +818,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                       borderRadius={10}
                       p={5}
                       py={2}
+                      transition={"transform 0.3s ease"}
                       _hover={{
                         transform: "translateX(8px)",
                       }}
@@ -862,15 +858,16 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
           <Flex
             height={"200vh"}
             width={"25vw"}
-            bgColor={"gray.100"}
-            borderLeftWidth={1}
+            bgColor={"gray.200"}
+            // borderLeftWidth={1}
             borderLeftColor={"gray.500"}
             flexDir={"column"}
             padding={10}
             px={5}
+            alignItems={"center"}
           >
-            <Center bgColor={"gray.200"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"}>
-              <Img src={"/user.png"} height={10} mr={5} />
+            <Center bgColor={"gray.300"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"} w={"60%"} justifyContent={"flex-start"}>
+              <Img src={"/user.png"} height={10} mr={8} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
                   {user.username ? user.username : obj.nickname}

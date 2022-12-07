@@ -130,7 +130,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         transition={"transform 0.3s ease"}
         boxShadow="sm"
         _hover={{
-          transform: "translateX(8px)",
+          transform: "translateY(-8px)",
         }}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>

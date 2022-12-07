@@ -238,7 +238,7 @@ export default function CampaignSingle({
       {isSubmitted ? <Confetti width={width} height={height} /> : null}
       <main>
         {" "}
-        <Flex px={"17.5vw"} direction={"column"} justifyContent={"space-evenly"} gap={"3vw"} marginTop={"5vh"}>
+        <Flex px={"17.5vw"} direction={"column"} gap={"3vw"} marginTop={"5vh"}>
           {isSubmitted ? (
             <Container maxW={"7xl"} columns={{ base: 1, md: 2 }} spacing={{ base: 10, lg: 32 }} py={{ base: 6 }}>
               <Alert status="success" mt="2">
