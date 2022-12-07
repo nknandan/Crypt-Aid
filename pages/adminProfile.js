@@ -580,7 +580,6 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [approvedPending, setApprovedPending] = useState(false);
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
-  const [campaignList1, setCampaignList1] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [approvedNumber, setApprovedNumber] = useState();
   const [notApprovedNumber, setNotApprovedNumber] = useState();
