@@ -866,7 +866,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             px={5}
             alignItems={"center"}
           >
-            <Center bgColor={"gray.300"} borderRadius={10} p={5} py={2} justifyContent={"space-evenly"} w={"60%"} justifyContent={"flex-start"}>
+            <Center bgColor={"gray.300"} borderRadius={10} p={5} py={2} w={"60%"} justifyContent={"flex-start"}>
               <Img src={"/user.png"} height={10} mr={8} />
               <Flex flexDir={"column"}>
                 <Text fontSize={22} fontWeight={600} noOfLines={1}>
