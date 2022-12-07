@@ -162,6 +162,12 @@ export default function RecommendedCampaigns({ name, description }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    let summaryTemp = getCampaigns();
+    fetchRecommendedCampaigns(summaryTemp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, description]);
+
   const getCampaigns = async () => {
     try {
       const campaigns = await factory.methods.getDeployedCampaigns().call();
