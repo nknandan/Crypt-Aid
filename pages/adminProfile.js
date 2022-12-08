@@ -57,9 +57,7 @@ function SettingsPage({ setSettingsScreen, users }) {
   async function getSummary() {
     try {
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
@@ -106,12 +104,7 @@ function SettingsPage({ setSettingsScreen, users }) {
 
   return (
     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
-      <Center
-        justifyContent={"flex-start"}
-        borderBottomWidth={1}
-        borderColor={"blue.800"}
-        py={2}
-      >
+      <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
         <Button p={0} mr={"2vh"} bgColor={"transparent"}>
           <Img
             src={"/back.png"}
@@ -162,11 +155,7 @@ function SettingsPage({ setSettingsScreen, users }) {
               Username
             </Text>
             <InputGroup w={"100%"}>
-              <Input
-                type="string"
-                borderColor={"gray.300"}
-                placeholder={obj.nickname}
-              />
+              <Input type="string" borderColor={"gray.300"} placeholder={obj.nickname} />
               <InputRightAddon bgColor={"#9ed1f0"}>
                 <Img src="/edit.png" h={6} />
               </InputRightAddon>
@@ -178,11 +167,7 @@ function SettingsPage({ setSettingsScreen, users }) {
                 First name
               </Text>
               <InputGroup w={"100%"}>
-                <Input
-                  type="string"
-                  borderColor={"gray.300"}
-                  placeholder={"First Name"}
-                />
+                <Input type="string" borderColor={"gray.300"} placeholder={"First Name"} />
                 <InputRightAddon bgColor={"#9ed1f0"}>
                   <Img src="/edit.png" h={6} />
                 </InputRightAddon>
@@ -193,11 +178,7 @@ function SettingsPage({ setSettingsScreen, users }) {
                 Last name
               </Text>
               <InputGroup w={"100%"}>
-                <Input
-                  type="string"
-                  borderColor={"gray.300"}
-                  placeholder={"Last Name"}
-                />
+                <Input type="string" borderColor={"gray.300"} placeholder={"Last Name"} />
                 <InputRightAddon bgColor={"#9ed1f0"}>
                   <Img src="/edit.png" h={6} />
                 </InputRightAddon>
@@ -211,21 +192,8 @@ function SettingsPage({ setSettingsScreen, users }) {
           </Text>
           <Center w={"100%"}>
             <Center mt={8} ml={8} pos="relative">
-              <Img
-                src={obj.picture}
-                h={"25vh"}
-                borderRadius={"50%"}
-                objectFit={"cover"}
-              />
-              <Button
-                h={16}
-                w={16}
-                bgColor={"blue.300"}
-                borderRadius={"50%"}
-                pos={"absolute"}
-                bottom={0}
-                right={0}
-              >
+              <Img src={obj.picture} h={"25vh"} borderRadius={"50%"} objectFit={"cover"} />
+              <Button h={16} w={16} bgColor={"blue.300"} borderRadius={"50%"} pos={"absolute"} bottom={0} right={0}>
                 <Img src="/edit.png" objectFit={"cover"} h={7} />
               </Button>
             </Center>
@@ -236,16 +204,7 @@ function SettingsPage({ setSettingsScreen, users }) {
   );
 }
 
-function ApprovedCard({
-  name,
-  description,
-  creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -288,18 +247,9 @@ function ApprovedCard({
           pb={"1.5rem"}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            ></Box>
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -309,11 +259,7 @@ function ApprovedCard({
           <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">
-                  {balance > 0
-                    ? "Raised : " + web3.utils.fromWei(balance, "ether")
-                    : "Raised : 0"}
-                </Text>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
                 <Text as="span" pr={2}>
                   {" "}
                   ETH
@@ -333,13 +279,7 @@ function ApprovedCard({
                 {getWEIPriceInUSD(ethPrice, target)})
               </Text>
             </Flex>
-            <Progress
-              colorScheme="blue"
-              size="sm"
-              value={balance}
-              max={target}
-              mt="2"
-            />
+            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
           </Box>
         </Box>
       </Box>
@@ -365,6 +305,7 @@ function PendingCard({
     updateStatus();
     setCampaignList(campaignList);
     redirect();
+    window.location.reload();
   }
 
   const redirect = () => {
@@ -405,13 +346,7 @@ function PendingCard({
       zIndex={1}
     >
       <NextLink href={`/campaign/${id}`}>
-        <Box
-          h={"100%"}
-          w={"25%"}
-          borderRadius={"20"}
-          borderRightRadius={"0"}
-          zIndex={1}
-        >
+        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"} zIndex={1}>
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
@@ -439,18 +374,9 @@ function PendingCard({
           zIndex={1}
         >
           <Box>
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-            ></Box>
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
@@ -479,14 +405,7 @@ function PendingCard({
           right={"1%"}
           bottom={"15%"}
         >
-          <Button
-            bgColor={"green.200"}
-            fontSize={12}
-            p={3}
-            h={2}
-            onClick={multiFunct}
-            component="a"
-          >
+          <Button bgColor={"green.200"} fontSize={12} p={3} h={2} onClick={multiFunct} component="a">
             Approve
           </Button>
         </Flex>
@@ -495,14 +414,7 @@ function PendingCard({
   );
 }
 
-function ApprovedCampaigns({
-  setApprovedPending,
-  campaignList,
-  campaignList1,
-  campaigns,
-  ethPrice,
-  setCampaignList,
-}) {
+function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
@@ -524,10 +436,7 @@ function ApprovedCampaigns({
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              if (
-                campaignList1[k].isApproved == false &&
-                campaignList1[k].name == el[5]
-              ) {
+              if (campaignList1[k].isApproved == false && campaignList1[k].name == el[5]) {
                 console.log(campaignList1[k]);
                 return (
                   <div key={i}>
@@ -554,13 +463,7 @@ function ApprovedCampaigns({
   );
 }
 
-function PendingCampaigns({
-  setApprovedPending,
-  campaignList,
-  campaignList1,
-  campaigns,
-  ethPrice,
-}) {
+function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
@@ -583,10 +486,7 @@ function PendingCampaigns({
             for (var k = 0; k < campaignList1.length; k++) {
               // console.log(el[5]);
               // console.log(campaignList1[k].name);
-              if (
-                campaignList1[k].isApproved == true &&
-                campaignList1[k].name == el[5]
-              ) {
+              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5]) {
                 return (
                   <div key={i}>
                     <ApprovedCard
@@ -628,9 +528,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     try {
       // getCampaigns();
       const summary = await Promise.all(
-        campaigns.map((campaign, i) =>
-          Campaign(campaigns[i]).methods.getSummary().call()
-        )
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
       const ethPrice = await getETHPrice();
       updateEthPrice(ethPrice);
@@ -696,10 +594,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   }
 
   function checkAdminCredentials() {
-    if (
-      adminmails.includes(adminEnteredMail) &&
-      adminpass.includes(adminEnteredPass)
-    ) {
+    if (adminmails.includes(adminEnteredMail) && adminpass.includes(adminEnteredPass)) {
       setAdminLogIn(0);
       setInvalidAdminLogIn(0);
       localStorage.setItem("adminAuth", "true");
@@ -722,10 +617,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     <div>
       <Head>
         <title>Admin Profile | CryptAid</title>
-        <meta
-          name="description"
-          content="Transparent Crowdfunding in Blockchain"
-        />
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
@@ -742,13 +634,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               borderColor={"gray"}
               borderRadius={10}
             >
-              <Flex
-                height={"60vh"}
-                width={"30vw"}
-                flexDirection={"column"}
-                align={"center"}
-                mt={"15vh"}
-              >
+              <Flex height={"60vh"} width={"30vw"} flexDirection={"column"} align={"center"} mt={"15vh"}>
                 <Heading fontSize={"50px"}>Welcome Admin !</Heading>
                 <Text fontSize={"20px"} color={"gray.500"}>
                   Help the people, make big changes
@@ -767,12 +653,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                       />
                     </InputGroup>
                   </FormControl>
-                  <FormControl
-                    id="password"
-                    type="password"
-                    mt={"3vh"}
-                    ml={"-25%"}
-                  >
+                  <FormControl id="password" type="password" mt={"3vh"} ml={"-25%"}>
                     <FormLabel>Password</FormLabel>
                     <InputGroup mt={-2} w={"150%"}>
                       <Input
@@ -827,18 +708,8 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               left={0}
             >
               <NavbarAdmin />
-              <Flex
-                height={"200vh"}
-                width={"25vw"}
-                bgColor={"gray.100"}
-                borderRightColor={"gray.500"}
-              ></Flex>
-              <Flex
-                height={"200vh"}
-                width={"55vw"}
-                bgColor={"gray.100"}
-                flexDirection={"column"}
-              >
+              <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderRightColor={"gray.500"}></Flex>
+              <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
                 <Flex
                   w={"90%"}
                   h={"20vh"}
@@ -846,12 +717,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   alignSelf={"center"}
                   bgGradient={"linear(to-l, #2C2C7B, #1CB5E0)"}
                 ></Flex>
-                <Flex
-                  flexDir={"row"}
-                  justifyContent={"flex-start"}
-                  pl={"10%"}
-                  mt={"-8%"}
-                >
+                <Flex flexDir={"row"} justifyContent={"flex-start"} pl={"10%"} mt={"-8%"}>
                   <Center mr={"2%"} minW={"19%"}>
                     <Img
                       src={
@@ -864,19 +730,9 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                       borderRadius={"50%"}
                     ></Img>
                   </Center>
-                  <Flex
-                    w={"79%"}
-                    justifyContent={"space-between"}
-                    pr={"10%"}
-                    alignItems={"center"}
-                  >
+                  <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
                     <Flex flexDir={"column"}>
-                      <Text
-                        fontSize={30}
-                        fontWeight={800}
-                        color={"blue.800"}
-                        mt={"30%"}
-                      >
+                      <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"30%"}>
                         Administrator
                       </Text>
                     </Flex>
@@ -888,21 +744,11 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   </Flex>
                 ) : (
                   <Flex flexDirection={"column"}>
-                    <Flex
-                      w={"100%"}
-                      mt={"5%"}
-                      px={"10%"}
-                      py={5}
-                      flexDirection={"column"}
-                    >
+                    <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
                       <Heading mb={6} fontSize={30}>
                         Dashboard
                       </Heading>
-                      <Flex
-                        flexDirection={"row"}
-                        width={"100%"}
-                        justifyContent={"space-evenly"}
-                      >
+                      <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -916,11 +762,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           <Img src={"/totalamount.png"} height={10} mr={5} />
                           <Flex flexDir={"column"}>
                             <Text fontSize={16}>Campaigns to approve</Text>
-                            <Text
-                              fontSize={26}
-                              fontWeight={600}
-                              color={"blue.500"}
-                            >
+                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
                               {notApprovedNumber}
                             </Text>
                           </Flex>
@@ -938,11 +780,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           <Img src={"/totalcreated.png"} height={10} mr={5} />
                           <Flex flexDir={"column"}>
                             <Text fontSize={16}>Total Campaigns Approved</Text>
-                            <Text
-                              fontSize={26}
-                              fontWeight={600}
-                              color={"blue.500"}
-                            >
+                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
                               {approvedNumber}
                             </Text>
                           </Flex>

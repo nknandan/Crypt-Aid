@@ -1,13 +1,4 @@
-import {
-  Box,
-  Flex,
-  Text,
-  SimpleGrid,
-  Heading,
-  Img,
-  Spinner,
-  Center,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, SimpleGrid, Heading, Img, Spinner, Center } from "@chakra-ui/react";
 
 import { useEffect, useState, useRef } from "react";
 import NextLink from "next/link";
@@ -122,7 +113,7 @@ export default function RecommendedCampaigns({ name, description }) {
           console.log(reqArr);
           let i = 0;
           for (let ele of reqArr) {
-            if (i > 3) break;
+            if (i > 2) break;
             dispTemparr.push(ele[0]);
             i++;
           }

@@ -26,7 +26,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useWallet } from "use-wallet";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
-import SearchTable from "./searchTable";
+import SearchTable from "./SearchTable";
 import { useUser } from "@auth0/nextjs-auth0";
 
 var cName2Id = {};
@@ -240,7 +240,7 @@ export default function NavbarAdmin() {
         py={0}
         borderBottomRadius={10}
       >
-        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref}/>}
+        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref} />}
       </Flex>
 
       {userMenu ? (
