@@ -307,6 +307,7 @@ function PendingCard({
     redirect();
     window.location.reload();
   }
+  useEffect(() => {}, [campaignList]);
 
   const redirect = () => {
     router.reload("/");
@@ -763,7 +764,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           <Flex flexDir={"column"}>
                             <Text fontSize={16}>Campaigns to approve</Text>
                             <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                              {notApprovedNumber}
+                              {notApprovedNumber + 1}
                             </Text>
                           </Flex>
                         </Center>
