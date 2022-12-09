@@ -764,7 +764,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           <Flex flexDir={"column"}>
                             <Text fontSize={16}>Campaigns to approve</Text>
                             <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                              {notApprovedNumber + 1}
+                              {notApprovedNumber}
                             </Text>
                           </Flex>
                         </Center>
