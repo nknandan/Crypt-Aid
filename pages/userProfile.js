@@ -495,7 +495,7 @@ function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campai
                       description={el[6]}
                       creatorId={el[4]}
                       imageURL={el[7]}
-                      id={cName2Id[el[5]]} //campaignList.length - 1 - i - k
+                      id={cName2Id[el[5]]}
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
