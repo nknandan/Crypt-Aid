@@ -29,7 +29,6 @@ const SearchTable = ({ searchData, mapping }) => {
   const data = searchData ?? [];
   return (
     <>
-      {/* <h1>Hello World</h1> */}
       <Table>
         <Tbody>
           {data.map((item) => (

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Head from "next/head";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -86,10 +87,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   async function findEmail() {
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) {
-        // console.log("IN IF");3333333333333
         setEmail(dbCamp[i].creatorEmail);
-        // console.log("EMAIL:");
-        // console.log(email);
         return dbCamp[i].creatorEmail;
       }
     }
@@ -160,7 +158,12 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
-                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"} color={useColorModeValue("gray.600", "gray.400")}>
+                <Box
+                  fontWeight={"600"}
+                  fontSize={"14px"}
+                  marginRight={"10px"}
+                  color={useColorModeValue("gray.600", "gray.400")}
+                >
                   c/CommunityName
                 </Box>{" "}
                 <Box color={useColorModeValue("gray.600", "gray.400")} fontSize={"14px"}>
@@ -240,16 +243,21 @@ export default function Home({ campaigns, users, dbCamp }) {
   }
 
   function handleShowMore() {
-    setCampaignListNumber(campaignListNumber >= campaignList.length ? campaignListNumber : campaignListNumber + (campaignList.length-campaignListNumber));
+    setCampaignListNumber(
+      campaignListNumber >= campaignList.length
+        ? campaignListNumber
+        : campaignListNumber + (campaignList.length - campaignListNumber)
+    );
     console.log("showing" + campaignListNumber);
     console.log("total" + campaignList.length);
-    if(campaignListNumber == campaignList.length){
+    if (campaignListNumber == campaignList.length) {
       setShowViewMore(0);
     }
   }
 
   useEffect(() => {
     getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -260,7 +268,7 @@ export default function Home({ campaigns, users, dbCamp }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <Flex p={"5rem"} className={styles.main} bgColor={useColorModeValue("gray.100", "#252525")}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}> 
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} align={"left"} position={"relative"}>
           {" "}
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
@@ -272,7 +280,6 @@ export default function Home({ campaigns, users, dbCamp }) {
           </Heading>
           <Heading
             textAlign={useBreakpointValue({ base: "left" })}
-            // fontFamily={"heading"}
             fontSize={"24px"}
             fontWeight={"200"}
             color={useColorModeValue("gray.800", "white")}

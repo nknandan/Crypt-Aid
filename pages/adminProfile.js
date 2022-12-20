@@ -76,19 +76,15 @@ function SettingsPage({ setSettingsScreen, users }) {
 
   function getUser() {
     try {
-      // console.log("Fetched users list");
-      // console.log(users);
       const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
       console.log(o);
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          //console.log(users[i]);
           setUser(users[i]);
           break;
         }
-        //console.log(JSON.stringify(user));
       }
     } catch (e) {
       console.log("Error in getUser().");
@@ -485,8 +481,6 @@ function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, cam
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              // console.log(el[5]);
-              // console.log(campaignList1[k].name);
               if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5]) {
                 return (
                   <div key={i}>
@@ -527,7 +521,6 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
 
   async function getSummary() {
     try {
-      // getCampaigns();
       const summary = await Promise.all(
         campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
@@ -548,36 +541,20 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
 
   function getUser() {
     try {
-      // console.log("Fetched users list");
-      // console.log(users);
       const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
-      //console.log(o);
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          // console.log(users[i]);
           setUser(users[i]);
           break;
         }
-        //console.log(JSON.stringify(user));
       }
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
     }
   }
-
-  // function getCampaigns() {
-  //   var a;
-  //   const u = localStorage.getItem("email");
-  //   var arr = [];
-  //   for (var i = 0; i < dbCamp.length; i++) {
-  //     if (dbCamp[i].creatorEmail == u) arr.push(dbCamp[i]);
-  //   }
-  //   setCampaignList1(arr);
-  //   console.log(campaignList1);
-  // }
 
   function getNumber() {
     var ab;

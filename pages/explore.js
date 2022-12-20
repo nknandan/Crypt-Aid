@@ -59,8 +59,6 @@ export async function getServerSideProps(context) {
   const dbCampaigns = await db.collection("campaigns").find().toArray();
   const dbUsers = await User.find();
 
-  // console.log(dbUsers);
-
   return {
     props: {
       campaigns,
@@ -86,7 +84,6 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
     return;
   }
   async function findUsername(tempEmail) {
-    // console.log(dbUsers);
     for (var i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == tempEmail) {
         const tempUsername = dbUsers[i].username;
@@ -199,7 +196,6 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               colorScheme="blue"
               size="sm"
               value={web3.utils.fromWei(balance, "ether")}
-              // value={50}
               max={web3.utils.fromWei(target, "ether")}
               mt="2"
             />
@@ -216,8 +212,6 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
   const [newButton, setNewButton] = useState(1);
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
-
-  // console.log(dbUsers);
 
   async function getSummary() {
     try {
@@ -305,7 +299,6 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     .reverse()
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {
-                        // console.log(dbCamp[j].isApproved);
                         if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
                           return (
                             <div key={i}>
@@ -333,7 +326,6 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     })
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {
-                        // console.log(dbCamp[j].isApproved);
                         if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
                           return (
                             <div key={i}>

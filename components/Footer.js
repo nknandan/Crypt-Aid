@@ -41,31 +41,15 @@ const SocialButton = ({ children, label, href }) => {
 
 export default function Footer() {
   return (
-    <Box
-      bg={useColorModeValue("blackAlpha.900", "gray.900")}
-      color={useColorModeValue("white", "gray.200")}
-    >
-      <Container
-        as={Stack}
-        maxW={"6xl"}
-        py={4}
-        spacing={4}
-        justify={"center"}
-        align={"center"}
-      >
+    <Box bg={useColorModeValue("blackAlpha.900", "gray.900")} color={useColorModeValue("white", "gray.200")}>
+      <Container as={Stack} maxW={"6xl"} py={4} spacing={4} justify={"center"} align={"center"}>
         <Heading
           textAlign={useBreakpointValue({ base: "center", md: "left" })}
-          // fontFamily={"heading"}
           color={useColorModeValue("teal.800", "white")}
           as="h2"
           size="lg"
         >
-          <Box
-            as={"span"}
-            color={useColorModeValue("#1CB5E0", "teal.300")}
-            position={"relative"}
-            zIndex={10}
-          >
+          <Box as={"span"} color={useColorModeValue("#1CB5E0", "teal.300")} position={"relative"} zIndex={10}>
             <NextLink href="/">CryptAid</NextLink>
           </Box>
         </Heading>
@@ -77,11 +61,7 @@ export default function Footer() {
         </Stack>
       </Container>
 
-      <Box
-        borderTopWidth={1}
-        borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.700")}
-      >
+      <Box borderTopWidth={1} borderStyle={"solid"} borderColor={useColorModeValue("gray.200", "gray.700")}>
         <Container
           maxW={"6xl"}
           py={4}
@@ -89,7 +69,7 @@ export default function Footer() {
           justify={{ base: "center", md: "space-between" }}
           align={{ base: "center", md: "center" }}
         >
-          <Text marginLeft={"300px"}>Made by Nandan N K, Alvin Antony Shaju,  Hari Krishnan U,  Harsha K</Text>
+          <Text marginLeft={"300px"}>Made by Nandan N K, Alvin Antony Shaju, Hari Krishnan U, Harsha K</Text>
         </Container>
       </Box>
     </Box>

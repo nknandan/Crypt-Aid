@@ -9,17 +9,7 @@ import web3 from "../smart-contract/web3";
 
 var cName2Id = {};
 
-function PendingCard({
-  name,
-  description,
-  approvedPending,
-  // creatorId,
-  imageURL,
-  id,
-  balance,
-  target,
-  ethPrice,
-}) {
+function PendingCard({ name, description, approvedPending, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -119,7 +109,6 @@ export default function RecommendedCampaigns({ name, description }) {
           }
           setDataDispNames(dispTemparr);
           console.log(dispTemparr);
-          //   return dispTemparr;
         });
     } catch (err) {
       console.log(err);
@@ -164,7 +153,6 @@ export default function RecommendedCampaigns({ name, description }) {
   };
 
   return (
-    // <></>
     <Flex w={"100%"} flexDir={"column"}>
       <Flex mb={3}>
         <Heading fontSize={30} mr={10}>

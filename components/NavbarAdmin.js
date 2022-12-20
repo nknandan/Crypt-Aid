@@ -106,21 +106,11 @@ export default function NavbarAdmin() {
         justify={"center"}
         css={{
           backdropFilter: "saturate(180%) blur(5px)",
-          // backgroundColor: useColorModeValue(
-          //   "#162F44",
-          //   "rgba(26, 32, 44, 0.8)"
-          // ),
         }}
       >
         <Container as={Flex} maxW={"7xl"} align={"center"}>
           <Flex flex={{ base: 1 }} justify="start">
-            <Heading
-              textAlign="left"
-              // fontFamily={"heading"}
-              color={useColorModeValue("red", "white")}
-              as="h2"
-              size="lg"
-            >
+            <Heading textAlign="left" color={useColorModeValue("red", "white")} as="h2" size="lg">
               <Box
                 as={"span"}
                 color={useColorModeValue("#fefefe", "teal.300")}
@@ -147,7 +137,6 @@ export default function NavbarAdmin() {
               alignContent={"center"}
               alignItems={"center"}
             >
-              {/* TODO  */}
               <InputGroup w={"90%"} border={"0px"}>
                 <Input
                   type="string"
@@ -155,15 +144,6 @@ export default function NavbarAdmin() {
                   placeholder={"Search for campaigns"}
                   onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
                 />
-
-                {/* <ul className="list">
-                  {search(campaignList).map((user) => (
-                    <li className="listItem" key={user.id}>
-                      {user["5"]}
-                    </li>
-                  ))}
-                </ul> */}
-                {/* {<SearchTable searchData={search(campaignList)} />} */}
               </InputGroup>
 
               <Button
@@ -235,7 +215,6 @@ export default function NavbarAdmin() {
         left={"29vw"}
         boxShadow={"sm"}
         zIndex="999"
-        // justify={"center"}
         paddingLeft={"20px"}
         py={0}
         borderBottomRadius={10}
@@ -259,14 +238,10 @@ export default function NavbarAdmin() {
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
             <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
-              {/* Above ml={2} */}
               <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
                 {user.nickname}
               </Text>
               <Text alignSelf={"flex-start"}>{user.name}</Text>
-              {/* <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
-                <NextLink href="/api/auth/logout">Manage your account</NextLink>
-              </Button> */}
               <NextLink href="/userProfile">
                 <a>
                   <Text

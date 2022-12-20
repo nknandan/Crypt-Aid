@@ -200,7 +200,6 @@ function SettingsPage({ setSettingsScreen, user }) {
               justifyContent={"space-between"}
             >
               {o.email}
-              {/* {} */}
               <Img height={7} src={"/mail.png"} />
             </Flex>
           </Flex>
@@ -388,8 +387,6 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
 }
 
 function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
-  // console.log(user.donatedCampaigns);
-  // console.log(chainCampaign);
   return (
     <Flex h={"100vh"} p={0} w={"100%"} maxW={"100%"}>
       <SimpleGrid row={{ base: 1, md: 3 }} spacing={10}>
@@ -397,14 +394,9 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
           var donatedArr = user.donatedCampaigns;
           for (var ele in donatedArr) {
             var camp = donatedArr[ele];
-            // console.log(camp);
-            // console.log(dbCampaign);
             for (var j = 0; j < dbCampaign.length; j++) {
-              // console.log(camp);
               if (dbCampaign[j].name == camp) {
-                // console.log(camp);
                 if (el[5] == camp) {
-                  // console.log(el);
                   return (
                     <NextLink href={``}>
                       <Box
@@ -457,57 +449,9 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
                               <Text noOfLines={3}>{el[6]}</Text>
                             </Box>
                           </Box>
-                          {/* <Box>
-                            <Flex
-                              direction={"row"}
-                              justifyContent={"space-between"}
-                            >
-                              <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                                <Text as="span">
-                                  {balance > 0
-                                    ? "Raised : " +
-                                      web3.utils.fromWei(balance, "ether")
-                                    : "Raised : 0"}
-                                </Text>
-                                <Text as="span" pr={2}>
-                                  {" "}
-                                  ETH
-                                </Text>
-                                <Text
-                                  as="span"
-                                  fontSize="lg"
-                                  display={balance > 0 ? "inline" : "none"}
-                                  fontWeight={"normal"}
-                                  color={useColorModeValue(
-                                    "gray.500",
-                                    "gray.200"
-                                  )}
-                                >
-                                  (${getWEIPriceInUSD(ethPrice, balance)})
-                                </Text>
-                              </Box>
-                              <Text fontSize={"md"} fontWeight="normal">
-                                Target : {web3.utils.fromWei(target, "ether")}{" "}
-                                ETH ($
-                                {getWEIPriceInUSD(ethPrice, target)})
-                              </Text>
-                            </Flex>
-                            <Progress
-                              colorScheme="blue"
-                              size="sm"
-                              value={balance}
-                              max={target}
-                              mt="2"
-                            />
-                          </Box> */}
                         </Box>
                       </Box>
                     </NextLink>
-                    // <div>
-                    //   <p>Name:{el[5]}</p>
-                    //   <p>Description:{el[6]}</p>
-                    //   <p>Image:{dbCampaign[j].imageUrl}</p>
-                    // </div>
                   );
                 }
               }
@@ -543,8 +487,6 @@ function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campai
         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              // console.log(el[5]);
-              // console.log(campaignList1[k].name);
               if (el[5] == campaignList1[k].name && campaignList1[k].isApproved == true) {
                 return (
                   <div key={i}>
@@ -596,8 +538,6 @@ function PendingCampaigns({ setActivePending, campaignList, campaignList1, campa
         <SimpleGrid py={8} spacing={10}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              // console.log(el[5]);
-              // console.log(campaignList1[k].name);
               if (el[5] == campaignList1[k].name && campaignList1[k].isApproved == false) {
                 return (
                   <div key={i}>
@@ -640,7 +580,6 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
     try {
       const tempArr = getCampaigns();
       setCampaignList1(tempArr);
-      // console.log(tempArr);
       const summary = await Promise.all(
         campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
       );
@@ -661,25 +600,18 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
 
   function getUser() {
     try {
-      // console.log("Fetched users list");
-      // console.log(users);
       const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
-      //console.log(o);
       setObj(o);
-      // console.log(obj);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
-          // console.log(users[i]);
           setUser(users[i]);
           setDonatedAmount(users[i].donatedAmount);
           setNoCreatedCampigns(users[i].createdCampaigns.length);
           setNoDonatedCampigns(users[i].donatedCampaigns.length);
           break;
         }
-        //console.log(JSON.stringify(user));
       }
-      // console.log(user);
     } catch (e) {
       console.log("Error in getUser().");
       console.log(e);
@@ -693,8 +625,6 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       if (dbCamp[i].creatorEmail == u) arr.push(dbCamp[i]);
     }
     setCampaignList1(arr);
-    // console.log("HERE");
-    // console.log(arr);
     return arr;
   }
 
@@ -759,7 +689,6 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                     borderRadius={"56px"}
                     onClick={() => {
                       setSettingsScreen(!settingsScreen);
-                      //console.log(settingsScreen);
                     }}
                   >
                     <Img objectFit={"contain"} src={"/settings.png"} />
@@ -860,7 +789,6 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
             height={"200vh"}
             width={"25vw"}
             bgColor={"gray.200"}
-            // borderLeftWidth={1}
             borderLeftColor={"gray.500"}
             flexDir={"column"}
             padding={10}
@@ -886,20 +814,6 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
                 My Donations
               </Text>
               <LatestActivity dbCampaign={dbCamp} chainCampaign={campaignList} campaigns={campaigns} user={user} />
-              {/* <LatestActivity
-                name={"Hi alvin"}
-                description={
-                  "save alvin antony shaju.do this project.pls.lalalallalal"
-                }
-                imageURL={"randomimageurl"}
-              />
-              <LatestActivity
-                name={"Hi alvin"}
-                description={
-                  "save alvin antony shaju.do this project.pls.lalalallalal"
-                }
-                imageURL={"randomimageurl"}
-              /> */}
             </Flex>
           </Flex>
         </Container>

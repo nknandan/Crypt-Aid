@@ -115,13 +115,7 @@ export default function NavBar() {
       >
         <Flex as={Flex} align={"center"} w={"100vw"} px={"10%"} justifyContent={"space-between"}>
           <Flex>
-            <Heading
-              textAlign="left"
-              // fontFamily={"heading"}
-              color={useColorModeValue("gray.600", "white")}
-              as="h2"
-              size="lg"
-            >
+            <Heading textAlign="left" color={useColorModeValue("gray.600", "white")} as="h2" size="lg">
               <Box as={"span"} color={useColorModeValue("#fefefe", "#fefefe")} position={"relative"} zIndex={10}>
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
@@ -270,14 +264,10 @@ export default function NavBar() {
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
             <Center flexDirection={"column"} maxW={"70%"} justifyContent={"center"} ml={5}>
-              {/* Above ml={2} */}
               <Text fontSize={25} fontWeight={400} alignSelf={"flex-start"}>
                 {user.nickname}
               </Text>
               <Text alignSelf={"flex-start"}>{user.name}</Text>
-              {/* <Button borderColor={"blue.300"} borderWidth={1} mt={2} borderRadius={20} alignSelf={"flex-start"}>
-                <NextLink href="/api/auth/logout">Manage your account</NextLink>
-              </Button> */}
               <NextLink href="/userProfile">
                 <a>
                   <Text
