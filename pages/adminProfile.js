@@ -303,7 +303,7 @@ function PendingCard({
     redirect();
     // window.location.reload();
   }
-  useEffect(() => {}, [campaignList]);
+  useEffect(() => { }, [campaignList]);
 
   const redirect = () => {
     router.reload("/");
@@ -320,7 +320,7 @@ function PendingCard({
         body: JSON.stringify({ tempObj }),
       });
     } catch (err) {
-      setError(err.message);
+      // setError(err.message);
       console.log(err);
     }
   }
@@ -434,7 +434,7 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
               if (campaignList1[k].isApproved == false && campaignList1[k].name == el[5]) {
-                console.log(campaignList1[k]);
+                // console.log(campaignList1[k]);
                 return (
                   <div key={i}>
                     <PendingCard
@@ -720,77 +720,71 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                     </Flex>
                   </Flex>
                 </Flex>
-                {settingsScreen ? (
-                  <Flex>
-                    <SettingsPage setSettingsScreen={setSettingsScreen} />
-                  </Flex>
-                ) : (
-                  <Flex flexDirection={"column"}>
-                    <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
-                      <Heading mb={6} fontSize={30}>
-                        Dashboard
-                      </Heading>
-                      <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
-                        <Center
-                          bgColor={"gray.200"}
-                          borderRadius={10}
-                          p={5}
-                          py={2}
-                          transition={"transform 0.3s ease"}
-                          _hover={{
-                            transform: "translateX(8px)",
-                          }}
-                        >
-                          <Img src={"/totalamount.png"} height={10} mr={5} />
-                          <Flex flexDir={"column"}>
-                            <Text fontSize={16}>Campaigns to approve</Text>
-                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                              {notApprovedNumber}
-                            </Text>
-                          </Flex>
-                        </Center>
-                        <Center
-                          bgColor={"gray.200"}
-                          borderRadius={10}
-                          p={5}
-                          py={2}
-                          transition={"transform 0.3s ease"}
-                          _hover={{
-                            transform: "translateX(8px)",
-                          }}
-                        >
-                          <Img src={"/totalcreated.png"} height={10} mr={5} />
-                          <Flex flexDir={"column"}>
-                            <Text fontSize={16}>Total Campaigns Approved</Text>
-                            <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                              {approvedNumber}
-                            </Text>
-                          </Flex>
-                        </Center>
-                      </Flex>
-                    </Flex>
-                    <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-                      {approvedPending ? (
-                        <PendingCampaigns
-                          setApprovedPending={setApprovedPending}
-                          campaignList={campaignList}
-                          campaignList1={dbCamp}
-                          campaigns={campaigns}
-                          ethPrice={ethPrice}
-                        />
-                      ) : (
-                        <ApprovedCampaigns
-                          setApprovedPending={setApprovedPending}
-                          campaignList={campaignList}
-                          campaignList1={dbCamp}
-                          campaigns={campaigns}
-                          ethPrice={ethPrice}
-                          setCampaignList={setCampaignList}
-                        />
-                      )}
+                <Flex flexDirection={"column"}>
+                  <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
+                    <Heading mb={6} fontSize={30}>
+                      Dashboard
+                    </Heading>
+                    <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
+                      <Center
+                        bgColor={"gray.200"}
+                        borderRadius={10}
+                        p={5}
+                        py={2}
+                        transition={"transform 0.3s ease"}
+                        _hover={{
+                          transform: "translateX(8px)",
+                        }}
+                      >
+                        <Img src={"/totalamount.png"} height={10} mr={5} />
+                        <Flex flexDir={"column"}>
+                          <Text fontSize={16}>Campaigns to approve</Text>
+                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                            {notApprovedNumber}
+                          </Text>
+                        </Flex>
+                      </Center>
+                      <Center
+                        bgColor={"gray.200"}
+                        borderRadius={10}
+                        p={5}
+                        py={2}
+                        transition={"transform 0.3s ease"}
+                        _hover={{
+                          transform: "translateX(8px)",
+                        }}
+                      >
+                        <Img src={"/totalcreated.png"} height={10} mr={5} />
+                        <Flex flexDir={"column"}>
+                          <Text fontSize={16}>Total Campaigns Approved</Text>
+                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                            {approvedNumber}
+                          </Text>
+                        </Flex>
+                      </Center>
                     </Flex>
                   </Flex>
-                )}
+                  <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
+                    {approvedPending ? (
+                      <PendingCampaigns
+                        setApprovedPending={setApprovedPending}
+                        campaignList={campaignList}
+                        campaignList1={dbCamp}
+                        campaigns={campaigns}
+                        ethPrice={ethPrice}
+                      />
+                    ) : (
+                      <ApprovedCampaigns
+                        setApprovedPending={setApprovedPending}
+                        campaignList={campaignList}
+                        campaignList1={dbCamp}
+                        campaigns={campaigns}
+                        ethPrice={ethPrice}
+                        setCampaignList={setCampaignList}
+                      />
+                    )}
+                  </Flex>
+                </Flex>
               </Flex>
               <Flex
                 height={"200vh"}

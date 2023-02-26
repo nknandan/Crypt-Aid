@@ -11,12 +11,14 @@ import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getET
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import NoSSR from "react-no-ssr";
 import PDFFile from "../pdfFile";
+import styles from "./[id].module.css";
 import {
   Box,
   Image,
   Flex,
   Stack,
   Heading,
+  Skeleton,
   Text,
   Container,
   Input,
@@ -126,6 +128,26 @@ function StatsCard(props) {
   );
 }
 
+function CommentCard() {
+  return (
+    <Box
+      w={"100%"}
+      position="relative"
+      bgColor={useColorModeValue("white", "#303030")}
+      borderRadius={"10"}
+      transition={"transform 0.3s ease"}
+      boxShadow="sm"
+      _hover={{
+        transform: "translateY(-3px)",
+      }}
+      padding={5}
+    >
+      <Text fontWeight={800} fontSize={18} color={"blue.300"}>Aromatic-Tomato-2330</Text>
+      Fun fact only one person from Kerala has ever gotten top 10 in JEE Advanced (entrance exam to IITs) and that was last year. Thomas Biju Cheeramvelil, from TVM, studied in Brilliant and secured All India Rank 3. He was one of my friend's neighbour. According to him this guy didn't get out of his house since 6th grade. And his mom, I believe took a long leave to be with him all the time. He is presently studying Computer Science Engineering at IIT Bombay, the most difficult course to gain admission to in the country. Was it worth sacrificing your childhood? Depends on your perspective
+    </Box>
+  );
+}
+
 export default function CampaignSingle({
   id,
   minimumContribution,
@@ -159,6 +181,7 @@ export default function CampaignSingle({
   const [donAmount, setDonAmount] = useState("");
   const [upVotes, setUpVotes] = useState();
   const [downVotes, setDownVotes] = useState();
+  const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("email") == null) {
@@ -246,27 +269,27 @@ export default function CampaignSingle({
     }
   }
 
-  async function upvote(){
+  async function upvote() {
     var tempObj = {};
     const u = localStorage.getItem("email");
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    console.log(tempObj["upVoters"].includes(u)); 
-    if(tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) 
+    console.log(tempObj["upVoters"].includes(u));
+    if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false)
       tempObj['upVoters'][0] = u;
-    else{
+    else {
       console.log("1");
-      if(tempObj["downVoters"].includes(u) == true){
+      if (tempObj["downVoters"].includes(u) == true) {
         console.log("HII");
         console.log(tempObj["downVoters"]);
         var i = tempObj["downVoters"].indexOf(u);
         tempObj["downVoters"].splice(i, 1);
         console.log(tempObj["downVoters"]);
-        if(tempObj["upVoters"].includes(u) == false)
+        if (tempObj["upVoters"].includes(u) == false)
           tempObj["upVoters"].push(u)
       }
-      else if(tempObj["upVoters"].includes(u) == true){
+      else if (tempObj["upVoters"].includes(u) == true) {
         console.log("continue");
       }
       else
@@ -288,25 +311,25 @@ export default function CampaignSingle({
     }
   }
 
-  async function downvote(){
+  async function downvote() {
     var tempObj = {};
     const u = localStorage.getItem("email");
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    if(tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) 
+    if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false)
       tempObj['downVoters'][0] = u;
-    else{
-      if(tempObj["upVoters"].includes(u) == true){
+    else {
+      if (tempObj["upVoters"].includes(u) == true) {
         console.log("1");
         console.log(tempObj["upVoters"]);
         var i = tempObj["upVoters"].indexOf(u);
         tempObj["upVoters"].splice(i, 1);
         console.log(tempObj["upVoters"]);
-        if(tempObj["downVoters"].includes(u) == false)
+        if (tempObj["downVoters"].includes(u) == false)
           tempObj["downVoters"].push(u)
       }
-      else if(tempObj["downVoters"].includes(u) == true){
+      else if (tempObj["downVoters"].includes(u) == true) {
         console.log("continue");
       }
       else
@@ -330,6 +353,7 @@ export default function CampaignSingle({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
 
   return (
     <div>
@@ -367,13 +391,27 @@ export default function CampaignSingle({
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
                 {description}
               </Text>
-              <button onClick={upvote}>UpVote {upVotes}</button>
-              <button onClick={downvote}>DownVote {downVotes}</button>
-              <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
-                View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
-              </Link>
+
+              <Flex direction={"row"} justifyContent={"space-between"} alignItems={"end"}>
+                <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
+                  View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
+                </Link>
+                <Flex direction={"row"} w={"25%"} justifyContent={"space-between"}>
+                  <button onClick={upvote}>
+                    <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10} alignItems={"center"} justifyContent={"space-between"}>
+                      <Img height={"26px"} objectFit={"contain"} src={"/arrow-up.png"} />
+                      <Text>123</Text>
+                    </Flex></button>
+                  <button onClick={downvote}>
+                    <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10}>
+                      <Img height={"26px"} objectFit={"contain"} src={"/arrow-down.png"} rotate={"20deg"} />
+                      <Text>123</Text>
+                    </Flex></button>
+                </Flex>
+              </Flex>
             </Flex>
           </Flex>
+
           <Box>
             <Stat
               bg={useColorModeValue("white", "gray.700")}
@@ -586,6 +624,61 @@ export default function CampaignSingle({
               info={"Number of people who have already donated to this campaign"}
             />
           </SimpleGrid>
+          <Box>
+            <Stat
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              rounded={"20px"}
+              p={{ base: 4, sm: 6, md: 8 }}
+              spacing={{ base: 8 }}
+            >
+              <Heading
+                lineHeight={1}
+                fontSize={{ base: "2xl", sm: "3xl" }}
+                color={useColorModeValue("teal.600", "teal.200")}
+              >
+                Comments
+              </Heading>
+              {commentList.length == 0 ? (
+                <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
+                  <CommentCard />
+                  <CommentCard />
+                  <CommentCard />
+                </SimpleGrid>
+              ) : (
+                <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
+                  <Skeleton height="3rem" />
+                  <Skeleton height="3rem" />
+                  <Skeleton height="3rem" />
+                </SimpleGrid>
+              )}
+              {showViewMoreComment ? (
+                <Button
+                  display={{ sm: "inline-flex" }}
+                  w={"200px"}
+                  fontSize={"md"}
+                  fontWeight={600}
+                  color={useColorModeValue("gray.900", "gray.100")}
+                  borderRadius={"20"}
+                  bg={useColorModeValue("white", "blue.400")}
+                  border={"1px solid"}
+                  borderColor={useColorModeValue("#0065A1", "#0065A1")}
+                  marginLeft={"50%"}
+                  marginTop={"1%"}
+                  transform={"translate(-50%, 0)"}
+                  // onClick={handleShowMoreComment}
+                  _hover={{
+                    bg: "#0065A1",
+                    color: "#ffffff",
+                  }}
+                >
+                  View more
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Stat>
+          </Box>
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>
