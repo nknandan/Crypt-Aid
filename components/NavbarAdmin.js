@@ -39,9 +39,9 @@ export default function NavbarAdmin() {
   const { user, isLoading, error } = useUser();
   const [userMenu, setUserMenu] = useState(0);
   const [searchMenu, setSearchMenu] = useState(0);
-  const ref = useRef();
+  const refs = useRef();
   useOutsideClick({
-    ref: ref,
+    ref: refs,
     handler: () => {
       setUserMenu(0);
       setSearchMenu(0);
@@ -219,7 +219,9 @@ export default function NavbarAdmin() {
         py={0}
         borderBottomRadius={10}
       >
-        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={ref} />}
+        {<SearchTable searchData={search(campaignList)} mapping={cName2Id} />}
+        {/* Below one unnecessarily using refs */}
+        {/* {<SearchTable searchData={search(campaignList)} mapping={cName2Id} ref={refs} />} */}
       </Flex>
 
       {userMenu ? (
@@ -233,7 +235,7 @@ export default function NavbarAdmin() {
           zIndex={9999}
           flexDirection={"column"}
           borderBottomRadius={10}
-          ref={ref}
+          // ! ref={refs} ???
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
