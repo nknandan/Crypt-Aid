@@ -67,7 +67,7 @@ function SettingsPage({ setSettingsScreen, users }) {
         cName2Id[summary[i]["5"]] = ele;
         i++;
       }
-      setCampaignListNumber(3);
+      // setCampaignListNumber(3);
       return summary;
     } catch (e) {
       console.log(e);
@@ -301,7 +301,7 @@ function PendingCard({
     updateStatus();
     setCampaignList(campaignList);
     redirect();
-    window.location.reload();
+    // window.location.reload();
   }
   useEffect(() => {}, [campaignList]);
 
@@ -309,10 +309,10 @@ function PendingCard({
     router.reload("/");
   };
 
-  function updateStatus() {
+  async function updateStatus() {
     const tempObj = { name: name, isApproved: true };
     try {
-      fetch("/api/campaign/create", {
+      await fetch("/api/campaign/create", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -507,6 +507,7 @@ function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, cam
 
 export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [approvedPending, setApprovedPending] = useState(false);
+  // No Settings Screen as of now.
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
@@ -518,6 +519,9 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [adminEnteredPass, setAdminEnteredPass] = useState("");
   const adminmails = ["admin1", "admin2", "admin3", "admin4"];
   const adminpass = ["admin1pass", "admin2pass", "admin3pass", "admin4pass"];
+  // Dummy to avoid log of errors in Console.
+  const [obj, setObj] = useState({});
+  const [user, setUser] = useState({});
 
   async function getSummary() {
     try {
@@ -532,7 +536,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
         cName2Id[summary[i]["5"]] = ele;
         i++;
       }
-      setCampaignListNumber(3);
+      // setCampaignListNumber(3);
       return summary;
     } catch (e) {
       console.log(e);
