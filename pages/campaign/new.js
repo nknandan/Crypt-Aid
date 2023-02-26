@@ -86,6 +86,8 @@ export default function NewCampaign() {
           isApproved: false,
           isActive: false,
           donatorEmail: [],
+          upVoters: [],
+          downVoters: [],
         }),
       });
 

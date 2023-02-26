@@ -157,6 +157,8 @@ export default function CampaignSingle({
   const [campName, setCampName] = useState("");
   const [donatedDate, setDonatedDate] = useState("");
   const [donAmount, setDonAmount] = useState("");
+  const [upVotes, setUpVotes] = useState();
+  const [downVotes, setDownVotes] = useState();
 
   useEffect(() => {
     if (localStorage.getItem("email") == null) {
@@ -244,6 +246,88 @@ export default function CampaignSingle({
     }
   }
 
+  async function upvote(){
+    var tempObj = {};
+    const u = localStorage.getItem("email");
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) tempObj = dbCamp[i];
+    }
+    console.log(tempObj["upVoters"].includes(u)); 
+    if(tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) 
+      tempObj['upVoters'][0] = u;
+    else{
+      console.log("1");
+      if(tempObj["downVoters"].includes(u) == true){
+        console.log("HII");
+        console.log(tempObj["downVoters"]);
+        var i = tempObj["downVoters"].indexOf(u);
+        tempObj["downVoters"].splice(i, 1);
+        console.log(tempObj["downVoters"]);
+        if(tempObj["upVoters"].includes(u) == false)
+          tempObj["upVoters"].push(u)
+      }
+      else if(tempObj["upVoters"].includes(u) == true){
+        console.log("continue");
+      }
+      else
+        tempObj["upVoters"].push(u);
+    }
+    setUpVotes(tempObj["upVoters"].length);
+    setDownVotes(tempObj["downVoters"].length);
+    try {
+      fetch("/api/campaign/voter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempObj }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
+  async function downvote(){
+    var tempObj = {};
+    const u = localStorage.getItem("email");
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) tempObj = dbCamp[i];
+    }
+    if(tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) 
+      tempObj['downVoters'][0] = u;
+    else{
+      if(tempObj["upVoters"].includes(u) == true){
+        console.log("1");
+        console.log(tempObj["upVoters"]);
+        var i = tempObj["upVoters"].indexOf(u);
+        tempObj["upVoters"].splice(i, 1);
+        console.log(tempObj["upVoters"]);
+        if(tempObj["downVoters"].includes(u) == false)
+          tempObj["downVoters"].push(u)
+      }
+      else if(tempObj["downVoters"].includes(u) == true){
+        console.log("continue");
+      }
+      else
+        tempObj["downVoters"].push(u);
+    }
+    setUpVotes(tempObj["upVoters"].length);
+    setDownVotes(tempObj["downVoters"].length);
+    try {
+      fetch("/api/campaign/voter", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempObj }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
@@ -283,6 +367,8 @@ export default function CampaignSingle({
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
                 {description}
               </Text>
+              <button onClick={upvote}>UpVote {upVotes}</button>
+              <button onClick={downvote}>DownVote {downVotes}</button>
               <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
                 View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
               </Link>
