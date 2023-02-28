@@ -400,12 +400,12 @@ export default function CampaignSingle({
                   <button onClick={upvote}>
                     <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10} alignItems={"center"} justifyContent={"space-between"}>
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-up.png"} />
-                      <Text>123</Text>
+                      <Text>{upVotes}</Text>
                     </Flex></button>
                   <button onClick={downvote}>
                     <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10}>
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-down.png"} rotate={"20deg"} />
-                      <Text>123</Text>
+                      <Text>{downVotes}</Text>
                     </Flex></button>
                 </Flex>
               </Flex>
