@@ -445,17 +445,18 @@ export default function CampaignSingle({
                 <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
                   View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
                 </Link>
-                <Flex direction={"row"} w={"25%"} justifyContent={"space-between"}>
+                <Flex direction={"row"} w={"25%"} justifyContent={"space-between"} alignItems={"center"}>
                   <button onClick={upvote}>
                     <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10} alignItems={"center"} justifyContent={"space-between"}>
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-up.png"} />
-                      <Text>{upVotes}</Text>
+                      {/* <Text>{upVotes}</Text> */}
                     </Flex></button>
                   <button onClick={downvote}>
                     <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10}>
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-down.png"} rotate={"20deg"} />
-                      <Text>{downVotes}</Text>
+                      {/* <Text>{downVotes}</Text> */}
                     </Flex></button>
+                    <Text fontSize={25} color={"blue.600"} fontWeight={600}>{upVotes-downVotes}</Text>
                 </Flex>
               </Flex>
             </Flex>
