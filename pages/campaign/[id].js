@@ -148,6 +148,55 @@ function CommentCard() {
   );
 }
 
+function CommentInbox() {
+
+  const [comments, setComments] = useState([]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newComment = event.target.comment.value;
+    setComments([...comments, newComment]);
+    event.target.comment.value = '';
+  };
+
+  return (
+    <Box w={"100%"} justifyContent={"space-between"}>
+      <Text mt={"2%"}mb={"1%"}> Enter your comment</Text>
+      <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"}>
+        <Box w={"70%"}>
+          <form>
+            <FormControl id="value">
+              <InputGroup w={"100%"}>
+                <Input
+                  type="string"
+                  borderColor={"gray.300"}
+                  placeholder={"Enter your comment here"}
+                  onChange={(e) => {
+
+                  }}
+                />
+              </InputGroup>
+            </FormControl>
+          </form>
+        </Box>
+        <Button
+          w={"25%"}
+          bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+          color={"white"}
+          _hover={{
+            bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+            boxShadow: "xl",
+          }}
+          onClick={() => {
+          }}
+        >
+          Comment
+        </Button>
+      </Flex>
+    </Box>
+  );
+}
+
 export default function CampaignSingle({
   id,
   minimumContribution,
@@ -632,6 +681,7 @@ export default function CampaignSingle({
               p={{ base: 4, sm: 6, md: 8 }}
               spacing={{ base: 8 }}
             >
+
               <Heading
                 lineHeight={1}
                 fontSize={{ base: "2xl", sm: "3xl" }}
@@ -639,6 +689,10 @@ export default function CampaignSingle({
               >
                 Comments
               </Heading>
+              <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
+                <CommentInbox />
+              </Box>
+
               {commentList.length == 0 ? (
                 <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
                   <CommentCard />
