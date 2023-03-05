@@ -148,8 +148,7 @@ function CommentCard() {
   );
 }
 
-function CommentInbox() {
-
+function CommentInbox({name, dbCamp}) {
   const [comments, setComments] = useState([]);
 
   const handleSubmit = (event) => {
@@ -158,6 +157,36 @@ function CommentInbox() {
     setComments([...comments, newComment]);
     event.target.comment.value = '';
   };
+
+  var tempComment = "";
+
+  async function submitComment(){
+    // console.log(dbCamp);
+    // console.log(name);
+    var tempObj = {};
+    const u = localStorage.getItem("email");
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) tempObj = dbCamp[i];
+    }
+    console.log(tempObj);
+    var tempCommentObj = {
+      creator: u,
+      description: tempComment,
+    }
+    tempObj.comments.push(tempCommentObj);
+    try {
+      fetch("/api/campaign/voter", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempObj }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
 
   return (
     <Box w={"100%"} justifyContent={"space-between"}>
@@ -172,7 +201,7 @@ function CommentInbox() {
                   borderColor={"gray.300"}
                   placeholder={"Enter your comment here"}
                   onChange={(e) => {
-
+                    tempComment = e.target.value;
                   }}
                 />
               </InputGroup>
@@ -188,6 +217,7 @@ function CommentInbox() {
             boxShadow: "xl",
           }}
           onClick={() => {
+            submitComment();
           }}
         >
           Comment
@@ -239,6 +269,7 @@ export default function CampaignSingle({
       setIsAuthenticated(true);
     }
   }, [isAuthenticated]);
+
 
   async function onSubmit(data) {
     console.log(data.value);
@@ -388,7 +419,7 @@ export default function CampaignSingle({
     setDownVotes(tempObj["downVoters"].length);
     try {
       fetch("/api/campaign/voter", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -691,7 +722,7 @@ export default function CampaignSingle({
                 Comments
               </Heading>
               <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
-                <CommentInbox />
+                <CommentInbox name={name} dbCamp={dbCamp} />
               </Box>
 
               {commentList.length == 0 ? (
