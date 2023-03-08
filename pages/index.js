@@ -415,43 +415,77 @@ export default function Home({ campaigns, users, dbCamp }) {
           </SimpleGrid>
           <Divider marginTop="4" />
         </Container>
-        <Container
-          w={"100%"}
-          h={"250px"}
-          bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
-          borderRadius={"30"}
-          my={"80px"}
-          py={"20px"}
-          position={"relative"}
-        >
-          <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
-            Feeling Inspired ?
-          </Text>
-          <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-            Let`s make a difference together. You can raise money or <br /> make a donation, and our platform will let
-            you do that <br /> effortlessly anywhere in the world.
-          </Text>
-          <NextLink href="/campaign/new">
-            <Button
-              display={{ sm: "inline-flex" }}
-              position={"absolute"}
-              right={"10"}
-              bottom={"10"}
-              w={"200px"}
-              fontSize={"md"}
-              fontWeight={600}
-              color={"black"}
-              borderRadius={"20"}
-              bg={"#97C5E0"}
-              _hover={{
-                bg: "#1CB5E0",
-                color: "#ffffff",
-              }}
-            >
-              Create Campaign
-            </Button>
-          </NextLink>
-        </Container>
+        <Flex w={"70%"} justifyContent={"space-between"}>
+          <Container
+            h={"250px"}
+            bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+            borderRadius={"30"}
+            py={"20px"}
+            mr={"20px"}
+          >
+            <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
+              Feeling Inspired ?
+            </Text>
+            <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
+              Let`s make a difference together. You can raise money or <br /> make a donation, and our platform will let
+              you do that <br /> effortlessly anywhere in the world.
+            </Text>
+            <NextLink href="/campaign/new">
+              <Button
+                display={{ sm: "inline-flex" }}
+                w={"200px"}
+                fontSize={"md"}
+                fontWeight={600}
+                color={"black"}
+                mx={"20px"}
+                ml={"220px"}
+                mt={"20px"}
+                borderRadius={"20"}
+                bg={"#97C5E0"}
+                _hover={{
+                  bg: "#f2f2f2",
+                  color: "#0070f3",
+                }}
+              >
+                Create Campaign
+              </Button>
+            </NextLink>
+          </Container>
+          <Container
+            h={"250px"}
+            bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+            borderRadius={"30"}
+            py={"20px"}
+          >
+            <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
+              Create A Community
+            </Text>
+            <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
+              Connect, Collaborate, and Share with like-minded people around the globe to help those in need. Foster growth and build your ideal community with ease
+            </Text>
+            <NextLink href="/campaign/new">
+              <Button
+                display={{ sm: "inline-flex" }}
+                w={"200px"}
+                fontSize={"md"}
+                fontWeight={600}
+                color={"black"}
+                mx={"20px"}
+                ml={"220px"}
+                mt={"20px"}
+                borderRadius={"20"}
+                bg={"#97C5E0"}
+                _hover={{
+                  bg: "#f2f2f2",
+                  color: "#0070f3",
+                }}
+              >
+                Create Community
+              </Button>
+            </NextLink>
+          </Container>
+        </Flex>
+
       </Flex>
     </div>
   );
