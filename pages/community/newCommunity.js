@@ -56,38 +56,21 @@ export default function NewCampaign() {
     }
   }, []);
   async function onSubmit(data) {
-    const accounts = await web3.eth.getAccounts();
-    await factory.methods
-      .createCampaign(
-        web3.utils.toWei(data.minimumContribution, "ether"),
-        data.campaignName,
-        data.description,
-        data.imageUrl,
-        web3.utils.toWei(data.target, "ether")
-      )
-      .send({
-        from: accounts[0],
-      });
     console.log(data);
     const o = JSON.parse(localStorage.getItem("user"));
     try {
-      fetch("/api/campaign/create", {
+      fetch("/api/communities/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: data.campaignName,
+          name: data.communityName,
           description: data.description,
           imageUrl: data.imageUrl,
-          minAmount: web3.utils.toWei(data.minimumContribution, "ether"),
-          targetAmount: web3.utils.toWei(data.target, "ether"),
-          creatorEmail: o.email,
-          isApproved: false,
-          isActive: false,
-          donatorEmail: [],
-          upVoters: [],
-          downVoters: [],
+          creator: o.name,
+          moderators: [o.name],
+
         }),
       });
 
@@ -153,10 +136,10 @@ export default function NewCampaign() {
             <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={4}>
-                  <FormControl id="campaignName">
+                  <FormControl id="communityName">
                     <FormLabel>Name</FormLabel>
                     <Input
-                      {...register("campaignName", { required: true })}
+                      {...register("communityName", { required: true })}
                       isDisabled={isSubmitting}
                       placeholder={"FundBoosters"}
                     />
