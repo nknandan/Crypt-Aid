@@ -216,6 +216,87 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
+function CommunityCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  async function findEmail() {
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) {
+        setEmail(dbCamp[i].creatorEmail);
+        return dbCamp[i].creatorEmail;
+      }
+    }
+    return;
+  }
+  async function findUsername(tempEmail) {
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].email == tempEmail) {
+        const tempUsername = users[i].username;
+        setUsername(tempUsername);
+        return tempUsername;
+        break;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tempEmail = await findEmail();
+      setEmail(tempEmail);
+      const tempUsername = await findUsername(tempEmail);
+      setUsername(tempUsername);
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <NextLink href={`/campaign/${id}`}>
+      <Box
+        h={"20vh"}
+        w={"20vw"}
+        display={"flex"}
+        flexDirection={"row"}
+        position="relative"
+        cursor="pointer"
+        bgColor={useColorModeValue("white", "#303030")}
+        borderRadius={"20"}
+        transition={"transform 0.3s ease"}
+        boxShadow="sm"
+        _hover={{
+          transform: "translateY(-8px)",
+        }}
+        mr={10}
+      >
+        <Box h={"100%"} w={"100%"} borderRadius={"20"}>
+          <Img
+            src={imageURL}
+            alt={`Picture of ${name}`}
+            objectFit="cover"
+            w="full"
+            h="full"
+            display="block"
+            borderRadius={"20"}
+            position={"absolute"}
+            opacity={"15%"}
+            zIndex={0}
+          />
+          <Flex w={"100%"} h={"100%"} padding={"20px"}  zIndex={9} opacity={"100%"} flexDir="column" justifyContent={"space-around"}>
+            <Text fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" color={"blue.900"} opacity={"100%"}>
+              {name}
+            </Text>
+            <Box maxW={"60%"} color={useColorModeValue("gray.600", "gray.200")}>
+              <Text noOfLines={3}>{description}</Text>
+            </Box>
+          </Flex>
+
+        </Box>
+      </Box>
+    </NextLink>
+  );
+}
+
 export default function Home({ campaigns, users, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
@@ -453,7 +534,7 @@ export default function Home({ campaigns, users, dbCamp }) {
           </Container>
           <Container
             h={"250px"}
-            bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+            bgGradient="linear(to-l, #1CB5E0, #2C2C7B)"
             borderRadius={"30"}
             py={"20px"}
           >
@@ -463,7 +544,7 @@ export default function Home({ campaigns, users, dbCamp }) {
             <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
               Connect, Collaborate, and Share with like-minded people around the globe to help those in need. Foster growth and build your ideal community with ease
             </Text>
-            <NextLink href="/campaign/new">
+            <NextLink href="/community/newCommunity">
               <Button
                 display={{ sm: "inline-flex" }}
                 w={"200px"}
@@ -485,7 +566,51 @@ export default function Home({ campaigns, users, dbCamp }) {
             </NextLink>
           </Container>
         </Flex>
-
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} id="communities">
+          <HStack spacing={2} justifyContent={"space-between"}>
+            <Heading as="h2" size="lg">
+              New Communities
+            </Heading>
+            <Button
+              fontSize={"md"}
+              fontWeight={200}
+              variant={"link"}
+              display={{ base: "none", md: "inline-flex" }}
+              color={useColorModeValue("#252525", "gray.200")}
+              pt={"20px"}
+            >
+              <NextLink href="/explore">View all ➡️</NextLink>
+            </Button>
+          </HStack>
+          <Divider marginTop="4" />
+          <Flex flexWrap={"nowrap"} overflowX={"auto"} py={"40px"}>
+            {campaignList
+              .slice(campaignList.length - campaignListNumber)
+              .reverse()
+              .map((el, i) => {
+                for (var j = 0; j < dbCamp.length; j++) {
+                  if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
+                    return (
+                      <div key={i}>
+                        <CommunityCardNew
+                          name={el[5]}
+                          description={el[6]}
+                          creatorId={el[4]}
+                          imageURL={el[7]}
+                          id={cName2Id[el[5]]}
+                          target={el[8]}
+                          balance={el[1]}
+                          ethPrice={ethPrice}
+                          users={users}
+                          dbCamp={dbCamp}
+                        />
+                      </div>
+                    );
+                  }
+                }
+              })}
+          </Flex>
+        </Container>
       </Flex>
     </div>
   );

@@ -11,7 +11,6 @@ import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getET
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import NoSSR from "react-no-ssr";
 import PDFFile from "../pdfFile";
-import styles from "./[id].module.css";
 import {
   Box,
   Image,
