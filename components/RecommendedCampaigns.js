@@ -96,11 +96,11 @@ export default function RecommendedCampaigns({ name, description }) {
           return response.json();
         })
         .then((data) => {
-          console.log(summary);
+          // console.log(summary);
           let disp = [];
           let reqArr = data["dsArr"];
           setLoadingRecom(0);
-          console.log(reqArr);
+          // console.log(reqArr);
           let i = 0;
           for (let ele of reqArr) {
             if (i > 2) break;
@@ -108,7 +108,7 @@ export default function RecommendedCampaigns({ name, description }) {
             i++;
           }
           setDataDispNames(dispTemparr);
-          console.log(dispTemparr);
+          // console.log(dispTemparr);
         });
     } catch (err) {
       console.log(err);
@@ -170,8 +170,12 @@ export default function RecommendedCampaigns({ name, description }) {
               for (var k = 0; k < campaignList.length; k++) {
                 if (ele === campaignList[k][5]) {
                   let el = campaignList[k];
-                  console.log("RANGE");
-                  console.log(el[5]);
+                  {
+                    /* console.log("RANGE"); */
+                  }
+                  {
+                    /* console.log(el[5]); */
+                  }
                   {
                     return (
                       <div key={i}>

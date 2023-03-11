@@ -233,8 +233,8 @@ export default function CampaignSingle({
   const [campName, setCampName] = useState("");
   const [donatedDate, setDonatedDate] = useState("");
   const [donAmount, setDonAmount] = useState("");
-  const [upVotes, setUpVotes] = useState();
-  const [downVotes, setDownVotes] = useState();
+  const [upVotes, setUpVotes] = useState(0);
+  const [downVotes, setDownVotes] = useState(0);
   const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
@@ -244,6 +244,12 @@ export default function CampaignSingle({
       setIsAuthenticated(true);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    console.log("In My Area.");
+    console.log(dbCamp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function onSubmit(data) {
     console.log(data.value);
@@ -330,7 +336,7 @@ export default function CampaignSingle({
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
     console.log(tempObj["upVoters"].includes(u));
-    if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"][0] = u;
+    if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"].push(u);
     else {
       console.log("1");
       if (tempObj["downVoters"].includes(u) == true) {
@@ -366,7 +372,7 @@ export default function CampaignSingle({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"][0] = u;
+    if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"].push(u);
     else {
       if (tempObj["upVoters"].includes(u) == true) {
         console.log("1");
