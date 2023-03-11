@@ -5,7 +5,7 @@ import { connectToDatabase } from "../../../lib/mongodb";
 export default async function addCampaign(req, res) {
   // GET
   if (req.method === "GET") {
-    // Process a POST request
+    // Process a GET request
     try {
       const { db } = await connectToDatabase();
 
@@ -36,9 +36,7 @@ export default async function addCampaign(req, res) {
       const temp = req.body;
       const approval = temp.tempObj.isApproved;
       const nm = temp.tempObj.name;
-      const u = await db
-        .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { isApproved: approval } });
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { isApproved: approval } });
       console.log(u);
       res.json({ u });
     } catch (error) {

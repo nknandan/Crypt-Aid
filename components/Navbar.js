@@ -47,7 +47,7 @@ export default function NavBar() {
     handler: () => {
       setUserMenu(0);
       setSearchMenu(0);
-      console.log(searchMenu);
+      // console.log(searchMenu);
     },
   });
 

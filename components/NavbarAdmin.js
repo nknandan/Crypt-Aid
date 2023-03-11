@@ -45,7 +45,7 @@ export default function NavbarAdmin() {
     handler: () => {
       setUserMenu(0);
       setSearchMenu(0);
-      console.log(searchMenu);
+      // console.log(searchMenu);
     },
   });
 
