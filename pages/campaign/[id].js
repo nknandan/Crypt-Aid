@@ -141,26 +141,35 @@ function CommentCard() {
       }}
       padding={5}
     >
-      <Text fontWeight={800} fontSize={18} color={"blue.300"}>Aromatic-Tomato-2330</Text>
-      Fun fact only one person from Kerala has ever gotten top 10 in JEE Advanced (entrance exam to IITs) and that was last year. Thomas Biju Cheeramvelil, from TVM, studied in Brilliant and secured All India Rank 3. He was one of my friend's neighbour. According to him this guy didn't get out of his house since 6th grade. And his mom, I believe took a long leave to be with him all the time. He is presently studying Computer Science Engineering at IIT Bombay, the most difficult course to gain admission to in the country. Was it worth sacrificing your childhood? Depends on your perspective
+      <Text fontWeight={800} fontSize={18} color={"blue.300"}>
+        Aromatic-Tomato-2330
+      </Text>
+      Fun fact only one person from Kerala has ever gotten top 10 in JEE Advanced (entrance exam to IITs) and that was
+      last year. Thomas Biju Cheeramvelil, from TVM, studied in Brilliant and secured All India Rank 3. He was one of my
+      friend&apos;s neighbour. According to him this guy didn&apos;t get out of his house since 6th grade. And his mom,
+      I believe took a long leave to be with him all the time. He is presently studying Computer Science Engineering at
+      IIT Bombay, the most difficult course to gain admission to in the country. Was it worth sacrificing your
+      childhood? Depends on your perspective
     </Box>
   );
 }
 
 function CommentInbox() {
-
   const [comments, setComments] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const newComment = event.target.comment.value;
     setComments([...comments, newComment]);
-    event.target.comment.value = '';
+    event.target.comment.value = "";
   };
 
   return (
     <Box w={"100%"} justifyContent={"space-between"}>
-      <Text mt={"2%"}mb={"1%"}> Enter your comment</Text>
+      <Text mt={"2%"} mb={"1%"}>
+        {" "}
+        Enter your comment
+      </Text>
       <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"}>
         <Box w={"70%"}>
           <form>
@@ -170,9 +179,7 @@ function CommentInbox() {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter your comment here"}
-                  onChange={(e) => {
-
-                  }}
+                  onChange={(e) => {}}
                 />
               </InputGroup>
             </FormControl>
@@ -186,8 +193,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => {
-          }}
+          onClick={() => {}}
         >
           Comment
         </Button>
@@ -324,8 +330,7 @@ export default function CampaignSingle({
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
     console.log(tempObj["upVoters"].includes(u));
-    if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false)
-      tempObj['upVoters'][0] = u;
+    if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"][0] = u;
     else {
       console.log("1");
       if (tempObj["downVoters"].includes(u) == true) {
@@ -334,14 +339,10 @@ export default function CampaignSingle({
         var i = tempObj["downVoters"].indexOf(u);
         tempObj["downVoters"].splice(i, 1);
         console.log(tempObj["downVoters"]);
-        if (tempObj["upVoters"].includes(u) == false)
-          tempObj["upVoters"].push(u)
-      }
-      else if (tempObj["upVoters"].includes(u) == true) {
+        if (tempObj["upVoters"].includes(u) == false) tempObj["upVoters"].push(u);
+      } else if (tempObj["upVoters"].includes(u) == true) {
         console.log("continue");
-      }
-      else
-        tempObj["upVoters"].push(u);
+      } else tempObj["upVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
     setDownVotes(tempObj["downVoters"].length);
@@ -365,8 +366,7 @@ export default function CampaignSingle({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false)
-      tempObj['downVoters'][0] = u;
+    if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"][0] = u;
     else {
       if (tempObj["upVoters"].includes(u) == true) {
         console.log("1");
@@ -374,14 +374,10 @@ export default function CampaignSingle({
         var i = tempObj["upVoters"].indexOf(u);
         tempObj["upVoters"].splice(i, 1);
         console.log(tempObj["upVoters"]);
-        if (tempObj["downVoters"].includes(u) == false)
-          tempObj["downVoters"].push(u)
-      }
-      else if (tempObj["downVoters"].includes(u) == true) {
+        if (tempObj["downVoters"].includes(u) == false) tempObj["downVoters"].push(u);
+      } else if (tempObj["downVoters"].includes(u) == true) {
         console.log("continue");
-      }
-      else
-        tempObj["downVoters"].push(u);
+      } else tempObj["downVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
     setDownVotes(tempObj["downVoters"].length);
@@ -446,16 +442,27 @@ export default function CampaignSingle({
                 </Link>
                 <Flex direction={"row"} w={"25%"} justifyContent={"space-between"} alignItems={"center"}>
                   <button onClick={upvote}>
-                    <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10} alignItems={"center"} justifyContent={"space-between"}>
+                    <Flex
+                      padding={3}
+                      borderWidth={2}
+                      borderColor={"gray.400"}
+                      borderRadius={10}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-up.png"} />
                       {/* <Text>{upVotes}</Text> */}
-                    </Flex></button>
+                    </Flex>
+                  </button>
                   <button onClick={downvote}>
                     <Flex padding={3} borderWidth={2} borderColor={"gray.400"} borderRadius={10}>
                       <Img height={"26px"} objectFit={"contain"} src={"/arrow-down.png"} rotate={"20deg"} />
                       {/* <Text>{downVotes}</Text> */}
-                    </Flex></button>
-                    <Text fontSize={25} color={"blue.600"} fontWeight={600}>{upVotes-downVotes}</Text>
+                    </Flex>
+                  </button>
+                  <Text fontSize={25} color={"blue.600"} fontWeight={600}>
+                    {upVotes - downVotes}
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>
@@ -681,7 +688,6 @@ export default function CampaignSingle({
               p={{ base: 4, sm: 6, md: 8 }}
               spacing={{ base: 8 }}
             >
-
               <Heading
                 lineHeight={1}
                 fontSize={{ base: "2xl", sm: "3xl" }}
@@ -712,10 +718,13 @@ export default function CampaignSingle({
                   w={"200px"}
                   fontSize={"md"}
                   fontWeight={600}
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   color={useColorModeValue("gray.900", "gray.100")}
                   borderRadius={"20"}
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   bg={useColorModeValue("white", "blue.400")}
                   border={"1px solid"}
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   borderColor={useColorModeValue("#0065A1", "#0065A1")}
                   marginLeft={"50%"}
                   marginTop={"1%"}
