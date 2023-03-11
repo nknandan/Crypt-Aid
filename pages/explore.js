@@ -54,11 +54,9 @@ export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
   await connectMongo();
   const campaigns = await factory.methods.getDeployedCampaigns().call();
-
   // ! FETCHING FROM DATABASE...
   const dbCampaigns = await db.collection("campaigns").find().toArray();
   const dbUsers = await User.find();
-
   return {
     props: {
       campaigns,
@@ -69,8 +67,6 @@ export async function getServerSideProps(context) {
 }
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
-  var emmmmmmm = "";
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
@@ -322,7 +318,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                 : trendingButton == 1
                 ? campaignList
                     .sort((a, b) => {
-                      return b[1] - a[1];
+                      return b[1] - a[1]; // Trending sorts based on the amount raised as of now
                     })
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {

@@ -398,7 +398,7 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
               if (dbCampaign[j].name == camp) {
                 if (el[5] == camp) {
                   return (
-                    <NextLink href={``}>
+                    <NextLink href={`/campaign/${cName2Id[el[5]]}`}>
                       <Box
                         h={"17vh"}
                         w={"100%"}
