@@ -736,14 +736,14 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   </Flex>
                 </Flex>
                 <Flex flexDirection={"column"}>
-                  <Button
+                  {/* <Button
                     color={"red"}
                     onClick={() => {
                       getDbCampaigns();
                     }}
                   >
                     DEBUG{" "}
-                  </Button>
+                  </Button> */}
                   <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
                     <Heading mb={6} fontSize={30}>
                       Dashboard
