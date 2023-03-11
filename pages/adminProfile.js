@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
 import NavbarAdmin from "../components/NavbarAdmin";
+import axios from "axios";
 import {
   Heading,
   useColorModeValue,
@@ -30,11 +31,14 @@ import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import CampaignModel from "../models/campaignModel";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
 
 var cName2Id = {};
+
+// CampaignList : consists of campaigns from blockchain
+// CampaignList1 : consists of campaigns from database
 
 export async function getServerSideProps(context) {
   const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -297,13 +301,14 @@ function PendingCard({
   campaignList,
 }) {
   const router = useRouter();
+
   function multiFunct() {
     updateStatus();
     setCampaignList(campaignList);
     redirect();
     // window.location.reload();
   }
-  useEffect(() => { }, [campaignList]);
+  useEffect(() => {}, [campaignList]);
 
   const redirect = () => {
     router.reload("/");
@@ -411,7 +416,8 @@ function PendingCard({
   );
 }
 
-function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
+// This function shows the Pending Campaigns
+function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
@@ -434,7 +440,6 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
               if (campaignList1[k].isApproved == false && campaignList1[k].name == el[5]) {
-                // console.log(campaignList1[k]);
                 return (
                   <div key={i}>
                     <PendingCard
@@ -460,7 +465,8 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
   );
 }
 
-function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice }) {
+// This function shows the Approved Campaigns
+function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
@@ -523,6 +529,17 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [obj, setObj] = useState({});
   const [user, setUser] = useState({});
 
+  async function getDbCampaigns() {
+    let res = await fetch("/api/campaign/create", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let dbCamp = await res.json();
+    console.log(dbCamp);
+  }
+
   async function getSummary() {
     try {
       const summary = await Promise.all(
@@ -570,9 +587,6 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     var approvedNumberTemp = totalNumberTemp - notApprovedNumberTemp;
     setApprovedNumber(approvedNumberTemp);
     setNotApprovedNumber(notApprovedNumberTemp);
-    // console.log(totalNumber);
-    // console.log(approvedNumber);
-    // console.log(notApprovedNumber);
   }
 
   function checkAdminCredentials() {
@@ -586,6 +600,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   }
 
   useEffect(() => {
+    getDbCampaigns();
     getUser();
     getSummary();
     getNumber();
@@ -721,6 +736,14 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   </Flex>
                 </Flex>
                 <Flex flexDirection={"column"}>
+                  {/* <Button
+                    color={"red"}
+                    onClick={() => {
+                      getDbCampaigns();
+                    }}
+                  >
+                    DEBUG{" "}
+                  </Button> */}
                   <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
                     <Heading mb={6} fontSize={30}>
                       Dashboard
@@ -766,7 +789,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   </Flex>
                   <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
                     {approvedPending ? (
-                      <PendingCampaigns
+                      <ApprovedCampaigns
                         setApprovedPending={setApprovedPending}
                         campaignList={campaignList}
                         campaignList1={dbCamp}
@@ -774,7 +797,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         ethPrice={ethPrice}
                       />
                     ) : (
-                      <ApprovedCampaigns
+                      <PendingCampaigns
                         setApprovedPending={setApprovedPending}
                         campaignList={campaignList}
                         campaignList1={dbCamp}

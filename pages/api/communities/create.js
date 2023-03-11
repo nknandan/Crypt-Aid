@@ -5,11 +5,11 @@ import { connectToDatabase } from "../../../lib/mongodb";
 export default async function addCampaign(req, res) {
   // GET
   if (req.method === "GET") {
-    // Process a GET request
+    // Process a POST request
     try {
       const { db } = await connectToDatabase();
 
-      const campaign = await db.collection("campaigns").find({}).toArray();
+      const campaign = await db.collection("communities").find({}).toArray();
       console.log(campaign);
       res.json({ campaign });
     } catch (error) {
@@ -23,7 +23,7 @@ export default async function addCampaign(req, res) {
       const { db } = await connectToDatabase();
       const temp = req.body;
       console.log(temp);
-      const u = await db.collection("campaigns").insertOne(temp);
+      const u = await db.collection("communities").insertOne(temp);
       console.log(u);
       res.json({ u });
     } catch (error) {
@@ -36,7 +36,9 @@ export default async function addCampaign(req, res) {
       const temp = req.body;
       const approval = temp.tempObj.isApproved;
       const nm = temp.tempObj.name;
-      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { isApproved: approval } });
+      const u = await db
+        .collection("communities")
+        .updateOne({ name: nm }, { $set: { isApproved: approval } });
       console.log(u);
       res.json({ u });
     } catch (error) {

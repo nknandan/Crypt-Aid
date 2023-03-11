@@ -47,7 +47,7 @@ export default function NavBar() {
     handler: () => {
       setUserMenu(0);
       setSearchMenu(0);
-      console.log(searchMenu);
+      // console.log(searchMenu);
     },
   });
 
@@ -234,22 +234,24 @@ export default function NavBar() {
                 <Text ml={3}>{user.nickname}</Text>
               </Button>
             ) : (
-              <Button
-                fontSize={"md"}
-                fontWeight={600}
-                color={useColorModeValue("black", "white")}
-                bg={useColorModeValue("#43B0F1", "gray.600")}
-                borderRadius={20}
-                width={150}
-                href={"#"}
-                _hover={{
-                  bg: useColorModeValue("#0065A1", "gray.700"),
-                  color: "white",
-                }}
-                p={0}
-              >
-                <NextLink href="/api/auth/login">Login</NextLink>
-              </Button>
+              <NextLink href="/api/auth/login">
+                <Button
+                  fontSize={"md"}
+                  fontWeight={600}
+                  color={useColorModeValue("black", "white")}
+                  bg={useColorModeValue("#43B0F1", "gray.600")}
+                  borderRadius={20}
+                  width={150}
+                  href={"#"}
+                  _hover={{
+                    bg: useColorModeValue("#0065A1", "gray.700"),
+                    color: "white",
+                  }}
+                  p={0}
+                >
+                  Login
+                </Button>
+              </NextLink>
             )}
 
             {/* <DarkModeSwitch /> */}
