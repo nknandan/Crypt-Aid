@@ -621,6 +621,7 @@ export default function CampaignSingle({
                         isDisabled={formState.isSubmitting}
                         onChange={(e) => {
                           setAmountInUSD(Math.abs(e.target.value));
+                          // TODO Check if it exceeds?.
                         }}
                         step="any"
                         min="0"

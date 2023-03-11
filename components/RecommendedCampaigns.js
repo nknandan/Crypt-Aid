@@ -96,8 +96,8 @@ export default function RecommendedCampaigns({ name, description }) {
           return response.json();
         })
         .then((data) => {
-          // console.log(summary);
-          let disp = [];
+          // console.log("NEXT");
+          // console.log(data);
           let reqArr = data["dsArr"];
           setLoadingRecom(0);
           // console.log(reqArr);
