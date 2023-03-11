@@ -167,7 +167,16 @@ export default function NavbarAdmin() {
               display={{ base: "none", md: "inline-flex" }}
               color={"white"}
             >
-              <NextLink href="/explore">Explore</NextLink>
+              <NextLink href="/explore">Campaigns</NextLink>
+            </Button>
+            <Button
+              fontSize={"md"}
+              fontWeight={200}
+              variant={"link"}
+              display={{ base: "none", md: "inline-flex" }}
+              color={"white"}
+            >
+              <NextLink href="/explore">Communities</NextLink>
             </Button>
             <Button
               fontSize={"md"}
