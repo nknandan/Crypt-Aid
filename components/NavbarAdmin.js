@@ -178,26 +178,26 @@ export default function NavbarAdmin() {
             >
               <NextLink href="/about">About</NextLink>
             </Button>
-            <Button
-              fontSize={"md"}
-              fontWeight={"bold"}
-              variant={"link"}
-              display={{ base: "none", md: "inline-flex" }}
-              color={"black"}
-              onClick={() => {
-                console.log("Debug Now.");
-                console.log(campaignList);
-                localStorage.setItem("adminAuth", "false");
-              }}
-              bgColor={"blue.300"}
-              padding={10}
-              py={0}
-              borderRadius={35}
-            >
-              <NextLink href="/" color="black">
+            <NextLink href="/" color="black">
+              <Button
+                fontSize={"md"}
+                fontWeight={"bold"}
+                variant={"link"}
+                display={{ base: "none", md: "inline-flex" }}
+                color={"black"}
+                onClick={() => {
+                  console.log("Debug Now.");
+                  console.log(campaignList);
+                  localStorage.setItem("adminAuth", "false");
+                }}
+                bgColor={"blue.300"}
+                padding={10}
+                py={0}
+                borderRadius={35}
+              >
                 Logout
-              </NextLink>
-            </Button>
+              </Button>
+            </NextLink>
           </Stack>
         </Container>
       </Flex>
