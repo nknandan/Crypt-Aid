@@ -440,7 +440,7 @@ export default function CampaignSingle({
                 <Link color="#0065A1" href={`https://goerli.etherscan.io/address/${id}`} isExternal>
                   View on Goerli Etherscan <ExternalLinkIcon mx="2px" />
                 </Link>
-                <Flex direction={"row"} w={"25%"} justifyContent={"space-between"} alignItems={"center"}>
+                <Flex direction={"row"} w={"170px"} justifyContent={"space-between"} alignItems={"center"}>
                   <button onClick={upvote}>
                     <Flex
                       padding={3}
