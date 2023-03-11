@@ -64,6 +64,8 @@ import CampaignModel from "../../models/campaignModel";
 import axios from "axios";
 import RecommendedCampaigns from "../../components/RecommendedCampaigns";
 
+var thisCamp = {};
+
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
   const campaign = Campaign(campaignId);
@@ -245,9 +247,16 @@ export default function CampaignSingle({
     }
   }, [isAuthenticated]);
 
+  // To set initial Votes count.
   useEffect(() => {
-    console.log("In My Area.");
-    console.log(dbCamp);
+    for (let i = 0; i < dbCamp.length; i++) {
+      const campObj = dbCamp[i];
+      if (campObj.name === name) {
+        thisCamp = campObj;
+      }
+    }
+    setUpVotes(thisCamp.upVoters?.length);
+    setDownVotes(thisCamp.downVoters?.length);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
