@@ -42,7 +42,6 @@ contract Campaign {
       _;
   }
 
-
     constructor(uint minimun, address creator,string memory name,string memory description,string memory image,uint target)  {
             //  public
       manager = creator;
@@ -83,7 +82,6 @@ contract Campaign {
       requests[index].complete = true;
 
   }
-
 
     function getSummary() public view returns (uint,uint,uint,uint,address,string memory,string memory,string memory,uint) {
         return(

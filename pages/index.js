@@ -217,7 +217,6 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
 }
 
 function CommunityCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
@@ -282,7 +281,15 @@ function CommunityCardNew({ name, description, creatorId, imageURL, id, balance,
             opacity={"15%"}
             zIndex={0}
           />
-          <Flex w={"100%"} h={"100%"} padding={"20px"}  zIndex={9} opacity={"100%"} flexDir="column" justifyContent={"space-around"}>
+          <Flex
+            w={"100%"}
+            h={"100%"}
+            padding={"20px"}
+            zIndex={9}
+            opacity={"100%"}
+            flexDir="column"
+            justifyContent={"space-around"}
+          >
             <Text fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" color={"blue.900"} opacity={"100%"}>
               {name}
             </Text>
@@ -290,7 +297,6 @@ function CommunityCardNew({ name, description, creatorId, imageURL, id, balance,
               <Text noOfLines={3}>{description}</Text>
             </Box>
           </Flex>
-
         </Box>
       </Box>
     </NextLink>
@@ -301,7 +307,6 @@ export default function Home({ campaigns, users, dbCamp }) {
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
-  const [showViewMore, setShowViewMore] = useState(1);
 
   async function getSummary() {
     try {
@@ -327,13 +332,12 @@ export default function Home({ campaigns, users, dbCamp }) {
     setCampaignListNumber(
       campaignListNumber >= campaignList.length
         ? campaignListNumber
-        : campaignListNumber + (campaignList.length - campaignListNumber)
+        : campaignListNumber + 4 <= campaignList.length
+        ? campaignListNumber + 4
+        : campaignList.length
     );
     console.log("showing" + campaignListNumber);
     console.log("total" + campaignList.length);
-    if (campaignListNumber == campaignList.length) {
-      setShowViewMore(0);
-    }
   }
 
   useEffect(() => {
@@ -441,7 +445,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {showViewMore ? (
+          {campaignListNumber != campaignList.length ? (
             <Button
               display={{ sm: "inline-flex" }}
               w={"200px"}
@@ -532,17 +536,13 @@ export default function Home({ campaigns, users, dbCamp }) {
               </Button>
             </NextLink>
           </Container>
-          <Container
-            h={"250px"}
-            bgGradient="linear(to-l, #1CB5E0, #2C2C7B)"
-            borderRadius={"30"}
-            py={"20px"}
-          >
+          <Container h={"250px"} bgGradient="linear(to-l, #1CB5E0, #2C2C7B)" borderRadius={"30"} py={"20px"}>
             <Text color={"white"} fontSize={"2rem"} mx={"20px"} fontWeight={"600"} pb={"10px"}>
               Create A Community
             </Text>
             <Text color={"white"} fontSize={"1rem"} mx={"20px"}>
-              Connect, Collaborate, and Share with like-minded people around the globe to help those in need. Foster growth and build your ideal community with ease
+              Connect, Collaborate, and Share with like-minded people around the globe to help those in need. Foster
+              growth and build your ideal community with ease
             </Text>
             <NextLink href="/community/newCommunity">
               <Button
