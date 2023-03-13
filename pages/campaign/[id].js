@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import Head from "next/head";
 import React from "react";
+import Router from 'next/router';
 import ReactDOM from "react-dom";
 import { useState, useEffect } from "react";
 import { useWallet } from "use-wallet";
@@ -65,6 +66,8 @@ import CampaignModel from "../../models/campaignModel";
 import axios from "axios";
 import RecommendedCampaigns from "../../components/RecommendedCampaigns";
 
+var thisCamp = {};
+
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
   const campaign = Campaign(campaignId);
@@ -128,7 +131,7 @@ function StatsCard(props) {
   );
 }
 
-function CommentCard() {
+function CommentCard({creator, description}) {
   return (
     <Box
       w={"100%"}
@@ -142,9 +145,8 @@ function CommentCard() {
       }}
       padding={5}
     >
-      <Text fontWeight={800} fontSize={18} color={"blue.300"}>Aromatic-Tomato-2330</Text>
-      Fun fact only one person from Kerala has ever gotten top 10 in JEE Advanced (entrance exam to IITs) and that was last year. Thomas Biju Cheeramvelil, from TVM, studied in Brilliant and secured All India Rank 3. He was one of my friend's neighbour. According to him this guy didn't get out of his house since 6th grade. And his mom, I believe took a long leave to be with him all the time. He is presently studying Computer Science Engineering at IIT Bombay, the most difficult course to gain admission to in the country. Was it worth sacrificing your childhood? Depends on your perspective
-    </Box>
+      <Text fontWeight={800} fontSize={18} color={"blue.300"}>{creator}</Text>
+{description}    </Box>
   );
 }
 
@@ -186,6 +188,7 @@ function CommentInbox({name, dbCamp}) {
       setError(err.message);
       console.log(err);
     }
+    Router.reload(window.location.pathname);
   }
 
   return (
@@ -269,6 +272,19 @@ export default function CampaignSingle({
       setIsAuthenticated(true);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    for (let i = 0; i < dbCamp.length; i++) {
+      const campObj = dbCamp[i];
+      if (campObj.name === name) {
+        thisCamp = campObj;
+        setCommentList(thisCamp.comments);
+      }
+    }
+    setUpVotes(thisCamp.upVoters?.length);
+    setDownVotes(thisCamp.downVoters?.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   async function onSubmit(data) {
@@ -733,9 +749,11 @@ export default function CampaignSingle({
                 </SimpleGrid>
               ) : (
                 <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
-                  <Skeleton height="3rem" />
-                  <Skeleton height="3rem" />
-                  <Skeleton height="3rem" />
+                  {commentList.slice(0).map((el, i) => {
+                    return(
+                      <CommentCard creator={el.creator} description={el.description} />
+                    );
+                  })}
                 </SimpleGrid>
               )}
               {showViewMoreComment ? (
