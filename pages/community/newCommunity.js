@@ -70,7 +70,9 @@ export default function NewCampaign() {
           imageUrl: data.imageUrl,
           creator: o.name,
           moderators: [o.name],
-
+          members: [],
+          campaigns: [],
+          posts: [],
         }),
       });
 

@@ -57,6 +57,7 @@ export async function getServerSideProps(context) {
 
     // ! FETCHING FROM DATABASE...
     const dbCampaigns = await db.collection("campaigns").find().toArray();
+    const dbCommunities = await db.collection("communities").find().toArray();
     const dbUsers = await User.find();
 
     return {
@@ -64,42 +65,45 @@ export async function getServerSideProps(context) {
             campaigns,
             dbUsers: JSON.parse(JSON.stringify(dbUsers)),
             dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+            dbComm: JSON.parse(JSON.stringify(dbCommunities)),
         },
     };
 }
 
-function CommunityCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
-    var emmmmmmm = "";
+function CommunityCard({ name, description, imageURL, creator, moderators, commCamps}) {
+    // var emmmmmmm = "";
+
+    console.log(imageURL);
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [joined, setJoined] = useState(1);
 
-    async function findEmail() {
-        for (var i = 0; i < dbCamp.length; i++) {
-            if (dbCamp[i].name == name) {
-                setEmail(dbCamp[i].creatorEmail);
-                return dbCamp[i].creatorEmail;
-            }
-        }
-        return;
-    }
-    async function findUsername(tempEmail) {
-        for (var i = 0; i < dbUsers.length; i++) {
-            if (dbUsers[i].email == tempEmail) {
-                const tempUsername = dbUsers[i].username;
-                setUsername(tempUsername);
-                return tempUsername;
-            }
-        }
-    }
+    // async function findEmail() {
+    //     for (var i = 0; i < dbCamp.length; i++) {
+    //         if (dbCamp[i].name == name) {
+    //             setEmail(dbCamp[i].creatorEmail);
+    //             return dbCamp[i].creatorEmail;
+    //         }
+    //     }
+    //     return;
+    // }
+    // async function findUsername(tempEmail) {
+    //     for (var i = 0; i < dbUsers.length; i++) {
+    //         if (dbUsers[i].email == tempEmail) {
+    //             const tempUsername = dbUsers[i].username;
+    //             setUsername(tempUsername);
+    //             return tempUsername;
+    //         }
+    //     }
+    // }
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempEmail = await findEmail();
-            setEmail(tempEmail);
-            const tempUsername = await findUsername(tempEmail);
-            setUsername(tempUsername);
+            // const tempEmail = await findEmail();
+            // setEmail(tempEmail);
+            // const tempUsername = await findUsername(tempEmail);
+            // setUsername(tempUsername);
         };
         fetchData();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -141,7 +145,7 @@ function CommunityCard({ name, description, creatorId, imageURL, id, balance, ta
                 </Box>
                 <Flex flexDir={"row"} paddingLeft={"20px"} paddingRight={"20px"} justifyContent={"space-between"} alignItems={"center"}>
                     <Text fontWeight={600} color={"#2C2C7B"}>17 posts</Text>
-                    <Text fontWeight={600} color={"#2C2C7B"}>220 members</Text>
+                    <Text fontWeight={600} color={"#2C2C7B"}>{moderators.length} members</Text>
                     {joined ? (<Button
                         w={"25%"}
                         borderRadius={50}
@@ -185,13 +189,15 @@ function CommunityCard({ name, description, creatorId, imageURL, id, balance, ta
     );
 }
 
-export default function exploreCommunities({ campaigns, dbUsers, dbCamp }) {
+export default function exploreCommunities({ campaigns, dbUsers, dbCamp, dbComm }) {
     const [campaignList, setCampaignList] = useState([]);
+    const [communityList, setCommunityList] = useState([]);
     const [ethPrice, updateEthPrice] = useState(null);
     const [newButton, setNewButton] = useState(1);
     const [popularButton, setPopularButton] = useState(0);
     const [trendingButton, setTrendingButton] = useState(0);
 
+    // console.log(dbComm);
     async function getSummary() {
         try {
             const summary = await Promise.all(
@@ -200,6 +206,7 @@ export default function exploreCommunities({ campaigns, dbUsers, dbCamp }) {
             const ETHPrice = await getETHPrice();
             updateEthPrice(ETHPrice);
             setCampaignList(summary);
+            setCommunityList(dbComm);
             let i = 0;
             for (let ele of campaigns) {
                 cName2Id[summary[i]["5"]] = ele;
@@ -270,62 +277,13 @@ export default function exploreCommunities({ campaigns, dbUsers, dbCamp }) {
                     </HStack>
 
                     <Divider marginTop="4" />
-                    {campaignList.length > 0 ? (
+                    {communityList.length > 0 ? (
                         <SimpleGrid row={{ base: 1, md: 3 }} columns={1} minChildWidth='380px' spacing={10} py={8}>
-                            {newButton == 1
-                                ? campaignList
-                                    .slice(0)
-                                    .reverse()
-                                    .map((el, i) => {
-                                        for (var j = 0; j < dbCamp.length; j++) {
-                                            if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
-                                                return (
-                                                    <div key={i}>
-                                                        <CommunityCard
-                                                            name={el[5]}
-                                                            description={el[6]}
-                                                            creatorId={el[4]}
-                                                            imageURL={el[7]}
-                                                            id={cName2Id[el[5]]}
-                                                            target={el[8]}
-                                                            balance={el[1]}
-                                                            ethPrice={ethPrice}
-                                                            dbUsers={dbUsers}
-                                                            dbCamp={dbCamp}
-                                                        />
-                                                    </div>
-                                                );
-                                            }
-                                        }
-                                    })
-                                : trendingButton == 1
-                                    ? campaignList
-                                        .sort((a, b) => {
-                                            return b[1] - a[1];
-                                        })
-                                        .map((el, i) => {
-                                            for (var j = 0; j < dbCamp.length; j++) {
-                                                if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
-                                                    return (
-                                                        <div key={i}>
-                                                            <CommunityCard
-                                                                name={el[5]}
-                                                                description={el[6]}
-                                                                creatorId={el[4]}
-                                                                imageURL={el[7]}
-                                                                id={campaigns[campaignList.length - 1 - i]}
-                                                                target={el[8]}
-                                                                balance={el[1]}
-                                                                ethPrice={ethPrice}
-                                                                dbUsers={dbUsers}
-                                                                dbCamp={dbCamp}
-                                                            />
-                                                        </div>
-                                                    );
-                                                }
-                                            }
-                                        })
-                                    : {}}
+                            {communityList.slice(0).map((el, i) => {
+                                return(
+                                    <CommunityCard name={el.name} description={el.description} imageURL={el.imageUrl} creator={el.creator} moderators={el.moderators} commCamps={el.campaigns} />
+                                );
+                            })}
                         </SimpleGrid>
                     ) : (
                         <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
