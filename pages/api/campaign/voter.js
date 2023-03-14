@@ -39,13 +39,11 @@ export default async function addCampaign(req, res) {
     try {
         const { db } = await connectToDatabase();
         const temp = req.body;
-        const uv = temp.tempObj.upVoters; 
-        const dv = temp.tempObj.downVoters; 
-        console.log(temp.tempObj);
+        const c = temp.tempObj.comments;
         const nm = temp.tempObj.name;
         const u = await db
         .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { upVoters: uv, downVoters: dv } });
+        .updateOne({ name: nm }, { $set: { comments:c } });
         console.log(u);
         res.json({ u });
     } catch (error) {

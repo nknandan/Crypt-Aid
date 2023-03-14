@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import Head from "next/head";
 import React from "react";
+import Router from "next/router";
 import ReactDOM from "react-dom";
 import { useState, useEffect } from "react";
 import { useWallet } from "use-wallet";
@@ -129,7 +130,7 @@ function StatsCard(props) {
   );
 }
 
-function CommentCard() {
+function CommentCard({ creator, description }) {
   return (
     <Box
       w={"100%"}
@@ -144,19 +145,14 @@ function CommentCard() {
       padding={5}
     >
       <Text fontWeight={800} fontSize={18} color={"blue.300"}>
-        Aromatic-Tomato-2330
+        {creator}
       </Text>
-      Fun fact only one person from Kerala has ever gotten top 10 in JEE Advanced (entrance exam to IITs) and that was
-      last year. Thomas Biju Cheeramvelil, from TVM, studied in Brilliant and secured All India Rank 3. He was one of my
-      friend&apos;s neighbour. According to him this guy didn&apos;t get out of his house since 6th grade. And his mom,
-      I believe took a long leave to be with him all the time. He is presently studying Computer Science Engineering at
-      IIT Bombay, the most difficult course to gain admission to in the country. Was it worth sacrificing your
-      childhood? Depends on your perspective
+      {description}{" "}
     </Box>
   );
 }
 
-function CommentInbox() {
+function CommentInbox({ name, dbCamp }) {
   const [comments, setComments] = useState([]);
 
   const handleSubmit = (event) => {
@@ -165,6 +161,37 @@ function CommentInbox() {
     setComments([...comments, newComment]);
     event.target.comment.value = "";
   };
+
+  var tempComment = "";
+
+  async function submitComment() {
+    // console.log(dbCamp);
+    // console.log(name);
+    var tempObj = {};
+    const u = localStorage.getItem("email");
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) tempObj = dbCamp[i];
+    }
+    console.log(tempObj);
+    var tempCommentObj = {
+      creator: u,
+      description: tempComment,
+    };
+    tempObj.comments.push(tempCommentObj);
+    try {
+      fetch("/api/campaign/voter", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempObj }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    Router.reload(window.location.pathname);
+  }
 
   return (
     <Box w={"100%"} justifyContent={"space-between"}>
@@ -181,7 +208,9 @@ function CommentInbox() {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter your comment here"}
-                  onChange={(e) => {}}
+                  onChange={(e) => {
+                    tempComment = e.target.value;
+                  }}
                 />
               </InputGroup>
             </FormControl>
@@ -195,7 +224,9 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => {}}
+          onClick={() => {
+            submitComment();
+          }}
         >
           Comment
         </Button>
@@ -247,12 +278,12 @@ export default function CampaignSingle({
     }
   }, [isAuthenticated]);
 
-  // To set initial Votes count.
   useEffect(() => {
     for (let i = 0; i < dbCamp.length; i++) {
       const campObj = dbCamp[i];
       if (campObj.name === name) {
         thisCamp = campObj;
+        setCommentList(thisCamp.comments);
       }
     }
     setUpVotes(thisCamp.upVoters?.length);
@@ -398,7 +429,7 @@ export default function CampaignSingle({
     setDownVotes(tempObj["downVoters"].length);
     try {
       fetch("/api/campaign/voter", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -712,7 +743,7 @@ export default function CampaignSingle({
                 Comments
               </Heading>
               <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
-                <CommentInbox />
+                <CommentInbox name={name} dbCamp={dbCamp} />
               </Box>
 
               {commentList.length == 0 ? (
@@ -723,9 +754,12 @@ export default function CampaignSingle({
                 </SimpleGrid>
               ) : (
                 <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
-                  <Skeleton height="3rem" />
-                  <Skeleton height="3rem" />
-                  <Skeleton height="3rem" />
+                  {commentList.slice(0).map((el, i) => {
+                    return (
+                      // eslint-disable-next-line react/jsx-key
+                      <CommentCard creator={el.creator} description={el.description} />
+                    );
+                  })}
                 </SimpleGrid>
               )}
               {showViewMoreComment ? (

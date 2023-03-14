@@ -88,6 +88,7 @@ export default function NewCampaign() {
           donatorEmail: [],
           upVoters: [],
           downVoters: [],
+          comments: [],
         }),
       });
 
