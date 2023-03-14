@@ -22,13 +22,11 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      const uv = temp.tempObj.upVoters; 
-      const dv = temp.tempObj.downVoters; 
+      const uv = temp.tempObj.upVoters;
+      const dv = temp.tempObj.downVoters;
       console.log(temp.tempObj);
       const nm = temp.tempObj.name;
-      const u = await db
-        .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { upVoters: uv, downVoters: dv } });
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { upVoters: uv, downVoters: dv } });
       console.log(u);
       res.json({ u });
     } catch (error) {
@@ -37,15 +35,14 @@ export default async function addCampaign(req, res) {
     }
   } else if (req.method == "PUT") {
     try {
-        const { db } = await connectToDatabase();
-        const temp = req.body;
-        const c = temp.tempObj.comments;
-        const nm = temp.tempObj.name;
-        const u = await db
-        .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { comments:c } });
-        console.log(u);
-        res.json({ u });
+      const { db } = await connectToDatabase();
+      const temp = req.body;
+      console.log(temp);
+      const c = temp.tempObj.comments;
+      const nm = temp.tempObj.name;
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { comments: c } });
+      console.log(u);
+      res.json({ u });
     } catch (error) {
       console.log(error);
       res.json({ error });
