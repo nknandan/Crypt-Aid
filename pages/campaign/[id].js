@@ -757,7 +757,7 @@ export default function CampaignSingle({
                   {commentList.slice(0).map((el, i) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <CommentCard creator={el.creator} description={el.description} />
+                      <CommentCard creator={el.creator} description={el.description} key={i} />
                     );
                   })}
                 </SimpleGrid>
