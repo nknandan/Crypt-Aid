@@ -142,9 +142,13 @@ function CommentCard({ creator, description }) {
       }}
       padding={5}
     >
-      <Text fontWeight={800} fontSize={18} color={"blue.300"}>
-        {creator}
-      </Text>
+      <NextLink href={`/user/${creator}`}>
+        <a>
+          <Text fontWeight={800} fontSize={18} color={"blue.300"}>
+            {creator}
+          </Text>
+        </a>
+      </NextLink>
       {description}{" "}
     </Box>
   );
@@ -237,7 +241,7 @@ function CommentInbox({}) {
           </Box>
         </Box>
 
-        {commentList.length == 0 ? (
+        {commentList?.length == (0 || null) ? (
           <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
             <CommentCard />
             <CommentCard />

@@ -279,7 +279,9 @@ export default function NavBar() {
                 {user.nickname}
               </Text>
               <Text alignSelf={"flex-start"}>{user.name}</Text>
-              <NextLink href="/userProfile">
+              {/* OLD IS HERE */}
+              {/* <NextLink href="/userProfile">     */}
+              <NextLink href={`/user/${user.email}`}>
                 <a>
                   <Text
                     fontWeight={600}

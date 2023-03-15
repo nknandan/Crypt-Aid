@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
-import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
+import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
 import {
   Heading,
   useColorModeValue,
@@ -19,17 +19,17 @@ import {
   Img,
   Progress,
 } from "@chakra-ui/react";
-import factory from "../smart-contract/factory";
-import web3 from "../smart-contract/web3";
-import Campaign from "../smart-contract/campaign";
+import factory from "../../smart-contract/factory";
+import web3 from "../../smart-contract/web3.js";
+import Campaign from "../../smart-contract/campaign";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
-import { connectMongo } from "../utils/connectMongo";
-import User from "../models/user";
+import { connectMongo } from "../../utils/connectMongo";
+import User from "../../models/user";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
-import CampaignModel from "../models/campaignModel";
+import CampaignModel from "../../models/campaignModel";
 
 var cName2Id = {};
 
