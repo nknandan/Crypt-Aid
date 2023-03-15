@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
@@ -8,34 +9,34 @@ import { AiFillRocket, AiFillFire } from "react-icons/ai";
 import { IoIosPodium } from "react-icons/io";
 import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
 import {
-    Heading,
-    useBreakpointValue,
-    useColorModeValue,
-    Text,
-    Button,
-    Flex,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
-    Container,
-    SimpleGrid,
-    Box,
-    Divider,
-    Skeleton,
-    Img,
-    Icon,
-    chakra,
-    Tooltip,
-    Link,
-    SkeletonCircle,
-    HStack,
-    Stack,
-    Progress,
+  Heading,
+  useBreakpointValue,
+  useColorModeValue,
+  Text,
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Container,
+  SimpleGrid,
+  Box,
+  Divider,
+  Skeleton,
+  Img,
+  Icon,
+  chakra,
+  Tooltip,
+  Link,
+  SkeletonCircle,
+  HStack,
+  Stack,
+  Progress,
 } from "@chakra-ui/react";
 
 import factory from "../smart-contract/factory";
@@ -51,249 +52,218 @@ import User from "../models/user";
 var cName2Id = {};
 
 export async function getServerSideProps(context) {
-    const { db } = await connectToDatabase();
-    await connectMongo();
-    const campaigns = await factory.methods.getDeployedCampaigns().call();
+  const { db } = await connectToDatabase();
+  await connectMongo();
+  const campaigns = await factory.methods.getDeployedCampaigns().call();
 
-    // ! FETCHING FROM DATABASE...
-    const dbCampaigns = await db.collection("campaigns").find().toArray();
-    const dbCommunities = await db.collection("communities").find().toArray();
-    const dbUsers = await User.find();
+  // ! FETCHING FROM DATABASE...
+  const dbCampaigns = await db.collection("campaigns").find().toArray();
+  const dbCommunities = await db.collection("communities").find().toArray();
+  const dbUsers = await User.find();
 
-    return {
-        props: {
-            campaigns,
-            dbUsers: JSON.parse(JSON.stringify(dbUsers)),
-            dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
-            dbComm: JSON.parse(JSON.stringify(dbCommunities)),
-        },
-    };
+  return {
+    props: {
+      campaigns,
+      dbUsers: JSON.parse(JSON.stringify(dbUsers)),
+      dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+      dbComm: JSON.parse(JSON.stringify(dbCommunities)),
+    },
+  };
 }
 
-function CommunityCard({ name, description, imageURL, creator, moderators, commCamps}) {
-    // var emmmmmmm = "";
+function CommunityCard({ name, description, imageURL, creator, moderators, commCamps }) {
+  console.log(imageURL);
 
-    console.log(imageURL);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [joined, setJoined] = useState(1);
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [joined, setJoined] = useState(1);
+  useEffect(() => {
+    const fetchData = async () => {};
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // async function findEmail() {
-    //     for (var i = 0; i < dbCamp.length; i++) {
-    //         if (dbCamp[i].name == name) {
-    //             setEmail(dbCamp[i].creatorEmail);
-    //             return dbCamp[i].creatorEmail;
-    //         }
-    //     }
-    //     return;
-    // }
-    // async function findUsername(tempEmail) {
-    //     for (var i = 0; i < dbUsers.length; i++) {
-    //         if (dbUsers[i].email == tempEmail) {
-    //             const tempUsername = dbUsers[i].username;
-    //             setUsername(tempUsername);
-    //             return tempUsername;
-    //         }
-    //     }
-    // }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            // const tempEmail = await findEmail();
-            // setEmail(tempEmail);
-            // const tempUsername = await findUsername(tempEmail);
-            // setUsername(tempUsername);
-        };
-        fetchData();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    return (
-        <NextLink href={`/community/dummy`}>
-            <Box
-                h={"250px"}
-                w={"400px"}
-                position="relative"
-                cursor="pointer"
-                bgColor={"#ffffff"}
-                borderRadius={"20"}
-                transition={"transform 0.3s ease"}
-                boxShadow="sm"
-                _hover={{
-                    transform: "translateY(-8px)",
-                }}
-                overflow={"hidden"}
-                zIndex={95}
+  return (
+    <NextLink href={`/community/${encodeURIComponent(name)}`}>
+      <Box
+        h={"250px"}
+        w={"400px"}
+        position="relative"
+        cursor="pointer"
+        bgColor={"#ffffff"}
+        borderRadius={"20"}
+        transition={"transform 0.3s ease"}
+        boxShadow="sm"
+        _hover={{
+          transform: "translateY(-8px)",
+        }}
+        overflow={"hidden"}
+        zIndex={95}
+      >
+        <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
+          <Box h={"100px"} w={"100%"} position="relative">
+            <Img
+              src={imageURL}
+              alt={`Picture of ${name}`}
+              objectFit="cover"
+              w="full"
+              h="full"
+              display="block"
+              opacity={"0.5"}
+              position={"absolute"}
+            />
+          </Box>
+        </Box>
+        <Text
+          maxW={"260px"}
+          noOfLines={1}
+          color={"white"}
+          fontSize={"24px"}
+          opacity={"1"}
+          zIndex={99}
+          position="absolute"
+          top={"65px"}
+          left={"20px"}
+          fontWeight={800}
+        >
+          {name}
+        </Text>
+        <Box bgColor={"white"} padding={"10px"} paddingLeft={"20px"} paddingRight={"20px"}>
+          <Text noOfLines={3}>{description}</Text>
+        </Box>
+        <Flex
+          flexDir={"row"}
+          paddingLeft={"20px"}
+          paddingRight={"20px"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Text fontWeight={600} color={"#2C2C7B"}>
+            17 posts
+          </Text>
+          <Text fontWeight={600} color={"#2C2C7B"}>
+            {moderators.length} members
+          </Text>
+          {joined ? (
+            <Button
+              w={"25%"}
+              borderRadius={50}
+              bgColor={"#609966"}
+              color={"white"}
+              zIndex={99}
+              _hover={{
+                bgGradient: "linear(to-l, #609966, #9DC08B)",
+                boxShadow: "xl",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setJoined(!joined);
+              }}
             >
-                <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
-                    <Box h={"100px"} w={"100%"} position="relative">
-                        <Img
-                            src={imageURL}
-                            alt={`Picture of ${name}`}
-                            objectFit="cover"
-                            w="full"
-                            h="full"
-                            display="block"
-                            opacity={'0.5'}
-                            position={"absolute"}
-                        />
-                    </Box>
-                </Box>
-                <Text maxW={"260px"} noOfLines={1} color={"white"} fontSize={"24px"} opacity={'1'} zIndex={99} position="absolute" top={"65px"} left={"20px"} fontWeight={800}>{name}</Text>
-                <Box bgColor={"white"} padding={"10px"} paddingLeft={"20px"} paddingRight={"20px"}>
-                    <Text noOfLines={3}>{description}</Text>
-                </Box>
-                <Flex flexDir={"row"} paddingLeft={"20px"} paddingRight={"20px"} justifyContent={"space-between"} alignItems={"center"}>
-                    <Text fontWeight={600} color={"#2C2C7B"}>17 posts</Text>
-                    <Text fontWeight={600} color={"#2C2C7B"}>{moderators.length} members</Text>
-                    {joined ? (<Button
-                        w={"25%"}
-                        borderRadius={50}
-                        bgColor={"#609966"}
-                        color={"white"}
-                        zIndex={99}
-                        _hover={{
-                            bgGradient: "linear(to-l, #609966, #9DC08B)",
-                            boxShadow: "xl",
-                        }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setJoined(!joined);
-                        }}
-                    >
-                        Joined
-                    </Button>) : (
-                        <Button
-                            w={"25%"}
-                            borderRadius={50}
-                            bgColor={"#1CB5E0"}
-                            color={"white"}
-                            zIndex={99}
-                            _hover={{
-                                bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
-                                boxShadow: "xl",
-                            }}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setJoined(!joined);
-                            }}
-                        >
-                            Join
-                        </Button>
-                    )}
-                </Flex>
-            </Box>
-        </NextLink>
-    );
+              Joined
+            </Button>
+          ) : (
+            <Button
+              w={"25%"}
+              borderRadius={50}
+              bgColor={"#1CB5E0"}
+              color={"white"}
+              zIndex={99}
+              _hover={{
+                bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                boxShadow: "xl",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setJoined(!joined);
+              }}
+            >
+              Join
+            </Button>
+          )}
+        </Flex>
+      </Box>
+    </NextLink>
+  );
 }
 
 export default function exploreCommunities({ campaigns, dbUsers, dbCamp, dbComm }) {
-    const [campaignList, setCampaignList] = useState([]);
-    const [communityList, setCommunityList] = useState([]);
-    const [ethPrice, updateEthPrice] = useState(null);
-    const [newButton, setNewButton] = useState(1);
-    const [popularButton, setPopularButton] = useState(0);
-    const [trendingButton, setTrendingButton] = useState(0);
+  const [campaignList, setCampaignList] = useState([]);
+  const [communityList, setCommunityList] = useState([]);
+  const [ethPrice, updateEthPrice] = useState(null);
+  const [newButton, setNewButton] = useState(1);
+  const [popularButton, setPopularButton] = useState(0);
+  const [trendingButton, setTrendingButton] = useState(0);
 
-    // console.log(dbComm);
-    async function getSummary() {
-        try {
-            const summary = await Promise.all(
-                campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
-            );
-            const ETHPrice = await getETHPrice();
-            updateEthPrice(ETHPrice);
-            setCampaignList(summary);
-            setCommunityList(dbComm);
-            let i = 0;
-            for (let ele of campaigns) {
-                cName2Id[summary[i]["5"]] = ele;
-                i++;
-            }
+  async function getSummary() {
+    try {
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      const ETHPrice = await getETHPrice();
+      updateEthPrice(ETHPrice);
+      setCampaignList(summary);
+      setCommunityList(dbComm);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
 
-            return summary;
-        } catch (e) {
-            console.log(e);
-        }
+      return summary;
+    } catch (e) {
+      console.log(e);
     }
+  }
 
-    useEffect(() => {
-        getSummary();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    return (
-        <div>
-            <Head>
-                <title>Explore Communities | CryptAid</title>
+  useEffect(() => {
+    getSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <div>
+      <Head>
+        <title>Explore Communities | CryptAid</title>
 
-                <meta name="description" content="Transparent Crowdfunding in Blockchain" />
-                <link rel="icon" href="/logo.svg" />
-            </Head>
-            <main className={styles.main}>
-                <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
-                    <HStack spacing={2} justifyContent={"space-between"}>
-                        <Heading as="h2" size="lg">
-                            Explore all Communities
-                        </Heading>
-                        {/* <Grid templateColumns="repeat(2, 1fr)">
-                            <GridItem width="20" h="5" bg="white.500">
-                                <Button
-                                    colorScheme="blue"
-                                    variant="ghost"
-                                    isActive={newButton}
-                                    borderRadius={20}
-                                    onClick={() => {
-                                        setNewButton(1);
-                                        setTrendingButton(0);
-                                    }}
-                                    _hover={{ bg: "gray.300" }}
-                                >
-                                    <SunIcon /> New
-                                </Button>
-                            </GridItem>
-                            <GridItem width="23" h="5" bg="white.500">
-                                <Button
-                                    colorScheme="blue"
-                                    variant="ghost"
-                                    isActive={trendingButton}
-                                    borderRadius={20}
-                                    onClick={() => {
-                                        setNewButton(0);
-                                        setTrendingButton(1);
-                                    }}
-                                    _hover={{ bg: "gray.300" }}
-                                >
-                                    <Icon as={IoIosPodium} /> Trending
-                                </Button>
-                            </GridItem>
-                            {/* <GridItem width="23" h="5" bg="white.500">
-                <Button colorScheme="blue" variant="ghost" onClick={() => { setNewButton(0); setPopularButton(1); setTrendingButton(0) }}>
-                  <Icon as={AiFillRocket} /> Popular
-                </Button>
-              </GridItem> */}
-                        {/* </Grid> */} */
-                    </HStack>
+        <meta name="description" content="Transparent Crowdfunding in Blockchain" />
+        <link rel="icon" href="/logo.svg" />
+      </Head>
+      <main className={styles.main}>
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>
+          <HStack spacing={2} justifyContent={"space-between"}>
+            <Heading as="h2" size="lg">
+              Explore all Communities
+            </Heading>
+          </HStack>
 
-                    <Divider marginTop="4" />
-                    {communityList.length > 0 ? (
-                        <SimpleGrid row={{ base: 1, md: 3 }} columns={1} minChildWidth='380px' spacing={10} py={8}>
-                            {communityList.slice(0).map((el, i) => {
-                                return(
-                                    <CommunityCard name={el.name} description={el.description} imageURL={el.imageUrl} creator={el.creator} moderators={el.moderators} commCamps={el.campaigns} />
-                                );
-                            })}
-                        </SimpleGrid>
-                    ) : (
-                        <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
-                            <Skeleton height="15rem" />
-                            <Skeleton height="15rem" />
-                            <Skeleton height="15rem" />
-                        </SimpleGrid>
-                    )}
-                </Container>
-            </main>
-        </div>
-    );
+          <Divider marginTop="4" />
+          {communityList.length > 0 ? (
+            <SimpleGrid row={{ base: 1, md: 3 }} columns={1} minChildWidth="380px" spacing={10} py={8}>
+              {communityList.slice(0).map((el, i) => {
+                return (
+                  <CommunityCard
+                    name={el.name}
+                    description={el.description}
+                    imageURL={el.imageUrl}
+                    creator={el.creator}
+                    moderators={el.moderators}
+                    commCamps={el.campaigns}
+                    key={i}
+                  />
+                );
+              })}
+            </SimpleGrid>
+          ) : (
+            <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
+              <Skeleton height="15rem" />
+              <Skeleton height="15rem" />
+              <Skeleton height="15rem" />
+            </SimpleGrid>
+          )}
+        </Container>
+      </main>
+    </div>
+  );
 }
