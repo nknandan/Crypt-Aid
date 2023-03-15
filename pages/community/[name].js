@@ -308,8 +308,7 @@ export default function CommunitySingle({dbComm}) {
                 <Text mt={2} color={"gray.600"} fontWeight={500} fontSize={"18px"}>
                   Moderators
                 </Text>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
+                <Flex px={4} alignItems={"flex-start"} flexDir={"column"}>
                   {tempMod.slice(0).map(el => {
                     return(
                       <Flex px={4} alignItems={"center"} mt={2}>
