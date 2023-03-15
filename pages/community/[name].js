@@ -49,6 +49,24 @@ import {
 } from "@chakra-ui/react";
 import { Line } from "@react-pdf/renderer";
 import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
+import { connectMongo } from "../../utils/connectMongo";
+import { connectToDatabase } from "../../lib/mongodb";
+
+var tempComm = {};
+var tempMod = [];
+
+export async function getServerSideProps({}) {
+  var ETHPrice = 1756.48;
+  const { db } = await connectToDatabase();
+  await connectMongo();
+  const dbCommunities = await db.collection("communities").find().toArray();
+  // console.log(JSON.parse(JSON.stringify(dbCommunities)));
+  return {
+    props: {
+      dbComm: JSON.parse(JSON.stringify(dbCommunities)),
+    },
+  };
+}
 
 function CommentInbox() {
   const [comments, setComments] = useState([]);
@@ -95,11 +113,28 @@ function CommentInbox() {
   );
 }
 
-export default function CommunitySingle({}) {
+export default function CommunitySingle({dbComm}) {
+  const router = useRouter();
+
   const [joined, setJoined] = useState(1);
   const [newButton, setNewButton] = useState(1);
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
+  const [communityName, setCommunityName] = useState();
+  const [thisComm, setThisComm] = useState();
+  
+  useEffect(() => {
+    var tempName = router.query.name;
+    setCommunityName(tempName);
+    for(let i=0; i<dbComm.length; i++){
+      if(dbComm[i].name == tempName){
+        tempComm = dbComm[i];
+        tempMod = tempComm.moderators;
+      }
+    }
+    console.log(tempMod);
+  }, []);
+
   return (
     <div>
       <Head>
@@ -115,7 +150,7 @@ export default function CommunitySingle({}) {
               w={"100%"}
               h={"100%"}
               src={
-                "https://www.smartcompany.com.au/wp-content/uploads/2017/10/That-Startup-Show-image.jpg?fit=641%2C333"
+                tempComm.imageUrl
               }
               objectFit="cover"
               borderRadius={30}
@@ -133,7 +168,7 @@ export default function CommunitySingle({}) {
                 borderColor={"gray.300"}
                 w={"100%"}
               >
-                <Heading fontSize={"44px"}>BRUJOS</Heading>
+                <Heading fontSize={"44px"}>{tempComm.name}</Heading>
                 {joined ? (
                   <Button
                     w={"25%"}
@@ -224,8 +259,7 @@ export default function CommunitySingle({}) {
                   About community
                 </Text>
                 <Text mt={2}>
-                  Bassiste, contrebassiste et compositeur, après avoir travaillé pour de nombreux artistes depuis plus
-                  de 20 ans et enregistré près de 50 albums, je présente en 2023 mon 3 em Album
+                  {tempComm.description}
                 </Text>
                 <Text color={"gray.600"} mt={2} fontWeight={200}>
                   Created Jan 25, 2012
@@ -234,7 +268,7 @@ export default function CommunitySingle({}) {
                 <Flex w={"100%"} justifyContent={"space-evenly"}>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      452
+                      {tempMod.length}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Members
@@ -276,7 +310,14 @@ export default function CommunitySingle({}) {
                 </Text>
                 <Flex px={4} alignItems={"center"}>
                   <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
+                  {tempMod.slice(0).map(el => {
+                    return(
+                      <Flex px={4} alignItems={"center"} mt={2}>
+                        <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
+                        <Text color={"black"}>{el}</Text>
+                    </Flex>
+                    );
+                  })}
                 </Flex>
               </Box>
               <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
