@@ -3,7 +3,7 @@ import Head from "next/head";
 import React from "react";
 import Router from "next/router";
 import ReactDOM from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
@@ -48,13 +48,10 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
-
 import { useDisclosure } from "@chakra-ui/react";
-
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Confetti from "react-confetti";
-
 import web3 from "../../smart-contract/web3";
 import Campaign from "../../smart-contract/campaign";
 import factory from "../../smart-contract/factory";
@@ -62,16 +59,17 @@ import { redirect } from "next/dist/server/api-utils";
 import { connectMongo } from "../../utils/connectMongo";
 import User from "../../models/user";
 import CampaignModel from "../../models/campaignModel";
-import axios from "axios";
 import RecommendedCampaigns from "../../components/RecommendedCampaigns";
 
 var thisCamp = {};
+var userEmail = "";
 
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
   const campaign = Campaign(campaignId);
   const summary = await campaign.methods.getSummary().call();
-  const ETHPrice = await getETHPrice();
+  // var ETHPrice = await getETHPrice();
+  var ETHPrice = 1756.48;
   await connectMongo();
   const users = await User.find();
   const dbCamp = await CampaignModel.find();
@@ -152,85 +150,138 @@ function CommentCard({ creator, description }) {
   );
 }
 
-function CommentInbox({ name, dbCamp }) {
-  const [comments, setComments] = useState([]);
+function CommentInbox({}) {
+  const [commentList, setCommentList] = useState([]);
+  const [comment, setComment] = useState({ creator: userEmail, description: "" });
+  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const commentInputRef = useRef(null);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newComment = event.target.comment.value;
-    setComments([...comments, newComment]);
-    event.target.comment.value = "";
-  };
-
-  var tempComment = "";
+  useEffect(() => {
+    setCommentList(thisCamp.comments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function submitComment() {
-    // console.log(dbCamp);
-    // console.log(name);
-    var tempObj = {};
-    const u = localStorage.getItem("email");
-    for (var i = 0; i < dbCamp.length; i++) {
-      if (dbCamp[i].name == name) tempObj = dbCamp[i];
-    }
-    console.log(tempObj);
-    var tempCommentObj = {
-      creator: u,
-      description: tempComment,
-    };
-    tempObj.comments.push(tempCommentObj);
+    thisCamp.comments.push(comment);
+    setCommentList(thisCamp.comments);
+    setComment({ creator: userEmail, description: "" });
+    commentInputRef.current.value = "";
+
     try {
       fetch("/api/campaign/voter", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ tempObj }),
+        body: JSON.stringify({ thisCamp }),
       });
     } catch (err) {
       setError(err.message);
       console.log(err);
     }
-    Router.reload(window.location.pathname);
+    // Router.reload(window.location.pathname);
   }
 
   return (
-    <Box w={"100%"} justifyContent={"space-between"}>
-      <Text mt={"2%"} mb={"1%"}>
-        {" "}
-        Enter your comment
-      </Text>
-      <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"}>
-        <Box w={"70%"}>
-          <form>
-            <FormControl id="value">
-              <InputGroup w={"100%"}>
-                <Input
-                  type="string"
-                  borderColor={"gray.300"}
-                  placeholder={"Enter your comment here"}
-                  onChange={(e) => {
-                    tempComment = e.target.value;
-                  }}
-                />
-              </InputGroup>
-            </FormControl>
-          </form>
+    <Box>
+      <Stat
+        bg={useColorModeValue("white", "gray.700")}
+        boxShadow={"lg"}
+        rounded={"20px"}
+        p={{ base: 4, sm: 6, md: 8 }}
+        spacing={{ base: 8 }}
+      >
+        <Heading lineHeight={1} fontSize={{ base: "2xl", sm: "3xl" }} color={useColorModeValue("teal.600", "teal.200")}>
+          Comments
+        </Heading>
+        <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
+          <Box w={"100%"} justifyContent={"space-between"}>
+            <Text mt={"2%"} mb={"1%"}>
+              {" "}
+              Enter your comment
+            </Text>
+            <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"}>
+              <Box w={"70%"}>
+                <form>
+                  <FormControl id="value">
+                    <InputGroup w={"100%"}>
+                      <Input
+                        ref={commentInputRef}
+                        type="string"
+                        borderColor={"gray.300"}
+                        placeholder={"Enter your comment here"}
+                        onChange={(e) => {
+                          setComment({ creator: userEmail, description: e.target.value });
+                        }}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                </form>
+              </Box>
+              <Button
+                w={"25%"}
+                bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+                color={"white"}
+                _hover={{
+                  bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                  boxShadow: "xl",
+                }}
+                disabled={comment.description == ""}
+                onClick={() => {
+                  submitComment();
+                }}
+              >
+                Comment
+              </Button>
+            </Flex>
+          </Box>
         </Box>
-        <Button
-          w={"25%"}
-          bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
-          color={"white"}
-          _hover={{
-            bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
-            boxShadow: "xl",
-          }}
-          onClick={() => {
-            submitComment();
-          }}
-        >
-          Comment
-        </Button>
-      </Flex>
+
+        {commentList.length == 0 ? (
+          <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
+            <CommentCard />
+            <CommentCard />
+            <CommentCard />
+          </SimpleGrid>
+        ) : (
+          <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
+            {commentList.slice(0).map((el, i) => {
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <CommentCard creator={el.creator} description={el.description} key={i} />
+              );
+            })}
+          </SimpleGrid>
+        )}
+        {showViewMoreComment ? (
+          <Button
+            display={{ sm: "inline-flex" }}
+            w={"200px"}
+            fontSize={"md"}
+            fontWeight={600}
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            color={useColorModeValue("gray.900", "gray.100")}
+            borderRadius={"20"}
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            bg={useColorModeValue("white", "blue.400")}
+            border={"1px solid"}
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            borderColor={useColorModeValue("#0065A1", "#0065A1")}
+            marginLeft={"50%"}
+            marginTop={"1%"}
+            transform={"translate(-50%, 0)"}
+            // onClick={handleShowMoreComment}
+            _hover={{
+              bg: "#0065A1",
+              color: "#ffffff",
+            }}
+          >
+            View more
+          </Button>
+        ) : (
+          <></>
+        )}
+      </Stat>
     </Box>
   );
 }
@@ -268,7 +319,7 @@ export default function CampaignSingle({
   const [donAmount, setDonAmount] = useState("");
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
-  const [commentList, setCommentList] = useState([]);
+  // const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("email") == null) {
@@ -279,11 +330,12 @@ export default function CampaignSingle({
   }, [isAuthenticated]);
 
   useEffect(() => {
+    userEmail = localStorage.getItem("email");
     for (let i = 0; i < dbCamp.length; i++) {
       const campObj = dbCamp[i];
       if (campObj.name === name) {
         thisCamp = campObj;
-        setCommentList(thisCamp.comments);
+        // setCommentList(thisCamp.comments);
       }
     }
     setUpVotes(thisCamp.upVoters?.length);
@@ -292,7 +344,6 @@ export default function CampaignSingle({
   }, []);
 
   async function onSubmit(data) {
-    console.log(data.value);
     try {
       const u = localStorage.getItem("email");
       var tempUser = {};
@@ -653,6 +704,7 @@ export default function CampaignSingle({
                         onChange={(e) => {
                           setAmountInUSD(Math.abs(e.target.value));
                           // TODO Check if it exceeds?.
+                          // console.log(typeof e.target.value);
                         }}
                         step="any"
                         min="0"
@@ -727,71 +779,7 @@ export default function CampaignSingle({
               info={"Number of people who have already donated to this campaign"}
             />
           </SimpleGrid>
-          <Box>
-            <Stat
-              bg={useColorModeValue("white", "gray.700")}
-              boxShadow={"lg"}
-              rounded={"20px"}
-              p={{ base: 4, sm: 6, md: 8 }}
-              spacing={{ base: 8 }}
-            >
-              <Heading
-                lineHeight={1}
-                fontSize={{ base: "2xl", sm: "3xl" }}
-                color={useColorModeValue("teal.600", "teal.200")}
-              >
-                Comments
-              </Heading>
-              <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
-                <CommentInbox name={name} dbCamp={dbCamp} />
-              </Box>
-
-              {commentList.length == 0 ? (
-                <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
-                  <CommentCard />
-                  <CommentCard />
-                  <CommentCard />
-                </SimpleGrid>
-              ) : (
-                <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
-                  {commentList.slice(0).map((el, i) => {
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <CommentCard creator={el.creator} description={el.description} key={i} />
-                    );
-                  })}
-                </SimpleGrid>
-              )}
-              {showViewMoreComment ? (
-                <Button
-                  display={{ sm: "inline-flex" }}
-                  w={"200px"}
-                  fontSize={"md"}
-                  fontWeight={600}
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  color={useColorModeValue("gray.900", "gray.100")}
-                  borderRadius={"20"}
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  bg={useColorModeValue("white", "blue.400")}
-                  border={"1px solid"}
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  borderColor={useColorModeValue("#0065A1", "#0065A1")}
-                  marginLeft={"50%"}
-                  marginTop={"1%"}
-                  transform={"translate(-50%, 0)"}
-                  // onClick={handleShowMoreComment}
-                  _hover={{
-                    bg: "#0065A1",
-                    color: "#ffffff",
-                  }}
-                >
-                  View more
-                </Button>
-              ) : (
-                <></>
-              )}
-            </Stat>
-          </Box>
+          <CommentInbox />
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>
