@@ -37,11 +37,9 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      console.log(temp);
-      const c = temp.tempObj.comments;
-      const nm = temp.tempObj.name;
+      const c = temp.thisCamp.comments;
+      const nm = temp.thisCamp.name;
       const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { comments: c } });
-      console.log(u);
       res.json({ u });
     } catch (error) {
       console.log(error);

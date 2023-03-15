@@ -7,7 +7,7 @@ const processResult = async (input, array) => {
   pythonProcess = spawn("python", [process.env.NEXT_PUBLIC_PY_PATH, input, array]);
   let data = "";
   for await (const chunk of pythonProcess.stdout) {
-    console.log("stdout chunk: " + chunk);
+    // console.log("stdout chunk: " + chunk);
     data += chunk;
     // console.log("now");
   }
@@ -83,7 +83,7 @@ export default async function addCampaign(req, res) {
         ds[campaign[i].name] = ans[i];
       }
       let dsArr = convObj2Arr(ds);
-      console.log(dsArr);
+      // console.log(dsArr);
       res.json({ dsArr });
     } catch (error) {
       console.log(error);
