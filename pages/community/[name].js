@@ -113,7 +113,7 @@ function CommentInbox() {
   );
 }
 
-export default function CommunitySingle({dbComm}) {
+export default function CommunitySingle({ dbComm }) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -122,17 +122,18 @@ export default function CommunitySingle({dbComm}) {
   const [trendingButton, setTrendingButton] = useState(0);
   const [communityName, setCommunityName] = useState();
   const [thisComm, setThisComm] = useState();
-  
+
   useEffect(() => {
     var tempName = router.query.name;
     setCommunityName(tempName);
-    for(let i=0; i<dbComm.length; i++){
-      if(dbComm[i].name == tempName){
+    for (let i = 0; i < dbComm.length; i++) {
+      if (dbComm[i].name == tempName) {
         tempComm = dbComm[i];
         tempMod = tempComm.moderators;
       }
     }
     console.log(tempMod);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -146,15 +147,7 @@ export default function CommunitySingle({dbComm}) {
         {" "}
         <Flex px={"17.5vw"} direction={"column"} gap={"3vw"}>
           <Box w={"100%"} h={"250px"}>
-            <Img
-              w={"100%"}
-              h={"100%"}
-              src={
-                tempComm.imageUrl
-              }
-              objectFit="cover"
-              borderRadius={30}
-            />
+            <Img w={"100%"} h={"100%"} src={tempComm.imageUrl} objectFit="cover" borderRadius={30} />
           </Box>
           <Flex w={"100%"} justifyContent={"space-between"} alignItems={"flex-start"}>
             <Flex w={"66%"} flexDir={"column"}>
@@ -258,9 +251,7 @@ export default function CommunitySingle({dbComm}) {
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   About community
                 </Text>
-                <Text mt={2}>
-                  {tempComm.description}
-                </Text>
+                <Text mt={2}>{tempComm.description}</Text>
                 <Text color={"gray.600"} mt={2} fontWeight={200}>
                   Created Jan 25, 2012
                 </Text>
@@ -310,12 +301,12 @@ export default function CommunitySingle({dbComm}) {
                 </Text>
                 <Flex px={4} alignItems={"center"}>
                   <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  {tempMod.slice(0).map(el => {
-                    return(
-                      <Flex px={4} alignItems={"center"} mt={2}>
+                  {tempMod.slice(0).map((el) => {
+                    return (
+                      <Flex px={4} alignItems={"center"} mt={2} key={el}>
                         <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                         <Text color={"black"}>{el}</Text>
-                    </Flex>
+                      </Flex>
                     );
                   })}
                 </Flex>

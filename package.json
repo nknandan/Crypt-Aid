@@ -37,6 +37,7 @@
     "solc": "0.4.26",
     "truffle": "^5.7.7",
     "truffle-hdwallet-provider": "1.0.17",
+    "twilio": "^4.8.0",
     "use-wallet": "0.8.1",
     "web3": "^1.7.4"
   },
