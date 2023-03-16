@@ -128,6 +128,8 @@ export default function CommunitySingle({dbComm, users}) {
   const [trendingButton, setTrendingButton] = useState(0);
   const [communityName, setCommunityName] = useState();
   const [thisComm, setThisComm] = useState();
+  const [memberNo, setMemberNo] = useState();
+  const [modNo, setModNo] = useState();
   
   useEffect(() => {
     userEmail = localStorage.getItem("email");
@@ -148,6 +150,9 @@ export default function CommunitySingle({dbComm, users}) {
           setJoined(1);
         else
           setJoined(0);
+        if(tempMem == undefined) setMemberNo(0);
+        else setMemberNo(tempMem.length);
+        setModNo(tempMod.length);
       }
     }
     console.log(tempUser);
@@ -320,7 +325,7 @@ export default function CommunitySingle({dbComm, users}) {
                 <Flex w={"100%"} justifyContent={"space-evenly"}>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      {tempMem.length + tempMod.length}
+                      {memberNo+modNo}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Members

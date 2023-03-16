@@ -82,8 +82,13 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(1);
+  const [memberNo, setMemberNo] = useState();
+  const [modNo, setModNo] = useState();
 
   useEffect(() => {
+    if(members == undefined) setMemberNo(0);
+    else setMemberNo(members.length);
+    setModNo(moderators.length);
     const fetchData = async () => {};
     fetchData();
     userEmail = localStorage.getItem("email");
@@ -161,7 +166,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
             17 posts
           </Text>
           <Text fontWeight={600} color={"#2C2C7B"}>
-            {moderators.length} members
+            {memberNo+modNo} members
           </Text>
           {joined ? (
             <Button

@@ -89,14 +89,14 @@ export default function NewCampaign() {
           var tempUser = dbUsers.users[k];
         }
       }
-      if (tempUser["createdCampaigns"] == undefined) tempUser["createdCampaigns"] = [data.campaignName];
-      else tempUser["createdCampaigns"].push(data.campaignName);
+      if (tempUser["joinedCommunities"] == undefined) tempUser["joinedCommunities"] = [data.communityName];
+      else tempUser["joinedCommunities"].push(data.communityName);
 
       console.log(tempUser);
 
       try {
-        fetch("/api/user2", {
-          method: "POST",
+        fetch("/api/communities/addMem", {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -107,8 +107,7 @@ export default function NewCampaign() {
         console.log(err);
       }
 
-      router.push("/");
-      console.log("ADD 2");
+      router.push("/exploreCommunities");
     } catch (err) {
       setError(err.message);
       console.log(err);
