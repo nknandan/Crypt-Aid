@@ -50,6 +50,11 @@ import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 
 var cName2Id = {};
+var tempComm = {};
+var tempMod = [];
+var tempMem = [];
+var tempUser = {};
+var userEmail = "";
 
 export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
@@ -71,7 +76,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-function CommunityCard({ name, description, imageURL, creator, moderators, commCamps }) {
+function CommunityCard({ name, description, imageURL, creator, moderators, members, commCamps, dbUsers }) {
   console.log(imageURL);
 
   const [username, setUsername] = useState("");
@@ -81,6 +86,20 @@ function CommunityCard({ name, description, imageURL, creator, moderators, commC
   useEffect(() => {
     const fetchData = async () => {};
     fetchData();
+    userEmail = localStorage.getItem("email");
+    var tempName = name;
+    // console.log(users);
+    for(let i=0; i<dbUsers.length; i++){
+      if(dbUsers[i].email == userEmail){
+        tempUser = dbUsers[i];
+      }
+    }
+    tempMod = moderators || [];
+    tempMem = members || [];
+    if(tempMem.includes(userEmail) || tempMod.includes(userEmail))
+      setJoined(1);
+    else
+      setJoined(0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -146,6 +165,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, commC
           </Text>
           {joined ? (
             <Button
+              disabled={true}
               w={"25%"}
               borderRadius={50}
               bgColor={"#609966"}
@@ -165,6 +185,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, commC
             </Button>
           ) : (
             <Button
+              disabled={true}
               w={"25%"}
               borderRadius={50}
               bgColor={"#1CB5E0"}
@@ -196,6 +217,7 @@ export default function exploreCommunities({ campaigns, dbUsers, dbCamp, dbComm 
   const [newButton, setNewButton] = useState(1);
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
+  const [joined, setJoined] = useState(1);
 
   async function getSummary() {
     try {
@@ -249,8 +271,10 @@ export default function exploreCommunities({ campaigns, dbUsers, dbCamp, dbComm 
                     imageURL={el.imageUrl}
                     creator={el.creator}
                     moderators={el.moderators}
+                    members={el.members}
                     commCamps={el.campaigns}
                     key={i}
+                    dbUsers={dbUsers}
                   />
                 );
               })}

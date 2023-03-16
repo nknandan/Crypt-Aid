@@ -51,19 +51,25 @@ import { Line } from "@react-pdf/renderer";
 import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
+import User from "../../models/user";
 
 var tempComm = {};
 var tempMod = [];
+var tempMem = [];
+var tempUser = {};
+var userEmail = "";
 
 export async function getServerSideProps({}) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
   const dbCommunities = await db.collection("communities").find().toArray();
-  // console.log(JSON.parse(JSON.stringify(dbCommunities)));
+  const users = await User.find();
+  // console.log(JSON.parse(JSON.stringify(users)));
   return {
     props: {
       dbComm: JSON.parse(JSON.stringify(dbCommunities)),
+      users: JSON.parse(JSON.stringify(users)),
     },
   };
 }
@@ -113,7 +119,7 @@ function CommentInbox() {
   );
 }
 
-export default function CommunitySingle({dbComm}) {
+export default function CommunitySingle({dbComm, users}) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -124,16 +130,61 @@ export default function CommunitySingle({dbComm}) {
   const [thisComm, setThisComm] = useState();
   
   useEffect(() => {
+    userEmail = localStorage.getItem("email");
     var tempName = router.query.name;
     setCommunityName(tempName);
+    // console.log(users);
+    for(let i=0; i<users.length; i++){
+      if(users[i].email == userEmail){
+        tempUser = users[i];
+      }
+    }
     for(let i=0; i<dbComm.length; i++){
       if(dbComm[i].name == tempName){
         tempComm = dbComm[i];
-        tempMod = tempComm.moderators;
+        tempMod = tempComm.moderators || [];
+        tempMem = tempComm.members || [];
+        if(tempMem.includes(userEmail) || tempMod.includes(userEmail))
+          setJoined(1);
+        else
+          setJoined(0);
       }
     }
-    console.log(tempMod);
+    console.log(tempUser);
   }, []);
+
+  async function joinComm(){
+    if(tempComm["members"] == undefined) tempComm["members"] = [userEmail];
+    else tempComm.members.push(userEmail);
+    // console.log(tempComm);
+    setJoined(1);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    if(tempUser["joinedCommunities"] == undefined) tempUser["joinedCommunities"] = [tempComm.name];
+    else tempUser["joinedCommunities"].push(tempComm.name);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
 
   return (
     <div>
@@ -171,6 +222,7 @@ export default function CommunitySingle({dbComm}) {
                 <Heading fontSize={"44px"}>{tempComm.name}</Heading>
                 {joined ? (
                   <Button
+                    disabled={true}
                     w={"25%"}
                     borderRadius={50}
                     bgColor={"#609966"}
@@ -202,7 +254,7 @@ export default function CommunitySingle({dbComm}) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      setJoined(!joined);
+                      joinComm();
                     }}
                   >
                     Join
@@ -268,7 +320,7 @@ export default function CommunitySingle({dbComm}) {
                 <Flex w={"100%"} justifyContent={"space-evenly"}>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      {tempMod.length}
+                      {tempMem.length + tempMod.length}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Members
@@ -332,7 +384,15 @@ export default function CommunitySingle({dbComm}) {
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   Members
                 </Text>
-                <Flex px={4} alignItems={"center"} mt={2}>
+                {tempMem.slice(0).map(el => {
+                  return(
+                    <Flex px={4} alignItems={"center"} mt={2}>
+                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
+                  <Text color={"black"}>{el}</Text>
+                </Flex>
+                  );
+                })}
+                {/* <Flex px={4} alignItems={"center"} mt={2}>
                   <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                   <Text color={"black"}>HarshaRocks</Text>
                 </Flex>
@@ -355,7 +415,7 @@ export default function CommunitySingle({dbComm}) {
                 <Flex px={4} alignItems={"center"}>
                   <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                   <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
+                </Flex> */}
               </Box>
             </Box>
           </Flex>
