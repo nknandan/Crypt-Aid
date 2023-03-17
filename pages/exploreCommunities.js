@@ -110,7 +110,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
   return (
     <NextLink href={`/community/${encodeURIComponent(name)}`}>
       <Box
-        h={"250px"}
+        minH={"250px"}
         w={"400px"}
         position="relative"
         cursor="pointer"
@@ -123,6 +123,10 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
         }}
         overflow={"hidden"}
         zIndex={95}
+        display={"flex"}
+        flexDir={"column"}
+        justifyContent={"space-between"}
+        paddingBottom={"5%"}
       >
         <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
           <Box h={"100px"} w={"100%"} position="relative">
@@ -152,7 +156,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
         >
           {name}
         </Text>
-        <Box bgColor={"white"} padding={"10px"} paddingLeft={"20px"} paddingRight={"20px"}>
+        <Box bgColor={"white"} paddingLeft={"20px"} paddingRight={"20px"} minH={"30%"}>
           <Text noOfLines={3}>{description}</Text>
         </Box>
         <Flex
