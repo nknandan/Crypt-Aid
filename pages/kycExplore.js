@@ -57,14 +57,14 @@ export default function Home({ campaigns }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} minH={"100vh"}>
+        <Container py={{ base: "4", md: "12" }} maxW={"7xl"} minH={"50vh"}>
           <HStack spacing={2} justifyContent={"space-between"}>
             <Heading as="h2" size="lg">
               KYC Verification
             </Heading>
           </HStack>
           <Divider marginTop="4" />
-          <Flex mt={10} justifyContent={"space-between"}>
+          <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
             <Img height={"400px"} objectFit={"contain"} src={"/kyc.png"} borderRadius={20} />
             <Flex flexDir={"column"} w={"40%"}>
               <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>

@@ -59,7 +59,7 @@ var tempMem = [];
 var tempUser = {};
 var userEmail = "";
 
-export async function getServerSideProps({}) {
+export async function getServerSideProps({ }) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -95,7 +95,7 @@ function CommentInbox() {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter your post here"}
-                  onChange={(e) => {}}
+                  onChange={(e) => { }}
                 />
               </InputGroup>
             </FormControl>
@@ -109,7 +109,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => {}}
+          onClick={() => { }}
           borderRadius={20}
         >
           Post
@@ -119,7 +119,7 @@ function CommentInbox() {
   );
 }
 
-export default function CommunitySingle({dbComm, users}) {
+export default function CommunitySingle({ dbComm, users }) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -130,27 +130,28 @@ export default function CommunitySingle({dbComm, users}) {
   const [thisComm, setThisComm] = useState();
   const [memberNo, setMemberNo] = useState();
   const [modNo, setModNo] = useState();
-  
+  const [createPostMode, setCreatePostMode] = useState(false);
+
   useEffect(() => {
     userEmail = localStorage.getItem("email");
     var tempName = router.query.name;
     setCommunityName(tempName);
     // console.log(users);
-    for(let i=0; i<users.length; i++){
-      if(users[i].email == userEmail){
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].email == userEmail) {
         tempUser = users[i];
       }
     }
-    for(let i=0; i<dbComm.length; i++){
-      if(dbComm[i].name == tempName){
+    for (let i = 0; i < dbComm.length; i++) {
+      if (dbComm[i].name == tempName) {
         tempComm = dbComm[i];
         tempMod = tempComm.moderators || [];
         tempMem = tempComm.members || [];
-        if(tempMem.includes(userEmail) || tempMod.includes(userEmail))
+        if (tempMem.includes(userEmail) || tempMod.includes(userEmail))
           setJoined(1);
         else
           setJoined(0);
-        if(tempMem == undefined) setMemberNo(0);
+        if (tempMem == undefined) setMemberNo(0);
         else setMemberNo(tempMem.length);
         setModNo(tempMod.length);
       }
@@ -158,8 +159,8 @@ export default function CommunitySingle({dbComm, users}) {
     console.log(tempUser);
   }, []);
 
-  async function joinComm(){
-    if(tempComm["members"] == undefined) tempComm["members"] = [userEmail];
+  async function joinComm() {
+    if (tempComm["members"] == undefined) tempComm["members"] = [userEmail];
     else tempComm.members.push(userEmail);
     // console.log(tempComm);
     setJoined(1);
@@ -175,7 +176,7 @@ export default function CommunitySingle({dbComm, users}) {
       setError(err.message);
       console.log(err);
     }
-    if(tempUser["joinedCommunities"] == undefined) tempUser["joinedCommunities"] = [tempComm.name];
+    if (tempUser["joinedCommunities"] == undefined) tempUser["joinedCommunities"] = [tempComm.name];
     else tempUser["joinedCommunities"].push(tempComm.name);
     try {
       fetch("/api/communities/addMem", {
@@ -266,7 +267,7 @@ export default function CommunitySingle({dbComm, users}) {
                   </Button>
                 )}
               </Flex>
-              <Box borderWidth={1} borderColor={"gray.300"} p={4} borderRadius={8} my={6}>
+              {createPostMode ? (<Box borderWidth={1} borderColor={"gray.300"} p={4} borderRadius={8} my={6}>
                 <Heading
                   lineHeight={1}
                   fontSize={{ base: "2xl", sm: "3xl" }}
@@ -277,8 +278,7 @@ export default function CommunitySingle({dbComm, users}) {
                 <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
                   <CommentInbox />
                 </Box>
-              </Box>
-              <Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
+              </Box>) : (<Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
                 <Button
                   colorScheme="blue"
                   variant="ghost"
@@ -308,7 +308,9 @@ export default function CommunitySingle({dbComm, users}) {
                 >
                   <Icon as={IoIosPodium} /> <Text ml={2}>Trending</Text>
                 </Button>
-              </Flex>
+              </Flex>)}
+
+
             </Flex>
             <Box w={"30%"}>
               <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5}>
@@ -325,7 +327,7 @@ export default function CommunitySingle({dbComm, users}) {
                 <Flex w={"100%"} justifyContent={"space-evenly"}>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      {memberNo+modNo}
+                      {memberNo + modNo}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Members
@@ -355,7 +357,7 @@ export default function CommunitySingle({dbComm, users}) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      setJoined(!joined);
+                      setCreatePostMode(true);
                     }}
                   >
                     Create Post
@@ -367,11 +369,11 @@ export default function CommunitySingle({dbComm, users}) {
                 </Text>
                 <Flex px={4} alignItems={"flex-start"} flexDir={"column"}>
                   {tempMod.slice(0).map(el => {
-                    return(
+                    return (
                       <Flex px={4} alignItems={"center"} mt={2}>
                         <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                         <Text color={"black"}>{el}</Text>
-                    </Flex>
+                      </Flex>
                     );
                   })}
                 </Flex>
@@ -390,11 +392,11 @@ export default function CommunitySingle({dbComm, users}) {
                   Members
                 </Text>
                 {tempMem.slice(0).map(el => {
-                  return(
+                  return (
                     <Flex px={4} alignItems={"center"} mt={2}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>{el}</Text>
-                </Flex>
+                      <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
+                      <Text color={"black"}>{el}</Text>
+                    </Flex>
                   );
                 })}
                 {/* <Flex px={4} alignItems={"center"} mt={2}>
