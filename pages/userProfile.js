@@ -320,6 +320,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         _hover={{
           transform: "translateY(-8px)",
         }}
+        overflowY={"auto"}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
           <Img

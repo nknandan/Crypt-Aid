@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
+import Link from 'next/link';
 import styles from "../../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
@@ -156,7 +157,7 @@ function SettingsPage({ setSettingsScreen, user }) {
   }, []);
 
   return (
-    <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
+    <Flex w={"100%"} mt={"5vh"} px={"5vw"} flexDir={"column"}>
       <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
         <Button p={0} mr={"2vh"} bgColor={"transparent"}>
           <Img
@@ -266,6 +267,14 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Button mt={10} bgColor={"blue.200"} onClick={multiFunct}>
             Submit
           </Button>
+          <Text fontSize={24} fontWeight={"400"} mt={10}>
+            Account Verification
+          </Text>
+          <NextLink href="/kycExplore">
+            <Button mt={3} bgColor={"blue.200"} onClick={multiFunct}>
+              Verify your account
+            </Button>
+          </NextLink>
         </Flex>
         <Flex w={"40%"} flexDir={"column"} pl={10}>
           <Text fontSize={24} fontWeight={"400"} mt={4}>
@@ -320,6 +329,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
         _hover={{
           transform: "translateY(-8px)",
         }}
+        overflowY={"auto"}
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
           <Img
@@ -465,7 +475,7 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
 
 function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campaigns, ethPrice }) {
   var ab;
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
