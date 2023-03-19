@@ -580,7 +580,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               color={useColorModeValue("#252525", "gray.200")}
               pt={"20px"}
             >
-              <NextLink href="/explore">View all ➡️</NextLink>
+              <NextLink href="/exploreCommunities">View all ➡️</NextLink>
             </Button>
           </HStack>
           <Divider marginTop="4" />

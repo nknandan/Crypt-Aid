@@ -15,6 +15,8 @@ import {
   Image,
   Flex,
   Stack,
+  Divider,
+  Textarea,
   Heading,
   Skeleton,
   Text,
@@ -43,12 +45,14 @@ import {
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
+  Tabs, TabList, TabPanels, Tab, TabPanel,
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { Line } from "@react-pdf/renderer";
 import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
 import User from "../../models/user";
@@ -119,6 +123,153 @@ function CommentInbox() {
   );
 }
 
+function Feed(){
+
+  const [isCampaign, setIsCampaign] = useState(0);
+  return(
+    <Flex>
+      {isCampaign ? (<></>) : (<></>)}
+    </Flex>
+  );
+}
+
+function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  async function findEmail() {
+    for (var i = 0; i < dbCamp.length; i++) {
+      if (dbCamp[i].name == name) {
+        setEmail(dbCamp[i].creatorEmail);
+        return dbCamp[i].creatorEmail;
+      }
+    }
+    return;
+  }
+  async function findUsername(tempEmail) {
+    for (var i = 0; i < dbUsers.length; i++) {
+      if (dbUsers[i].email == tempEmail) {
+        const tempUsername = dbUsers[i].username;
+        setUsername(tempUsername);
+        return tempUsername;
+      }
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tempEmail = await findEmail();
+      setEmail(tempEmail);
+      const tempUsername = await findUsername(tempEmail);
+      setUsername(tempUsername);
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <NextLink href={`/campaign/${id}`}>
+      <Box
+        h={"30vh"}
+        w={"65vw"}
+        display={"flex"}
+        flexDirection={"row"}
+        position="relative"
+        cursor="pointer"
+        bgColor={"#ffffff"}
+        borderRadius={"20"}
+        transition={"transform 0.3s ease"}
+        boxShadow="sm"
+        _hover={{
+          transform: "translateY(-8px)",
+        }}
+        overflowY={"auto"}
+      >
+        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+          <Img
+            src={imageURL}
+            alt={`Picture of ${name}`}
+            objectFit="cover"
+            w="full"
+            h="full"
+            display="block"
+            borderRadius={"20"}
+            borderRightRadius={"0"}
+          />
+        </Box>
+        <Box
+          h={"100%"}
+          w={"75%"}
+          borderRadius={"20"}
+          borderLeftRadius={"0"}
+          padding={"1rem"}
+          px={"2rem"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"space-between"}
+          pb={"1.5rem"}
+        >
+          <Box>
+            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+              <Box display={"flex"} flexDirection={"row"}>
+                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
+                  c/CommunityName
+                </Box>{" "}
+                <Box color={"gray.600"} fontSize={"14px"}>
+                  6 hours ago by {username} ✅
+                </Box>
+              </Box>
+              <Box display={"flex"} flexDirection={"row"}>
+                <Text fontWeight={"bold"} paddingRight={"5px"}>
+                  19
+                </Text>
+                <Text>days left</Text>
+              </Box>
+            </Box>
+
+            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+              {name}
+            </Box>
+            <Box maxW={"60%"}>
+              <Text noOfLines={3}>{description}</Text>
+            </Box>
+          </Box>
+          <Box>
+            <Flex direction={"row"} justifyContent={"space-between"}>
+              <Box maxW={{ base: "	15rem", sm: "sm" }}>
+                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
+                <Text as="span" pr={2}>
+                  {" "}
+                  ETH
+                </Text>
+                <Text
+                  as="span"
+                  fontSize="lg"
+                  display={balance > 0 ? "inline" : "none"}
+                  fontWeight={"normal"}
+                  color={useColorModeValue("gray.500", "gray.200")}
+                >
+                  (${getWEIPriceInUSD(ethPrice, balance)})
+                </Text>
+              </Box>
+              <Text fontSize={"md"} fontWeight="normal">
+                Target : {web3.utils.fromWei(target, "ether")} ETH ($
+                {getWEIPriceInUSD(ethPrice, target)})
+              </Text>
+            </Flex>
+            <Progress
+              colorScheme="blue"
+              size="sm"
+              value={web3.utils.fromWei(balance, "ether")}
+              max={web3.utils.fromWei(target, "ether")}
+              mt="2"
+            />
+          </Box>
+        </Box>
+      </Box>
+    </NextLink>
+  );
+}
+
 export default function CommunitySingle({ dbComm, users }) {
   const router = useRouter();
 
@@ -131,6 +282,11 @@ export default function CommunitySingle({ dbComm, users }) {
   const [memberNo, setMemberNo] = useState();
   const [modNo, setModNo] = useState();
   const [createPostMode, setCreatePostMode] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleTabChange = (index) => {
+    setSelectedTab(index);
+  };
 
   useEffect(() => {
     userEmail = localStorage.getItem("email");
@@ -267,18 +423,110 @@ export default function CommunitySingle({ dbComm, users }) {
                   </Button>
                 )}
               </Flex>
-              {createPostMode ? (<Box borderWidth={1} borderColor={"gray.300"} p={4} borderRadius={8} my={6}>
-                <Heading
-                  lineHeight={1}
-                  fontSize={{ base: "2xl", sm: "3xl" }}
-                  color={useColorModeValue("#2C2C7B", "teal.200")}
-                >
-                  Create a post
-                </Heading>
-                <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
-                  <CommentInbox />
-                </Box>
-              </Box>) : (<Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
+              {createPostMode ? (
+                <Box borderWidth={1} borderColor={"gray.300"} p={4} borderRadius={8} my={6}>
+                  <Flex alignItems={"center"}>
+                    <Button p={0} mr={2} onClick={() => { setCreatePostMode(false) }}>
+                      <ArrowBackIcon h={"24px"} w={"24px"} />
+                    </Button>
+                    <Heading
+                      lineHeight={1}
+                      fontSize={{ base: "2xl", sm: "3xl" }}
+                      color={useColorModeValue("#2C2C7B", "teal.200")}
+                    >
+                      Create a post
+                    </Heading>
+                  </Flex>
+                  <Divider marginTop="2" />
+                  <Tabs mt={4} onChange={handleTabChange} index={selectedTab} variant='enclosed-colored' size='md' align='center' isFitted >
+                    <TabList>
+                      <Tab>Post</Tab>
+                      <Tab>Share Campaign</Tab>
+                    </TabList>
+                    <TabPanels>
+                      <TabPanel>
+                        <Flex>
+                          <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
+                            <form >
+                              <Stack spacing={4}>
+                                <FormControl id="campaignName">
+                                  <FormLabel>Title</FormLabel>
+                                  <Input
+                                    placeholder={"Covid Relief Fund"}
+                                  />
+                                </FormControl>
+                                <FormControl id="description">
+                                  <FormLabel>Description</FormLabel>
+                                  <Textarea
+                                    placeholder={
+                                      "The COVID-19 pandemic is one of the worst health and economic crises in modern history and it continues to require the best of humanity to overcome. Your donation to this fund will help stop the spread of the virus, including the highly contagious Omicron variant, to protect us all."
+                                    }
+                                  />
+                                </FormControl>
+                                <Button
+                                  w={"15%"}
+                                  bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+                                  color={"white"}
+                                  _hover={{
+                                    bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                                    boxShadow: "xl",
+                                  }}
+                                  onClick={() => { }}
+                                  borderRadius={20}
+                                  alignSelf={"flex-end"}
+                                >
+                                  Post
+                                </Button>
+                              </Stack>
+                            </form>
+                          </Box>
+                        </Flex>
+                      </TabPanel>
+                      <TabPanel>
+                        <Flex>
+                          <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
+                            <form >
+                              <Stack spacing={4}>
+                                <FormControl id="campaignName">
+                                  <FormLabel>Title</FormLabel>
+                                  <Input
+                                    placeholder={"Covid Relief Fund"}
+                                  />
+                                </FormControl>
+                                <FormControl id="description">
+                                  <FormLabel>Campaign URL</FormLabel>
+                                  <Input
+                                    placeholder={"http://localhost:3002/campaign/0x880B2078e57CbBac229863c5E77DB658bA382176/"}
+                                  />
+                                </FormControl>
+                                <Button
+                                  w={"15%"}
+                                  bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+                                  color={"white"}
+                                  _hover={{
+                                    bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                                    boxShadow: "xl",
+                                  }}
+                                  onClick={() => { }}
+                                  borderRadius={20}
+                                  alignSelf={"flex-end"}
+                                >
+                                  Post
+                                </Button>
+                              </Stack>
+                            </form>
+                          </Box>
+                        </Flex>
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                  {/* <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
+                    <CommentInbox />
+                  </Box> */}
+                </Box>) : (<></>
+              )}
+
+              <Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
                 <Button
                   colorScheme="blue"
                   variant="ghost"
@@ -308,9 +556,11 @@ export default function CommunitySingle({ dbComm, users }) {
                 >
                   <Icon as={IoIosPodium} /> <Text ml={2}>Trending</Text>
                 </Button>
-              </Flex>)}
+              </Flex>
 
-
+              <Flex h={"100vh"}>
+                  <Feed/>
+              </Flex>
             </Flex>
             <Box w={"30%"}>
               <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5}>
