@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-children-prop */
 import Head from "next/head";
 import React from "react";
@@ -45,7 +46,11 @@ import {
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
-  Tabs, TabList, TabPanels, Tab, TabPanel,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
@@ -56,6 +61,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
 import User from "../../models/user";
+import NextLink from "next/link";
 
 var tempComm = {};
 var tempMod = [];
@@ -63,7 +69,7 @@ var tempMem = [];
 var tempUser = {};
 var userEmail = "";
 
-export async function getServerSideProps({ }) {
+export async function getServerSideProps({}) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -99,7 +105,7 @@ function CommentInbox() {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter your post here"}
-                  onChange={(e) => { }}
+                  onChange={(e) => {}}
                 />
               </InputGroup>
             </FormControl>
@@ -113,7 +119,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => { }}
+          onClick={() => {}}
           borderRadius={20}
         >
           Post
@@ -123,14 +129,9 @@ function CommentInbox() {
   );
 }
 
-function Feed(){
-
+function Feed() {
   const [isCampaign, setIsCampaign] = useState(0);
-  return(
-    <Flex>
-      {isCampaign ? (<></>) : (<></>)}
-    </Flex>
-  );
+  return <Flex>{isCampaign ? <></> : <></>}</Flex>;
 }
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
@@ -167,6 +168,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    // eslint-disable-next-line react/jsx-no-undef
     <NextLink href={`/campaign/${id}`}>
       <Box
         h={"30vh"}
@@ -303,16 +305,15 @@ export default function CommunitySingle({ dbComm, users }) {
         tempComm = dbComm[i];
         tempMod = tempComm.moderators || [];
         tempMem = tempComm.members || [];
-        if (tempMem.includes(userEmail) || tempMod.includes(userEmail))
-          setJoined(1);
-        else
-          setJoined(0);
+        if (tempMem.includes(userEmail) || tempMod.includes(userEmail)) setJoined(1);
+        else setJoined(0);
         if (tempMem == undefined) setMemberNo(0);
         else setMemberNo(tempMem.length);
         setModNo(tempMod.length);
       }
     }
     console.log(tempUser);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function joinComm() {
@@ -359,15 +360,7 @@ export default function CommunitySingle({ dbComm, users }) {
         {" "}
         <Flex px={"17.5vw"} direction={"column"} gap={"3vw"}>
           <Box w={"100%"} h={"250px"}>
-            <Img
-              w={"100%"}
-              h={"100%"}
-              src={
-                tempComm.imageUrl
-              }
-              objectFit="cover"
-              borderRadius={30}
-            />
+            <Img w={"100%"} h={"100%"} src={tempComm.imageUrl} objectFit="cover" borderRadius={30} />
           </Box>
           <Flex w={"100%"} justifyContent={"space-between"} alignItems={"flex-start"}>
             <Flex w={"66%"} flexDir={"column"}>
@@ -426,7 +419,13 @@ export default function CommunitySingle({ dbComm, users }) {
               {createPostMode ? (
                 <Box borderWidth={1} borderColor={"gray.300"} p={4} borderRadius={8} my={6}>
                   <Flex alignItems={"center"}>
-                    <Button p={0} mr={2} onClick={() => { setCreatePostMode(false) }}>
+                    <Button
+                      p={0}
+                      mr={2}
+                      onClick={() => {
+                        setCreatePostMode(false);
+                      }}
+                    >
                       <ArrowBackIcon h={"24px"} w={"24px"} />
                     </Button>
                     <Heading
@@ -438,7 +437,15 @@ export default function CommunitySingle({ dbComm, users }) {
                     </Heading>
                   </Flex>
                   <Divider marginTop="2" />
-                  <Tabs mt={4} onChange={handleTabChange} index={selectedTab} variant='enclosed-colored' size='md' align='center' isFitted >
+                  <Tabs
+                    mt={4}
+                    onChange={handleTabChange}
+                    index={selectedTab}
+                    variant="enclosed-colored"
+                    size="md"
+                    align="center"
+                    isFitted
+                  >
                     <TabList>
                       <Tab>Post</Tab>
                       <Tab>Share Campaign</Tab>
@@ -447,13 +454,11 @@ export default function CommunitySingle({ dbComm, users }) {
                       <TabPanel>
                         <Flex>
                           <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
-                            <form >
+                            <form>
                               <Stack spacing={4}>
                                 <FormControl id="campaignName">
                                   <FormLabel>Title</FormLabel>
-                                  <Input
-                                    placeholder={"Covid Relief Fund"}
-                                  />
+                                  <Input placeholder={"Covid Relief Fund"} />
                                 </FormControl>
                                 <FormControl id="description">
                                   <FormLabel>Description</FormLabel>
@@ -471,7 +476,7 @@ export default function CommunitySingle({ dbComm, users }) {
                                     bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
                                     boxShadow: "xl",
                                   }}
-                                  onClick={() => { }}
+                                  onClick={() => {}}
                                   borderRadius={20}
                                   alignSelf={"flex-end"}
                                 >
@@ -485,18 +490,18 @@ export default function CommunitySingle({ dbComm, users }) {
                       <TabPanel>
                         <Flex>
                           <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
-                            <form >
+                            <form>
                               <Stack spacing={4}>
                                 <FormControl id="campaignName">
                                   <FormLabel>Title</FormLabel>
-                                  <Input
-                                    placeholder={"Covid Relief Fund"}
-                                  />
+                                  <Input placeholder={"Covid Relief Fund"} />
                                 </FormControl>
                                 <FormControl id="description">
                                   <FormLabel>Campaign URL</FormLabel>
                                   <Input
-                                    placeholder={"http://localhost:3002/campaign/0x880B2078e57CbBac229863c5E77DB658bA382176/"}
+                                    placeholder={
+                                      "http://localhost:3002/campaign/0x880B2078e57CbBac229863c5E77DB658bA382176/"
+                                    }
                                   />
                                 </FormControl>
                                 <Button
@@ -507,7 +512,7 @@ export default function CommunitySingle({ dbComm, users }) {
                                     bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
                                     boxShadow: "xl",
                                   }}
-                                  onClick={() => { }}
+                                  onClick={() => {}}
                                   borderRadius={20}
                                   alignSelf={"flex-end"}
                                 >
@@ -523,7 +528,9 @@ export default function CommunitySingle({ dbComm, users }) {
                   {/* <Box w={"100%"} alignContent={"center"} justifyContent={"center"}>
                     <CommentInbox />
                   </Box> */}
-                </Box>) : (<></>
+                </Box>
+              ) : (
+                <></>
               )}
 
               <Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
@@ -559,7 +566,7 @@ export default function CommunitySingle({ dbComm, users }) {
               </Flex>
 
               <Flex h={"100vh"}>
-                  <Feed/>
+                <Feed />
               </Flex>
             </Flex>
             <Box w={"30%"}>
@@ -567,9 +574,7 @@ export default function CommunitySingle({ dbComm, users }) {
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   About community
                 </Text>
-                <Text mt={2}>
-                  {tempComm.description}
-                </Text>
+                <Text mt={2}>{tempComm.description}</Text>
                 <Text color={"gray.600"} mt={2} fontWeight={200}>
                   Created Jan 25, 2012
                 </Text>
@@ -618,9 +623,9 @@ export default function CommunitySingle({ dbComm, users }) {
                   Moderators
                 </Text>
                 <Flex px={4} alignItems={"flex-start"} flexDir={"column"}>
-                  {tempMod.slice(0).map(el => {
+                  {tempMod.slice(0).map((el) => {
                     return (
-                      <Flex px={4} alignItems={"center"} mt={2}>
+                      <Flex px={4} alignItems={"center"} mt={2} key={el}>
                         <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                         <Text color={"black"}>{el}</Text>
                       </Flex>
@@ -641,9 +646,9 @@ export default function CommunitySingle({ dbComm, users }) {
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   Members
                 </Text>
-                {tempMem.slice(0).map(el => {
+                {tempMem.slice(0).map((el) => {
                   return (
-                    <Flex px={4} alignItems={"center"} mt={2}>
+                    <Flex px={4} alignItems={"center"} mt={2} key={el}>
                       <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
                       <Text color={"black"}>{el}</Text>
                     </Flex>
