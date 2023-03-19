@@ -212,16 +212,14 @@ export default function NewCampaign() {
                       <AlertDescription mr={2}> {error}</AlertDescription>
                     </Alert>
                   ) : null}
-                  {errors.name ||
-                  errors.description ||
-                  errors.imageUrl ? (
+                  {errors.name || errors.description || errors.imageUrl ? (
                     <Alert status="error">
                       <AlertIcon color={"red"} />
                       <AlertDescription mr={2}> All Fields are Required</AlertDescription>
                     </Alert>
                   ) : null}
                   <Stack spacing={10}>
-                    {wallet.status === "connected" ? (
+                    {/* {wallet.status === "connected" ? (
                       <Button
                         bg={"#43B0F1"}
                         color={"white"}
@@ -254,7 +252,22 @@ export default function NewCampaign() {
                           <AlertDescription mr={2}>Connect your wallet to create communities</AlertDescription>
                         </Alert>
                       </Stack>
-                    )}
+                    )} */}
+
+                    {/* NO WALLET */}
+                    <Button
+                      bg={"#43B0F1"}
+                      color={"white"}
+                      _hover={{
+                        bg: "#0065A1",
+                        color: "white",
+                      }}
+                      isLoading={isSubmitting}
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                    {/* NO WALLET END */}
                   </Stack>
                 </Stack>
               </form>
