@@ -41,12 +41,33 @@ import {
   Center,
 } from "@chakra-ui/react";
 
+var OTP;
 
 export default function Home({ campaigns }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleVerify = (otp) => {
-    // Handle OTP verification logic here
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  // Handle OTP verification logic here
+  const handleVerify = async (otp) => {
+    if (OTP == otp) {
+      alert("OTP Verified");
+    } else {
+      alert("Incorrect OTP. Try again.");
+    }
     setIsModalOpen(false);
+  };
+
+  const sendOTP = async () => {
+    const res = await fetch("/api/sendMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phoneNumber }),
+    });
+    const apiResponse = await res.json();
+    console.log(apiResponse);
+    OTP = apiResponse.otp;
   };
 
   return (
@@ -68,7 +89,9 @@ export default function Home({ campaigns }) {
             <Img height={"400px"} objectFit={"contain"} src={"/kyc.png"} borderRadius={20} />
             <Flex flexDir={"column"} w={"40%"}>
               <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
-                <Heading fontSize={"26px"} mb={4}>Enter your details</Heading>
+                <Heading fontSize={"26px"} mb={4}>
+                  Enter your details
+                </Heading>
                 <form>
                   <Stack spacing={4}>
                     <FormControl id="campaignName">
@@ -76,6 +99,8 @@ export default function Home({ campaigns }) {
                       <Input
                         placeholder={"XXXX-XXXX-XX"}
                         type={"tel"}
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     </FormControl>
                     <Button
@@ -86,7 +111,8 @@ export default function Home({ campaigns }) {
                         color: "white",
                       }}
                       onClick={() => {
-                        setIsModalOpen(true)
+                        setIsModalOpen(true);
+                        sendOTP();
                       }}
                     >
                       Send OTP

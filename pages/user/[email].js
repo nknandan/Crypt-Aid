@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import NextLink from "next/link";
-import Link from 'next/link';
+import Link from "next/link";
 import styles from "../../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
@@ -271,7 +271,7 @@ function SettingsPage({ setSettingsScreen, user }) {
             Account Verification
           </Text>
           <NextLink href="/kycExplore">
-            <Button mt={3} bgColor={"blue.200"} onClick={multiFunct}>
+            <Button mt={3} bgColor={"blue.200"}>
               Verify your account
             </Button>
           </NextLink>
@@ -475,7 +475,7 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
 
 function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campaigns, ethPrice }) {
   var ab;
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
