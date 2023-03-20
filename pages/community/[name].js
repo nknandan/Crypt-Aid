@@ -129,7 +129,7 @@ function CommentInbox() {
   );
 }
 
-function Feed() {
+function Feed({ posts, campPosts }) {
   const [isCampaign, setIsCampaign] = useState(0);
   return <Flex>{isCampaign ? <></> : <></>}</Flex>;
 }
@@ -280,11 +280,18 @@ export default function CommunitySingle({ dbComm, users }) {
   const [popularButton, setPopularButton] = useState(0);
   const [trendingButton, setTrendingButton] = useState(0);
   const [communityName, setCommunityName] = useState();
-  const [thisComm, setThisComm] = useState();
   const [memberNo, setMemberNo] = useState();
   const [modNo, setModNo] = useState();
   const [createPostMode, setCreatePostMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const [newPostTitle, setNewPostTitle] = useState("");
+  const [newPostDescription, setNewPostDescription] = useState("");
+  const [newCampTitle, setNewCampTitle] = useState("");
+  const [newCampURL, setNewCampURL] = useState("");
+
+  const [posts, setPosts] = useState([]);
+  const [campPosts, setCampPosts] = useState([]);
 
   const handleTabChange = (index) => {
     setSelectedTab(index);
@@ -458,7 +465,13 @@ export default function CommunitySingle({ dbComm, users }) {
                               <Stack spacing={4}>
                                 <FormControl id="campaignName">
                                   <FormLabel>Title</FormLabel>
-                                  <Input placeholder={"Covid Relief Fund"} />
+                                  <Input
+                                    placeholder={"Covid Relief Fund"}
+                                    value={newPostTitle}
+                                    onChange={(e) => {
+                                      setNewPostTitle(e.target.value);
+                                    }}
+                                  />
                                 </FormControl>
                                 <FormControl id="description">
                                   <FormLabel>Description</FormLabel>
@@ -466,6 +479,10 @@ export default function CommunitySingle({ dbComm, users }) {
                                     placeholder={
                                       "The COVID-19 pandemic is one of the worst health and economic crises in modern history and it continues to require the best of humanity to overcome. Your donation to this fund will help stop the spread of the virus, including the highly contagious Omicron variant, to protect us all."
                                     }
+                                    value={newPostDescription}
+                                    onChange={(e) => {
+                                      setNewPostDescription(e.target.value);
+                                    }}
                                   />
                                 </FormControl>
                                 <Button
@@ -494,7 +511,13 @@ export default function CommunitySingle({ dbComm, users }) {
                               <Stack spacing={4}>
                                 <FormControl id="campaignName">
                                   <FormLabel>Title</FormLabel>
-                                  <Input placeholder={"Covid Relief Fund"} />
+                                  <Input
+                                    placeholder={"Covid Relief Fund"}
+                                    value={newCampTitle}
+                                    onChange={(e) => {
+                                      setNewCampTitle(e.target.value);
+                                    }}
+                                  />
                                 </FormControl>
                                 <FormControl id="description">
                                   <FormLabel>Campaign URL</FormLabel>
@@ -502,6 +525,10 @@ export default function CommunitySingle({ dbComm, users }) {
                                     placeholder={
                                       "http://localhost:3002/campaign/0x880B2078e57CbBac229863c5E77DB658bA382176/"
                                     }
+                                    value={newCampURL}
+                                    onChange={(e) => {
+                                      setNewCampURL(e.target.value);
+                                    }}
                                   />
                                 </FormControl>
                                 <Button
@@ -566,7 +593,7 @@ export default function CommunitySingle({ dbComm, users }) {
               </Flex>
 
               <Flex h={"100vh"}>
-                <Feed />
+                <Feed posts={posts} campPosts={campPosts} />
               </Flex>
             </Flex>
             <Box w={"30%"}>

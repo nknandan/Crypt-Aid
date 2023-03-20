@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState } from "react";
-import styles from "../styles/Home.module.css";
-import OTPModal from "./OTPModal";
+import styles from "../../styles/Home.module.css";
+import OTPModal from "../OTPModal";
 import {
   Heading,
   useBreakpointValue,
@@ -51,6 +51,7 @@ export default function Home({ campaigns }) {
   const handleVerify = async (otp) => {
     if (OTP == otp) {
       alert("OTP Verified");
+      // Add this verified phoneNumber to the currently logged In User's Database.
     } else {
       alert("Incorrect OTP. Try again.");
     }
