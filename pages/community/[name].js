@@ -356,6 +356,32 @@ export default function CommunitySingle({ dbComm, users }) {
     }
   }
 
+  async function addPost(){
+    // console.log(newPostTitle);
+    // console.log(newPostDescription);
+    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    var tempObj = {
+      isPost: true,
+      title: newPostTitle,
+      description: newPostDescription,
+      createdDate: utc,
+    };
+    tempComm.posts.push(tempObj);
+    console.log(tempComm);
+    try {
+      fetch("/api/communities/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -493,7 +519,7 @@ export default function CommunitySingle({ dbComm, users }) {
                                     bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
                                     boxShadow: "xl",
                                   }}
-                                  onClick={() => {}}
+                                  onClick={addPost}
                                   borderRadius={20}
                                   alignSelf={"flex-end"}
                                 >
