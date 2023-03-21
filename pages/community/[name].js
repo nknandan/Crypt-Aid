@@ -68,6 +68,7 @@ var tempMod = [];
 var tempMem = [];
 var tempUser = {};
 var userEmail = "";
+var comPosts = [];
 
 export async function getServerSideProps({}) {
   var ETHPrice = 1756.48;
@@ -129,9 +130,21 @@ function CommentInbox() {
   );
 }
 
-function Feed({ posts, campPosts }) {
+function Feed({ posts }) {
+  // console.log(posts);
   const [isCampaign, setIsCampaign] = useState(0);
-  return <Flex>{isCampaign ? <></> : <></>}</Flex>;
+  // return <Flex>{isCampaign ? <></> : <></>}</Flex>;
+  return <Flex>
+    {posts.slice(0).map(el => {
+      return(
+        <Text color={"black"}>
+          <div>Title: {el.title}</div> 
+          <div>Description: {el.description}</div>
+          <div>Created On: {el.createdDate}</div>  
+        </Text>
+      );
+    })}
+  </Flex>
 }
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
@@ -312,6 +325,8 @@ export default function CommunitySingle({ dbComm, users }) {
         tempComm = dbComm[i];
         tempMod = tempComm.moderators || [];
         tempMem = tempComm.members || [];
+        comPosts = tempComm.posts || [];
+        setPosts(comPosts);
         if (tempMem.includes(userEmail) || tempMod.includes(userEmail)) setJoined(1);
         else setJoined(0);
         if (tempMem == undefined) setMemberNo(0);
@@ -319,7 +334,7 @@ export default function CommunitySingle({ dbComm, users }) {
         setModNo(tempMod.length);
       }
     }
-    console.log(tempUser);
+    // console.log(tempUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -619,7 +634,7 @@ export default function CommunitySingle({ dbComm, users }) {
               </Flex>
 
               <Flex h={"100vh"}>
-                <Feed posts={posts} campPosts={campPosts} />
+                <Feed posts={posts} />
               </Flex>
             </Flex>
             <Box w={"30%"}>
