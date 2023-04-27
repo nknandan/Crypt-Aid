@@ -76,7 +76,6 @@ export async function getServerSideProps({}) {
   await connectMongo();
   const dbCommunities = await db.collection("communities").find().toArray();
   const users = await User.find();
-  // console.log(JSON.parse(JSON.stringify(users)));
   return {
     props: {
       dbComm: JSON.parse(JSON.stringify(dbCommunities)),
@@ -134,17 +133,19 @@ function Feed({ posts }) {
   // console.log(posts);
   const [isCampaign, setIsCampaign] = useState(0);
   // return <Flex>{isCampaign ? <></> : <></>}</Flex>;
-  return <Flex>
-    {posts.slice(0).map(el => {
-      return(
-        <Text color={"black"}>
-          <div>Title: {el.title}</div> 
-          <div>Description: {el.description}</div>
-          <div>Created On: {el.createdDate}</div>  
-        </Text>
-      );
-    })}
-  </Flex>
+  return (
+    <Flex>
+      {posts.slice(0).map((el) => {
+        return (
+          <Text color={"black"} key={el}>
+            <div>Title: {el.title}</div>
+            <div>Description: {el.description}</div>
+            <div>Created On: {el.createdDate}</div>
+          </Text>
+        );
+      })}
+    </Flex>
+  );
 }
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
@@ -371,10 +372,10 @@ export default function CommunitySingle({ dbComm, users }) {
     }
   }
 
-  async function addPost(){
+  async function addPost() {
     // console.log(newPostTitle);
     // console.log(newPostDescription);
-    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
     var tempObj = {
       isPost: true,
       title: newPostTitle,
