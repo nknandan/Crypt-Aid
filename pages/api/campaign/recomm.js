@@ -44,7 +44,7 @@ const isApproved = (camp) => {
 };
 
 export default async function addCampaign(req, res) {
-  // GET
+  // PUT
   if (req.method === "PUT") {
     const name = req.body.name;
     const desc = req.body.description;

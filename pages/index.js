@@ -446,7 +446,7 @@ export default function Home({ campaigns, users, dbCamp }) {
               <Skeleton height="15rem" />
             </SimpleGrid>
           )}
-          {campaignListNumber != campaignList.length ? (
+          {campaignListNumber != campaignList.length && campaignList.length != 0 ? (
             <Button
               display={{ sm: "inline-flex" }}
               w={"200px"}

@@ -257,7 +257,8 @@ function CommentInbox({}) {
             })}
           </SimpleGrid>
         )}
-        {showViewMoreComment ? (
+        {/* ?? SHOW VIEW MORE DISABLED. */}
+        {/* {showViewMoreComment ? (
           <Button
             display={{ sm: "inline-flex" }}
             w={"200px"}
@@ -284,7 +285,7 @@ function CommentInbox({}) {
           </Button>
         ) : (
           <></>
-        )}
+        )} */}
       </Stat>
     </Box>
   );
@@ -430,19 +431,18 @@ export default function CampaignSingle({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    console.log(tempObj["upVoters"].includes(u));
+    // console.log(tempObj["upVoters"].includes(u));
     if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"].push(u);
     else {
-      console.log("1");
+      // console.log("1");
       if (tempObj["downVoters"].includes(u) == true) {
-        console.log("HII");
-        console.log(tempObj["downVoters"]);
+        // console.log(tempObj["downVoters"]);
         var i = tempObj["downVoters"].indexOf(u);
         tempObj["downVoters"].splice(i, 1);
-        console.log(tempObj["downVoters"]);
+        // console.log(tempObj["downVoters"]);
         if (tempObj["upVoters"].includes(u) == false) tempObj["upVoters"].push(u);
       } else if (tempObj["upVoters"].includes(u) == true) {
-        console.log("continue");
+        // console.log("continue");
       } else tempObj["upVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
@@ -470,14 +470,13 @@ export default function CampaignSingle({
     if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"].push(u);
     else {
       if (tempObj["upVoters"].includes(u) == true) {
-        console.log("1");
-        console.log(tempObj["upVoters"]);
+        // console.log(tempObj["upVoters"]);
         var i = tempObj["upVoters"].indexOf(u);
         tempObj["upVoters"].splice(i, 1);
-        console.log(tempObj["upVoters"]);
+        // console.log(tempObj["upVoters"]);
         if (tempObj["downVoters"].includes(u) == false) tempObj["downVoters"].push(u);
       } else if (tempObj["downVoters"].includes(u) == true) {
-        console.log("continue");
+        // console.log("continue");
       } else tempObj["downVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);

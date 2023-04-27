@@ -82,7 +82,6 @@ function SettingsPage({ setSettingsScreen, users }) {
     try {
       const u = localStorage.getItem("email");
       const o = JSON.parse(localStorage.getItem("user"));
-      console.log(o);
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
@@ -537,7 +536,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
       },
     });
     let dbCamp = await res.json();
-    console.log(dbCamp);
+    // console.log(dbCamp);
   }
 
   async function getSummary() {
