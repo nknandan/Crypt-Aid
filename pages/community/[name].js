@@ -392,6 +392,9 @@ export default function CommunitySingle({ dbComm, users }) {
         },
         body: JSON.stringify({ tempComm }),
       });
+      setCreatePostMode(false);
+      setNewPostTitle("");
+      setNewPostDescription("");
     } catch (err) {
       setError(err.message);
       console.log(err);
@@ -401,7 +404,7 @@ export default function CommunitySingle({ dbComm, users }) {
   return (
     <div>
       <Head>
-        <title>Community Details</title>
+        <title>{tempComm.name}</title>
         <meta name="description" content="Create a Withdrawal Request" />
         <link rel="icon" href="/logo.svg" />
       </Head>
@@ -500,6 +503,7 @@ export default function CommunitySingle({ dbComm, users }) {
                       <Tab>Share Campaign</Tab>
                     </TabList>
                     <TabPanels>
+                      {/* POST PANEL BELOW */}
                       <TabPanel>
                         <Flex>
                           <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
@@ -546,6 +550,8 @@ export default function CommunitySingle({ dbComm, users }) {
                           </Box>
                         </Flex>
                       </TabPanel>
+                      {/* SHARE CAMP PANEL BELOW */}
+
                       <TabPanel>
                         <Flex>
                           <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
