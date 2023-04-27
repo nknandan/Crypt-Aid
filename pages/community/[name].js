@@ -62,6 +62,10 @@ import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
 import User from "../../models/user";
 import NextLink from "next/link";
+import factory from "../../smart-contract/factory";
+import Campaign from "../../smart-contract/campaign";
+
+var campId2Name = {};
 
 var tempComm = {};
 var tempMod = [];
@@ -75,11 +79,14 @@ export async function getServerSideProps({}) {
   const { db } = await connectToDatabase();
   await connectMongo();
   const dbCommunities = await db.collection("communities").find().toArray();
+  const dbCampaigns = await db.collection("campaigns").find().toArray();
+
   const users = await User.find();
   return {
     props: {
       dbComm: JSON.parse(JSON.stringify(dbCommunities)),
       users: JSON.parse(JSON.stringify(users)),
+      dbCamps: JSON.parse(JSON.stringify(dbCampaigns)),
     },
   };
 }
@@ -137,7 +144,7 @@ function Feed({ posts }) {
     <Flex>
       {posts.slice(0).map((el) => {
         return (
-          <Text color={"black"} key={el}>
+          <Text color={"black"} key={el.title}>
             <div>Title: {el.title}</div>
             <div>Description: {el.description}</div>
             <div>Created On: {el.createdDate}</div>
@@ -286,7 +293,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
-export default function CommunitySingle({ dbComm, users }) {
+export default function CommunitySingle({ dbComm, users, dbCamps }) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -298,6 +305,8 @@ export default function CommunitySingle({ dbComm, users }) {
   const [modNo, setModNo] = useState();
   const [createPostMode, setCreatePostMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const [campaignList, setCampaignList] = useState([]);
 
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostDescription, setNewPostDescription] = useState("");
@@ -338,6 +347,31 @@ export default function CommunitySingle({ dbComm, users }) {
     // console.log(tempUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getCampaigns();
+    };
+    fetchData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const getCampaigns = async () => {
+    try {
+      const campaigns = await factory.methods.getDeployedCampaigns().call();
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      setCampaignList(summary);
+      let i = 0;
+      for (let ele of campaigns) {
+        campId2Name[ele] = summary[i]["5"];
+        i++;
+      }
+      return summary;
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   async function joinComm() {
     if (tempComm["members"] == undefined) tempComm["members"] = [userEmail];
@@ -399,6 +433,36 @@ export default function CommunitySingle({ dbComm, users }) {
       setError(err.message);
       console.log(err);
     }
+  }
+
+  async function addShareCampaign() {
+    // console.log(newPostTitle);
+    // console.log(newPostDescription);
+    // !!! HERE code to add campaign to database.
+    // var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
+    // var tempObj = {
+    //   isPost: true,
+    //   title: newPostTitle,
+    //   description: newPostDescription,
+    //   createdDate: utc,
+    // };
+    // tempComm.posts.push(tempObj);
+    // console.log(tempComm);
+    // try {
+    //   fetch("/api/communities/addPost", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ tempComm }),
+    //   });
+    //   setCreatePostMode(false);
+    //   setNewCampTitle("");
+    //   setNewCampURL("");
+    // } catch (err) {
+    //   setError(err.message);
+    //   console.log(err);
+    // }
   }
 
   return (
@@ -551,7 +615,6 @@ export default function CommunitySingle({ dbComm, users }) {
                         </Flex>
                       </TabPanel>
                       {/* SHARE CAMP PANEL BELOW */}
-
                       <TabPanel>
                         <Flex>
                           <Box bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} w={"100%"}>
@@ -587,7 +650,7 @@ export default function CommunitySingle({ dbComm, users }) {
                                     bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
                                     boxShadow: "xl",
                                   }}
-                                  onClick={() => {}}
+                                  onClick={addShareCampaign}
                                   borderRadius={20}
                                   alignSelf={"flex-end"}
                                 >
