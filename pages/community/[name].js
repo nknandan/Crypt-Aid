@@ -6,9 +6,10 @@ import ReactDOM from "react-dom";
 import { useState, useEffect } from "react";
 import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
-import { Grid, GridItem, textDecoration } from "@chakra-ui/react";
+import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { IoIosPodium } from "react-icons/io";
 import { useRouter } from "next/router";
+import web3 from "../../smart-contract/web3";
 import { useWindowSize } from "react-use";
 import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../lib/getETHPrice";
 import {
@@ -56,7 +57,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { Line } from "@react-pdf/renderer";
-import { ChevronDownIcon, SunIcon } from "@chakra-ui/icons";
+import { ChevronUpIcon, ChevronDownIcon, SunIcon, ChatIcon, LinkIcon } from "@chakra-ui/icons";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
@@ -74,7 +75,7 @@ var tempUser = {};
 var userEmail = "";
 var comPosts = [];
 
-export async function getServerSideProps({}) {
+export async function getServerSideProps({ }) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -112,7 +113,7 @@ function CommentInbox() {
                   type="string"
                   borderColor={"gray.300"}
                   placeholder={"Enter your post here"}
-                  onChange={(e) => {}}
+                  onChange={(e) => { }}
                 />
               </InputGroup>
             </FormControl>
@@ -126,7 +127,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => {}}
+          onClick={() => { }}
           borderRadius={20}
         >
           Post
@@ -138,20 +139,124 @@ function CommentInbox() {
 
 function Feed({ posts }) {
   // console.log(posts);
-  const [isCampaign, setIsCampaign] = useState(0);
-  // return <Flex>{isCampaign ? <></> : <></>}</Flex>;
+  const [isCampaign, setIsCampaign] = useState(1);
   return (
-    <Flex>
+    <Box w={"100%"}>
       {posts.slice(0).map((el) => {
         return (
-          <Text color={"black"} key={el.title}>
-            <div>Title: {el.title}</div>
-            <div>Description: {el.description}</div>
-            <div>Created On: {el.createdDate}</div>
-          </Text>
+          <Flex>
+            {isCampaign ?
+
+              (
+                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
+                  bgColor={"#ffffff"}
+                  borderRadius={"20"}
+                  transition={"transform 0.3s ease"}
+                  boxShadow="sm"
+                  _hover={{
+                    transform: "translateY(-8px)",
+                  }}
+                  overflowY={"auto"}>
+                  <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
+                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
+                      <ChevronUpIcon boxSize={8} />
+                    </Button>
+                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
+                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
+                      <ChevronDownIcon boxSize={8} />
+                    </Button>
+                  </Center>
+                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+
+                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
+                      <Button colorScheme='teal' variant='link' mr={"5px"}>
+                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
+                      </Button>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
+                    </Flex>
+
+                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
+                      <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text>
+                      <CampaignCardNew
+                        name={"harshak"}
+                        description={"harshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshak harshakharshakharshakharshak harshakharshakharshakharshakharshakharshak"}
+                        creatorId={"harshak"}
+                        imageURL={"https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80"}
+                        id={"harshak"}
+                        target={"100"}
+                        balance={"50"}
+                        ethPrice={"harshak"}
+                        users={"harshak"}
+                        dbCamp={"harshak"}
+                      />
+                    </Flex>
+
+                    {/* <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
+                      <Button variant={"link"} colorScheme="blue">
+                        <ChatIcon color={"gray.600"} />
+                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
+                      </Button>
+                      <Button variant={"link"} colorScheme="blue" ml={5}>
+                        <LinkIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>Share</Text>
+                      </Button>
+                    </Flex> */}
+                  </Flex>
+                </Flex>
+              ) :
+
+              (
+                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
+                  bgColor={"#ffffff"}
+                  borderRadius={"20"}
+                  transition={"transform 0.3s ease"}
+                  boxShadow="sm"
+                  _hover={{
+                    transform: "translateY(-8px)",
+                  }}
+                  overflowY={"auto"}>
+                  <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
+                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
+                      <ChevronUpIcon boxSize={8} />
+                    </Button>
+                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
+                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
+                      <ChevronDownIcon boxSize={8} />
+                    </Button>
+                  </Center>
+                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+
+                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
+                      <Button colorScheme='teal' variant='link' mr={"5px"}>
+                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
+                      </Button>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
+                    </Flex>
+
+                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
+                      <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text>
+                      <Text fontSize={"16"}>{el.description}</Text>
+                    </Flex>
+
+                    <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
+                      <Button variant={"link"} colorScheme="blue">
+                        <ChatIcon color={"gray.600"} />
+                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
+                      </Button>
+                      <Button variant={"link"} colorScheme="blue" ml={5}>
+                        <LinkIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>Share</Text>
+                      </Button>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              )}
+          </Flex>
         );
       })}
-    </Flex>
+    </Box>
   );
 }
 
@@ -193,17 +298,17 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
     <NextLink href={`/campaign/${id}`}>
       <Box
         h={"30vh"}
-        w={"65vw"}
+        w={"100%"}
         display={"flex"}
         flexDirection={"row"}
         position="relative"
         cursor="pointer"
-        bgColor={"#ffffff"}
+        bgColor={"gray.100"}
         borderRadius={"20"}
         transition={"transform 0.3s ease"}
         boxShadow="sm"
         _hover={{
-          transform: "translateY(-8px)",
+          transform: "translateY(4px)",
         }}
         overflowY={"auto"}
       >
@@ -703,7 +808,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
                 </Button>
               </Flex>
 
-              <Flex h={"100vh"}>
+              <Flex w={"100%"} overflowX={"hidden"}>
                 <Feed posts={posts} />
               </Flex>
             </Flex>
