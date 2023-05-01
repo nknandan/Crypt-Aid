@@ -66,7 +66,7 @@ import NextLink from "next/link";
 import factory from "../../smart-contract/factory";
 import Campaign from "../../smart-contract/campaign";
 
-var campId2Name = {};
+var cName2Id = {};
 
 var tempComm = {};
 var tempMod = [];
@@ -74,17 +74,20 @@ var tempMem = [];
 var tempUser = {};
 var userEmail = "";
 var comPosts = [];
+var camp = []
 
 export async function getServerSideProps({ }) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
+  const campaigns = await factory.methods.getDeployedCampaigns().call();
   const dbCommunities = await db.collection("communities").find().toArray();
   const dbCampaigns = await db.collection("campaigns").find().toArray();
 
   const users = await User.find();
   return {
     props: {
+      campaigns,
       dbComm: JSON.parse(JSON.stringify(dbCommunities)),
       users: JSON.parse(JSON.stringify(users)),
       dbCamps: JSON.parse(JSON.stringify(dbCampaigns)),
@@ -165,70 +168,13 @@ function DownvoteIcon() {
   );
 }
 
-function Feed({ posts }) {
-  // console.log(posts);
-  const [isCampaign, setIsCampaign] = useState(1);
+function Feed({ posts, campaignList }) {
   return (
     <Box w={"100%"}>
       {posts.slice(0).map((el) => {
         return (
           <Flex>
-            {isCampaign ?
-              (
-                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
-                  bgColor={"#ffffff"}
-                  borderRadius={"20"}
-                  transition={"transform 0.3s ease"}
-                  boxShadow="sm"
-                  _hover={{
-                    transform: "translateY(-8px)",
-                  }}
-                  overflowY={"auto"}>
-                  <Center pt={"10px"} bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"start"} flexDir={"column"} justifyContent={"start"}>
-                    <UpvoteIcon/>
-                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
-                    <DownvoteIcon/>
-                  </Center>
-                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
-
-                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
-                      <Button colorScheme='teal' variant='link' mr={"5px"}>
-                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
-                      </Button>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
-                    </Flex>
-
-                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
-                      <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text>
-                      <CampaignCardNew
-                        name={"harshak"}
-                        description={"harshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshak harshakharshakharshakharshak harshakharshakharshakharshakharshakharshak"}
-                        creatorId={"harshak"}
-                        imageURL={"https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80"}
-                        id={"harshak"}
-                        target={"100"}
-                        balance={"50"}
-                        ethPrice={"harshak"}
-                        users={"harshak"}
-                        dbCamp={"harshak"}
-                      />
-                    </Flex>
-
-                    {/* <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
-                      <Button variant={"link"} colorScheme="blue">
-                        <ChatIcon color={"gray.600"} />
-                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
-                      </Button>
-                      <Button variant={"link"} colorScheme="blue" ml={5}>
-                        <LinkIcon color={"gray.600"} />
-                        <Text color={"gray.600"} ml={2}>Share</Text>
-                      </Button>
-                    </Flex> */}
-                  </Flex>
-                </Flex>
-              ) :
-
+            {el.isPost ?
               (
                 <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
                   bgColor={"#ffffff"}
@@ -253,9 +199,9 @@ function Feed({ posts }) {
                     <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
                       <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
                       <Button colorScheme='teal' variant='link' mr={"5px"}>
-                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
+                        <Text color={"gray.600"} fontSize={14}>u/{el.createdBy}</Text>
                       </Button>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Created On: {el.createdDate}</Text>
                     </Flex>
 
                     <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
@@ -275,7 +221,54 @@ function Feed({ posts }) {
                     </Flex>
                   </Flex>
                 </Flex>
-              )}
+              ) :
+              (
+                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
+                  bgColor={"#ffffff"}
+                  borderRadius={"20"}
+                  transition={"transform 0.3s ease"}
+                  boxShadow="sm"
+                  _hover={{
+                    transform: "translateY(-8px)",
+                  }}
+                  overflowY={"auto"}>
+                  <Center pt={"10px"} bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"start"} flexDir={"column"} justifyContent={"start"}>
+                    <UpvoteIcon/>
+                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
+                    <DownvoteIcon/>
+                  </Center>
+                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+
+                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
+                      <Button colorScheme='teal' variant='link' mr={"5px"}>
+                        <Text color={"gray.600"} fontSize={14}>u/{el.createdBy}</Text>
+                      </Button>
+                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
+                    </Flex>
+
+                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
+                      {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
+                      <CampaignCardNew
+                        name={el.title}
+                        id={el.campID}
+                        campaignList={campaignList}
+                      />
+                    </Flex>
+
+                    {/* <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
+                      <Button variant={"link"} colorScheme="blue">
+                        <ChatIcon color={"gray.600"} />
+                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
+                      </Button>
+                      <Button variant={"link"} colorScheme="blue" ml={5}>
+                        <LinkIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>Share</Text>
+                      </Button>
+                    </Flex> */}
+                  </Flex>
+                </Flex>
+              ) }
           </Flex>
         );
       })}
@@ -283,40 +276,21 @@ function Feed({ posts }) {
   );
 }
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-
-  async function findEmail() {
-    for (var i = 0; i < dbCamp.length; i++) {
-      if (dbCamp[i].name == name) {
-        setEmail(dbCamp[i].creatorEmail);
-        return dbCamp[i].creatorEmail;
-      }
-    }
-    return;
-  }
-  async function findUsername(tempEmail) {
-    for (var i = 0; i < dbUsers.length; i++) {
-      if (dbUsers[i].email == tempEmail) {
-        const tempUsername = dbUsers[i].username;
-        setUsername(tempUsername);
-        return tempUsername;
-      }
-    }
-  }
-
+function CampaignCardNew({ name, id, campaignList }) {
+  const [thisCampaign, setThisCampaign] = useState([]);
+  
   useEffect(() => {
-    const fetchData = async () => {
-      const tempEmail = await findEmail();
-      setEmail(tempEmail);
-      const tempUsername = await findUsername(tempEmail);
-      setUsername(tempUsername);
-    };
-    fetchData();
+    console.log(campaignList);
+    console.log(id);
+    for(var i=0; i<campaignList.length; i++){
+      if(campaignList[i][5] == name)
+        setThisCampaign(campaignList[i]);
+    }
+    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    // console.log(camp)
     // eslint-disable-next-line react/jsx-no-undef
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -337,7 +311,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
           <Img
-            src={imageURL}
+            src={thisCampaign[7]}
             alt={`Picture of ${name}`}
             objectFit="cover"
             w="full"
@@ -360,13 +334,13 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+            {/* <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
-                  c/CommunityName
+                  
                 </Box>{" "}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {username} ✅
+                  
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"}>
@@ -375,16 +349,16 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                 </Text>
                 <Text>days left</Text>
               </Box>
-            </Box>
+            </Box> */}
 
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
-              <Text noOfLines={3}>{description}</Text>
+              <Text noOfLines={3}>{thisCampaign[6]}</Text>
             </Box>
           </Box>
-          <Box>
+          {/* <Box>
             <Flex direction={"row"} justifyContent={"space-between"}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}>
                 <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
@@ -414,14 +388,14 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
               max={web3.utils.fromWei(target, "ether")}
               mt="2"
             />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </NextLink>
   );
 }
 
-export default function CommunitySingle({ dbComm, users, dbCamps }) {
+export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -433,8 +407,6 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
   const [modNo, setModNo] = useState();
   const [createPostMode, setCreatePostMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
-
-  const [campaignList, setCampaignList] = useState([]);
 
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostDescription, setNewPostDescription] = useState("");
@@ -448,7 +420,33 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
     setSelectedTab(index);
   };
 
+
+  const [campaignList, setCampaignList] = useState([]);
+  const [ethPrice, updateEthPrice] = useState(null);
+  const [campaignListNumber, setCampaignListNumber] = useState(0);
+
+  async function getSummary() {
+    try {
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      const ETHPrice = await getETHPrice();
+      updateEthPrice(ETHPrice);
+      setCampaignList(summary);
+      setCampaignListNumber(3);
+      let i = 0;
+      for (let ele of campaigns) {
+        cName2Id[summary[i]["5"]] = ele;
+        i++;
+      }
+      return summary;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
+    getSummary();
     userEmail = localStorage.getItem("email");
     var tempName = router.query.name;
     setCommunityName(tempName);
@@ -542,6 +540,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
       isPost: true,
       title: newPostTitle,
       description: newPostDescription,
+      createdBy: tempUser.username,
       createdDate: utc,
     };
     tempComm.posts.push(tempObj);
@@ -564,33 +563,34 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
   }
 
   async function addShareCampaign() {
-    // console.log(newPostTitle);
-    // console.log(newPostDescription);
-    // !!! HERE code to add campaign to database.
-    // var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
-    // var tempObj = {
-    //   isPost: true,
-    //   title: newPostTitle,
-    //   description: newPostDescription,
-    //   createdDate: utc,
-    // };
-    // tempComm.posts.push(tempObj);
-    // console.log(tempComm);
-    // try {
-    //   fetch("/api/communities/addPost", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ tempComm }),
-    //   });
-    //   setCreatePostMode(false);
-    //   setNewCampTitle("");
-    //   setNewCampURL("");
-    // } catch (err) {
-    //   setError(err.message);
-    //   console.log(err);
-    // }
+    // console.log(newCampTitle);
+    var tempID = newCampURL.slice(31, 73);
+    // console.log(tempID);
+    var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
+    var tempObj = {
+      isPost: false,
+      title: newCampTitle,
+      campID: tempID,
+      createdBy: tempUser.username,
+      createdDate: utc,
+    };
+    tempComm.posts.push(tempObj);
+    console.log(tempComm);
+    try {
+      fetch("/api/communities/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+      setCreatePostMode(false);
+      setNewCampTitle("");
+      setNewCampURL("");
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
   }
 
   return (
@@ -832,7 +832,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
               </Flex>
 
               <Flex w={"100%"} overflowX={"hidden"}>
-                <Feed posts={posts} />
+                <Feed posts={posts} campaignList = {campaignList}/>
               </Flex>
             </Flex>
             <Box w={"30%"}>
