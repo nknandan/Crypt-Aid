@@ -137,6 +137,34 @@ function CommentInbox() {
   );
 }
 
+function UpvoteIcon() {
+  const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
+
+  const handleClick = () => {
+    setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
+  };
+
+  return (
+    <Button w={"2%"} h={"10%"} variant='ghost' colorScheme={iconColor} onClick={handleClick}>
+      <ChevronUpIcon boxSize={8} />
+    </Button>
+  );
+}
+
+function DownvoteIcon() {
+  const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
+
+  const handleClick = () => {
+    setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
+  };
+
+  return (
+    <Button w={"2%"} h={"10%"} variant='ghost' colorScheme={iconColor} onClick={handleClick}>
+      <ChevronDownIcon boxSize={8} />
+    </Button>
+  );
+}
+
 function Feed({ posts }) {
   // console.log(posts);
   const [isCampaign, setIsCampaign] = useState(1);
@@ -146,7 +174,6 @@ function Feed({ posts }) {
         return (
           <Flex>
             {isCampaign ?
-
               (
                 <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
                   bgColor={"#ffffff"}
@@ -157,14 +184,10 @@ function Feed({ posts }) {
                     transform: "translateY(-8px)",
                   }}
                   overflowY={"auto"}>
-                  <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
-                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
-                      <ChevronUpIcon boxSize={8} />
-                    </Button>
+                  <Center pt={"10px"} bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"start"} flexDir={"column"} justifyContent={"start"}>
+                    <UpvoteIcon/>
                     <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
-                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
-                      <ChevronDownIcon boxSize={8} />
-                    </Button>
+                    <DownvoteIcon/>
                   </Center>
                   <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
 
