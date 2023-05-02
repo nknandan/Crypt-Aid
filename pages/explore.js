@@ -48,6 +48,16 @@ import { connectToDatabase } from "../lib/mongodb";
 import { connectMongo } from "../utils/connectMongo";
 import User from "../models/user";
 
+import {
+  TwitterShareButton,
+  FacebookShareButton,
+  FacebookMessengerShareButton,
+  LinkedinShareButton,
+  EmailShareButton,
+  RedditShareButton,
+} from "react-share";
+import { TwitterIcon, FacebookIcon, FacebookMessengerIcon, LinkedinIcon, EmailIcon, RedditIcon } from "react-share";
+
 var cName2Id = {};
 
 export async function getServerSideProps(context) {
@@ -144,6 +154,47 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
+                <div>
+                  <TwitterShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " +
+                      name +
+                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                      description +
+                      "\n\n#CryptAid #" +
+                      name
+                    }
+                    // className="Demo__some-network__share-button"
+                  >
+                    <TwitterIcon size={38} round />
+                  </TwitterShareButton>
+                </div>
+                <div>
+                  <EmailShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    subject={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    body={description}
+                    className="Demo__some-network__share-button"
+                  >
+                    <EmailIcon size={32} round />
+                  </EmailShareButton>
+                </div>
+                <div>
+                  <RedditShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    windowWidth={660}
+                    windowHeight={460}
+                    className="Demo__some-network__share-button"
+                  >
+                    <RedditIcon size={32} round />
+                  </RedditShareButton>
+                </div>
                 <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
                 </Box>{" "}

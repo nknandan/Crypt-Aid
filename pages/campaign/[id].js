@@ -601,6 +601,31 @@ export default function CampaignSingle({
                   </TwitterShareButton>
                 </div>
                 <div>
+                  <EmailShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    subject={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    body={description}
+                    className="Demo__some-network__share-button"
+                  >
+                    <EmailIcon size={32} round />
+                  </EmailShareButton>
+                </div>
+                <div>
+                  <RedditShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    windowWidth={660}
+                    windowHeight={460}
+                    className="Demo__some-network__share-button"
+                  >
+                    <RedditIcon size={32} round />
+                  </RedditShareButton>
+                </div>
+                <div>
                   {/* <FacebookShareButton
                     url={`http://localhost:3002/campaign/${id}`}
                     title={
@@ -637,31 +662,6 @@ export default function CampaignSingle({
                     <LinkedinIcon size={32} round />
                   </LinkedinShareButton>
                 </div> */}
-                <div>
-                  <EmailShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    subject={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    body={description}
-                    className="Demo__some-network__share-button"
-                  >
-                    <EmailIcon size={32} round />
-                  </EmailShareButton>
-                </div>
-                <div>
-                  <RedditShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    title={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    windowWidth={660}
-                    windowHeight={460}
-                    className="Demo__some-network__share-button"
-                  >
-                    <RedditIcon size={32} round />
-                  </RedditShareButton>
-                </div>
               </Flex>
             </Flex>
           </Flex>
