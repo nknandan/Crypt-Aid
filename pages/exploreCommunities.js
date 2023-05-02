@@ -76,7 +76,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-function CommunityCard({ name, description, imageURL, creator, moderators, members, commCamps, dbUsers }) {
+function CommunityCard({ name, description, imageURL, creator, moderators, members, commCamps, commPosts, dbUsers }) {
   console.log(imageURL);
 
   const [username, setUsername] = useState("");
@@ -84,6 +84,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
   const [joined, setJoined] = useState(1);
   const [memberNo, setMemberNo] = useState();
   const [modNo, setModNo] = useState();
+  const [postCount, setPostCount] = useState();
 
   useEffect(() => {
     if(members == undefined) setMemberNo(0);
@@ -93,6 +94,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
     fetchData();
     userEmail = localStorage.getItem("email");
     var tempName = name;
+    setPostCount(commPosts.length);
     // console.log(users);
     for(let i=0; i<dbUsers.length; i++){
       if(dbUsers[i].email == userEmail){
@@ -167,7 +169,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
           alignItems={"center"}
         >
           <Text fontWeight={600} color={"#2C2C7B"}>
-            17 posts
+            {postCount} posts
           </Text>
           <Text fontWeight={600} color={"#2C2C7B"}>
             {memberNo+modNo} members
@@ -282,6 +284,7 @@ export default function exploreCommunities({ campaigns, dbUsers, dbCamp, dbComm 
                     moderators={el.moderators}
                     members={el.members}
                     commCamps={el.campaigns}
+                    commPosts={el.posts}
                     key={i}
                     dbUsers={dbUsers}
                   />

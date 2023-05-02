@@ -391,6 +391,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   const [newCampURL, setNewCampURL] = useState("");
 
   const [posts, setPosts] = useState([]);
+  const [postCount, setPostCount] = useState();
   const [campPosts, setCampPosts] = useState([]);
 
   const handleTabChange = (index) => {
@@ -451,7 +452,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
         setModNo(tempMod.length);
       }
     }
-    // console.log(tempUser);
+    setPostCount(tempComm.posts.length);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -837,7 +838,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                   </Flex>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      17
+                      {postCount}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Posts
