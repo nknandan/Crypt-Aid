@@ -164,14 +164,19 @@ function DownvoteIcon() {
 }
 
 function Feed({ posts, campaignList }) {
-  useEffect(() => {}, [campaignList]);
+  useEffect(() => {
+    console.log("HERE R THE POSTS IN FEEEED...");
+    console.log(posts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignList]);
 
-  async function deletePost(name){
+  async function deletePost(name) {
     var temp;
-    for(var i=0; i<tempComm.posts.length; i++)
-      if(tempComm.posts[i].title == name)
-        temp = tempComm.posts[i];
-    tempComm.posts.splice(tempComm.posts.findIndex(a => a.title == temp.title), 1)
+    for (var i = 0; i < tempComm.posts.length; i++) if (tempComm.posts[i].title == name) temp = tempComm.posts[i];
+    tempComm.posts.splice(
+      tempComm.posts.findIndex((a) => a.title == temp.title),
+      1
+    );
     console.log(tempComm.posts);
     try {
       fetch("/api/communities/addPost", {
@@ -261,14 +266,16 @@ function Feed({ posts, campaignList }) {
                         Share
                       </Text>
                     </Button>
-                    {userEmail == tempComm.moderators ? 
-                  <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
-                  <LinkIcon color={"gray.600"} />
-                  <Text color={"gray.600"} ml={2}>
-                    Delete
-                  </Text>
-                </Button>
-                : console.log("COOOL")}
+                    {userEmail == tempComm.moderators ? (
+                      <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
+                        <LinkIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>
+                          Delete
+                        </Text>
+                      </Button>
+                    ) : (
+                      console.log("COOOL")
+                    )}
                   </Flex>
                 </Flex>
               </Flex>
@@ -322,14 +329,16 @@ function Feed({ posts, campaignList }) {
                     {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
                     <CampaignCardNew name={el.title} id={el.campID} campaignList={campaignList} />
                   </Flex>
-                  {userEmail == tempComm.moderators ? 
-                  <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
-                  <LinkIcon color={"gray.600"} />
-                  <Text color={"gray.600"} ml={2}>
-                    Delete
-                  </Text>
-                </Button>
-                : console.log("COOOL")}
+                  {userEmail == tempComm.moderators ? (
+                    <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
+                      <LinkIcon color={"gray.600"} />
+                      <Text color={"gray.600"} ml={2}>
+                        Delete
+                      </Text>
+                    </Button>
+                  ) : (
+                    console.log("COOOL")
+                  )}
                 </Flex>
               </Flex>
             )}
@@ -551,12 +560,10 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
     }
   }
 
-  async function leaveComm(){
-    if(userEmail == tempComm.moderators)
-      return;
+  async function leaveComm() {
+    if (userEmail == tempComm.moderators) return;
     var ind = tempComm.members.indexOf(userEmail);
-    if(ind > -1)
-      tempComm.members.splice(ind, 1);
+    if (ind > -1) tempComm.members.splice(ind, 1);
     setJoined(0);
     try {
       fetch("/api/communities/addMem", {
@@ -571,8 +578,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
       console.log(err);
     }
     ind = tempUser.joinedCommunities.indexOf(tempComm.name);
-    if(ind > -1)
-      tempUser.joinedCommunities.splice(ind, 1);
+    if (ind > -1) tempUser.joinedCommunities.splice(ind, 1);
     try {
       fetch("/api/communities/addMem", {
         method: "PUT",
@@ -919,25 +925,28 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                 </Flex>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Box my={5}>
-                  {joined ? <Button
-                    w={"100%"}
-                    borderRadius={50}
-                    bgColor={"#43B0F1"}
-                    color={"white"}
-                    zIndex={99}
-                    _hover={{
-                      bgGradient: "linear(to-l, #0065A1, #43B0F1)",
-                      boxShadow: "xl",
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setCreatePostMode(true);
-                    }}
-                  >
-                    Create Post
-                  </Button>
-                  : console.log("HIII")}
+                  {joined ? (
+                    <Button
+                      w={"100%"}
+                      borderRadius={50}
+                      bgColor={"#43B0F1"}
+                      color={"white"}
+                      zIndex={99}
+                      _hover={{
+                        bgGradient: "linear(to-l, #0065A1, #43B0F1)",
+                        boxShadow: "xl",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCreatePostMode(true);
+                      }}
+                    >
+                      Create Post
+                    </Button>
+                  ) : (
+                    console.log("HIII")
+                  )}
                 </Box>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Text mt={2} color={"gray.600"} fontWeight={500} fontSize={"18px"}>
