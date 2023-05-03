@@ -166,6 +166,27 @@ function DownvoteIcon() {
 function Feed({ posts, campaignList }) {
   useEffect(() => {}, [campaignList]);
 
+  async function deletePost(name){
+    var temp;
+    for(var i=0; i<tempComm.posts.length; i++)
+      if(tempComm.posts[i].title == name)
+        temp = tempComm.posts[i];
+    tempComm.posts.splice(tempComm.posts.findIndex(a => a.title == temp.title), 1)
+    console.log(tempComm.posts);
+    try {
+      fetch("/api/communities/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <Box w={"100%"}>
       {/* <Button
@@ -240,6 +261,14 @@ function Feed({ posts, campaignList }) {
                         Share
                       </Text>
                     </Button>
+                    {userEmail == tempComm.moderators ? 
+                  <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
+                  <LinkIcon color={"gray.600"} />
+                  <Text color={"gray.600"} ml={2}>
+                    Delete
+                  </Text>
+                </Button>
+                : console.log("COOOL")}
                   </Flex>
                 </Flex>
               </Flex>
@@ -293,6 +322,14 @@ function Feed({ posts, campaignList }) {
                     {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
                     <CampaignCardNew name={el.title} id={el.campID} campaignList={campaignList} />
                   </Flex>
+                  {userEmail == tempComm.moderators ? 
+                  <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
+                  <LinkIcon color={"gray.600"} />
+                  <Text color={"gray.600"} ml={2}>
+                    Delete
+                  </Text>
+                </Button>
+                : console.log("COOOL")}
                 </Flex>
               </Flex>
             )}
@@ -514,6 +551,42 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
     }
   }
 
+  async function leaveComm(){
+    if(userEmail == tempComm.moderators)
+      return;
+    var ind = tempComm.members.indexOf(userEmail);
+    if(ind > -1)
+      tempComm.members.splice(ind, 1);
+    setJoined(0);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    ind = tempUser.joinedCommunities.indexOf(tempComm.name);
+    if(ind > -1)
+      tempUser.joinedCommunities.splice(ind, 1);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   async function addPost() {
     // console.log(newPostTitle);
     // console.log(newPostDescription);
@@ -603,7 +676,6 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                 <Heading fontSize={"44px"}>{tempComm.name}</Heading>
                 {joined ? (
                   <Button
-                    disabled={true}
                     w={"25%"}
                     borderRadius={50}
                     bgColor={"#609966"}
@@ -616,7 +688,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      setJoined(!joined);
+                      leaveComm();
                     }}
                   >
                     Joined
@@ -847,7 +919,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                 </Flex>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Box my={5}>
-                  <Button
+                  {joined ? <Button
                     w={"100%"}
                     borderRadius={50}
                     bgColor={"#43B0F1"}
@@ -865,6 +937,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                   >
                     Create Post
                   </Button>
+                  : console.log("HIII")}
                 </Box>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Text mt={2} color={"gray.600"} fontWeight={500} fontSize={"18px"}>
