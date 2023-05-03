@@ -167,7 +167,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                     }
                     // className="Demo__some-network__share-button"
                   >
-                    <TwitterIcon size={38} round />
+                    <TwitterIcon size={32} round />
                   </TwitterShareButton>
                 </div>
                 <div>

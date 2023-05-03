@@ -597,7 +597,7 @@ export default function CampaignSingle({
                     }
                     // className="Demo__some-network__share-button"
                   >
-                    <TwitterIcon size={38} round />
+                    <TwitterIcon size={32} round />
                   </TwitterShareButton>
                 </div>
                 <div>
