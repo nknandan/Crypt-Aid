@@ -33,6 +33,7 @@
     "react-hook-form": "^7.33.1",
     "react-icons": "4.2.0",
     "react-no-ssr": "^1.1.0",
+    "react-share": "^4.4.1",
     "react-use": "^17.4.0",
     "solc": "0.4.26",
     "truffle": "^5.7.7",

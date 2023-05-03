@@ -84,6 +84,13 @@ export default function NewRequest() {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main>
+        {/* <Button
+          onClick={() => {
+            console.log(userAccount, creatorAccount);
+          }}
+        >
+          MEEEEH
+        </Button> */}
         {creatorAccount == userAccount ? (
           <Stack spacing={8} mx={"auto"} maxW={"2xl"} py={12} px={6}>
             <Text fontSize={"lg"} color={"teal.400"} justifyContent="center">
