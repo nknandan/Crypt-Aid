@@ -86,7 +86,6 @@ const Feature = ({ title, text, icon }) => {
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
   var emmmmmmm = "";
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
@@ -363,6 +362,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
         flexDir={"column"}
         justifyContent={"space-between"}
         paddingBottom={"5%"}
+        mr={"40px"}
       >
         <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
           <Box h={"100px"} w={"100%"} position="relative">

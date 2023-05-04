@@ -143,7 +143,7 @@ function CommentCard({ creator, description }) {
     <Box
       w={"100%"}
       position="relative"
-      bgColor={useColorModeValue("white", "#303030")}
+      bgColor={useColorModeValue("gray.100", "#303030")}
       borderRadius={"10"}
       transition={"transform 0.3s ease"}
       boxShadow="sm"
@@ -164,7 +164,7 @@ function CommentCard({ creator, description }) {
   );
 }
 
-function CommentInbox({}) {
+function CommentInbox({ }) {
   const [commentList, setCommentList] = useState([]);
   const [comment, setComment] = useState({ creator: userEmail, description: "" });
   const [showViewMoreComment, setShowViewMoreComment] = useState(1);
@@ -522,13 +522,13 @@ export default function CampaignSingle({
         <Flex px={"17.5vw"} direction={"column"} gap={"3vw"} marginTop={"5vh"}>
           {/*  */}
 
-          <Button
+          {/* <Button
             onClick={() => {
               console.log(thisCamp);
             }}
           >
             {"MEEEEEEH"}
-          </Button>
+          </Button> */}
           {/*  */}
           {isSubmitted ? (
             <Container maxW={"7xl"} columns={{ base: 1, md: 2 }} spacing={{ base: 10, lg: 32 }} py={{ base: 6 }}>
@@ -549,7 +549,7 @@ export default function CampaignSingle({
           <Flex direction={"row"}>
             <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
-              <Heading lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
+              <Heading color={"blue.800"} lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }} mb={"1rem"}>
                 {name}
               </Heading>
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
@@ -584,49 +584,59 @@ export default function CampaignSingle({
                     {upVotes - downVotes}
                   </Text>
                 </Flex>
-                <div>
-                  <TwitterShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    title={
-                      "Kindly visit the " +
-                      name +
-                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
-                      description +
-                      "\n\n#CryptAid #" +
-                      name
-                    }
+              </Flex>
+              <Flex minH={"50px"} mt={"40px"} justifyContent={"space-between"} bgColor={"#ededed"} alignItems={"center"} borderRadius={"20px"}>
+                <Flex flexDir={"column"} bgColor={"lightcyan"} h={"100%"} maxW={"60%"} minW={"60%"} borderRadius={"20px"} borderRightRadius={"20px"} mr={"10px"} alignItems={"center"} justifyContent={"center"} px={"10px"} pl={"5px"}>
+                  <Text fontSize={"18px"} fontWeight={"600"}>Tell your friends, family and neighbours.</Text>
+                  <Text color={"darkcyan"} fontSize={"20px"} fontWeight={"800"}>Share it to the world !</Text>
+                </Flex>
+                <Flex bgColor={"#ededed"} h={"100%"} maxW={"40%"} minW={"40%"} alignItems={"center"} justifyContent={"space-between"}  borderRadius={"20px"} borderLeftRadius={"20px"}>
+                  <Flex>
+                    <TwitterShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " +
+                        name +
+                        " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                        description +
+                        "\n\n#CryptAid #" +
+                        name
+                      }
                     // className="Demo__some-network__share-button"
-                  >
-                    <TwitterIcon size={32} round />
-                  </TwitterShareButton>
-                </div>
-                <div>
-                  <EmailShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    subject={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    body={description}
-                    className="Demo__some-network__share-button"
-                  >
-                    <EmailIcon size={32} round />
-                  </EmailShareButton>
-                </div>
-                <div>
-                  <RedditShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    title={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    windowWidth={660}
-                    windowHeight={460}
-                    className="Demo__some-network__share-button"
-                  >
-                    <RedditIcon size={32} round />
-                  </RedditShareButton>
-                </div>
-                <div>
-                  {/* <FacebookShareButton
+                    >
+                      <TwitterIcon size={32} round />
+                    </TwitterShareButton>
+                  </Flex>
+                  <Flex>
+                    <EmailShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      subject={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      body={description}
+                      className="Demo__some-network__share-button"
+                    >
+                      <EmailIcon size={32} round />
+                    </EmailShareButton>
+                  </Flex>
+                  <Flex mr={"10px"}>
+                    <RedditShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      windowWidth={660}
+                      windowHeight={460}
+                      className="Demo__some-network__share-button"
+                    >
+                      <RedditIcon size={32} round />
+                    </RedditShareButton>
+                  </Flex>
+                </Flex>
+
+
+                {/* <div> */}
+                {/* <FacebookShareButton
                     url={`http://localhost:3002/campaign/${id}`}
                     title={
                       "Kindly visit the " +
@@ -639,16 +649,16 @@ export default function CampaignSingle({
                   >
                     <FacebookIcon size={38} round />
                   </FacebookShareButton> */}
-                </div>
-                <div>
-                  {/* <FacebookMessengerShareButton
+                {/* </div>
+                <div> */}
+                {/* <FacebookMessengerShareButton
                     url={`http://localhost:3002/campaign/${id}`}
                     appId="521270401588372"
                     className="Demo__some-network__share-button"
                   >
                     <FacebookMessengerIcon size={32} round />
                   </FacebookMessengerShareButton> */}
-                </div>
+                {/* </div> */}
                 {/* <div>
                   <LinkedinShareButton
                     url={`http://localhost:3002/campaign/${id}`}

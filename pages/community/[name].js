@@ -57,7 +57,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { Line } from "@react-pdf/renderer";
-import { ChevronUpIcon, ChevronDownIcon, SunIcon, ChatIcon, LinkIcon } from "@chakra-ui/icons";
+import { ChevronUpIcon, ChevronDownIcon, SunIcon, ChatIcon, LinkIcon, DeleteIcon } from "@chakra-ui/icons";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
@@ -76,7 +76,7 @@ var userEmail = "";
 var comPosts = [];
 var camp = [];
 var ccampaignss = [];
-export async function getServerSideProps({}) {
+export async function getServerSideProps({ }) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
@@ -125,7 +125,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => {}}
+          onClick={() => { }}
           borderRadius={20}
         >
           Post
@@ -227,7 +227,7 @@ function Feed({ posts, campaignList }) {
                     {" "}
                     17{" "}
                   </Text>
-                  <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => {}} colorScheme="blue">
+                  <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => { }} colorScheme="blue">
                     <ChevronDownIcon boxSize={8} />
                   </Button>
                 </Center>
@@ -253,29 +253,25 @@ function Feed({ posts, campaignList }) {
                     <Text fontSize={"16"}>{el.description}</Text>
                   </Flex>
 
-                  <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
+                  <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4} justifyContent={"space-between"} pr={"40px"}>
                     <Button variant={"link"} colorScheme="blue">
                       <ChatIcon color={"gray.600"} />
                       <Text ml={2} color={"gray.600"}>
                         9 Comments
                       </Text>
                     </Button>
-                    <Button variant={"link"} colorScheme="blue" ml={5}>
-                      <LinkIcon color={"gray.600"} />
-                      <Text color={"gray.600"} ml={2}>
-                        Share
-                      </Text>
-                    </Button>
-                    {userEmail == tempComm.moderators ? (
-                      <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
-                        <LinkIcon color={"gray.600"} />
-                        <Text color={"gray.600"} ml={2}>
-                          Delete
-                        </Text>
-                      </Button>
-                    ) : (
-                      console.log("COOOL")
-                    )}
+                    <Flex width={"100%"} justifyContent={"end"}>
+                      {userEmail == tempComm.moderators ? (
+                        <Button variant={"link"} colorScheme="red" ml={5} onClick={() => deletePost(el.title)}>
+                          <DeleteIcon color={"gray.600"} />
+                          <Text color={"gray.600"} ml={2}>
+                            Delete
+                          </Text>
+                        </Button>
+                      ) : (
+                        console.log("COOOL")
+                      )}
+                    </Flex>
                   </Flex>
                 </Flex>
               </Flex>
@@ -329,16 +325,19 @@ function Feed({ posts, campaignList }) {
                     {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
                     <CampaignCardNew name={el.title} id={el.campID} campaignList={campaignList} />
                   </Flex>
-                  {userEmail == tempComm.moderators ? (
-                    <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
-                      <LinkIcon color={"gray.600"} />
-                      <Text color={"gray.600"} ml={2}>
-                        Delete
-                      </Text>
-                    </Button>
-                  ) : (
-                    console.log("COOOL")
-                  )}
+
+                  <Flex minH={"4vh"} alignItems={"center"} w={"100%"} justifyContent={"end"} pr={"40px"} mt={-4}>
+                    {userEmail == tempComm.moderators ? (
+                      <Button variant={"link"} colorScheme="red" ml={5} onClick={() => deletePost(el.title)}>
+                        <DeleteIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>
+                          Delete
+                        </Text>
+                      </Button>
+                    ) : (
+                      console.log("COOOL")
+                    )}
+                  </Flex>
                 </Flex>
               </Flex>
             )}
