@@ -33,7 +33,7 @@ import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3";
 import axios from "axios";
 
-export default function NewCampaign() {
+export default function NewCommunity() {
   const {
     handleSubmit,
     register,
@@ -122,7 +122,7 @@ export default function NewCampaign() {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main>
-        <Flex direction={"row"} justifyContent={"space-evenly"}>
+        <Flex direction={"row"} justifyContent={"space-evenly"} minH={"65vh"}>
           <Box>
             <Text fontSize={"lg"} color={"#1CB5E0"} mb={"13vh"}>
               <ArrowBackIcon mr={2} />
