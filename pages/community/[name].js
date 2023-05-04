@@ -66,7 +66,7 @@ import NextLink from "next/link";
 import factory from "../../smart-contract/factory";
 import Campaign from "../../smart-contract/campaign";
 
-var campId2Name = {};
+var cId2Name = {};
 
 var tempComm = {};
 var tempMod = [];
@@ -74,17 +74,20 @@ var tempMem = [];
 var tempUser = {};
 var userEmail = "";
 var comPosts = [];
-
-export async function getServerSideProps({ }) {
+var camp = [];
+var ccampaignss = [];
+export async function getServerSideProps({}) {
   var ETHPrice = 1756.48;
   const { db } = await connectToDatabase();
   await connectMongo();
+  const campaigns = await factory.methods.getDeployedCampaigns().call();
   const dbCommunities = await db.collection("communities").find().toArray();
   const dbCampaigns = await db.collection("campaigns").find().toArray();
 
   const users = await User.find();
   return {
     props: {
+      campaigns,
       dbComm: JSON.parse(JSON.stringify(dbCommunities)),
       users: JSON.parse(JSON.stringify(users)),
       dbCamps: JSON.parse(JSON.stringify(dbCampaigns)),
@@ -109,12 +112,7 @@ function CommentInbox() {
           <form>
             <FormControl id="value">
               <InputGroup w={"100%"}>
-                <Input
-                  type="string"
-                  borderColor={"gray.300"}
-                  placeholder={"Enter your post here"}
-                  onChange={(e) => { }}
-                />
+                <Input type="string" borderColor={"gray.300"} placeholder={"Enter your post here"} />
               </InputGroup>
             </FormControl>
           </form>
@@ -127,7 +125,7 @@ function CommentInbox() {
             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
             boxShadow: "xl",
           }}
-          onClick={() => { }}
+          onClick={() => {}}
           borderRadius={20}
         >
           Post
@@ -145,7 +143,7 @@ function UpvoteIcon() {
   };
 
   return (
-    <Button w={"2%"} h={"10%"} variant='ghost' colorScheme={iconColor} onClick={handleClick}>
+    <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
       <ChevronUpIcon boxSize={8} />
     </Button>
   );
@@ -159,123 +157,191 @@ function DownvoteIcon() {
   };
 
   return (
-    <Button w={"2%"} h={"10%"} variant='ghost' colorScheme={iconColor} onClick={handleClick}>
+    <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
       <ChevronDownIcon boxSize={8} />
     </Button>
   );
 }
 
-function Feed({ posts }) {
-  // console.log(posts);
-  const [isCampaign, setIsCampaign] = useState(1);
+function Feed({ posts, campaignList }) {
+  useEffect(() => {
+    console.log("HERE R THE POSTS IN FEEEED...");
+    console.log(posts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignList]);
+
+  async function deletePost(name) {
+    var temp;
+    for (var i = 0; i < tempComm.posts.length; i++) if (tempComm.posts[i].title == name) temp = tempComm.posts[i];
+    tempComm.posts.splice(
+      tempComm.posts.findIndex((a) => a.title == temp.title),
+      1
+    );
+    console.log(tempComm.posts);
+    try {
+      fetch("/api/communities/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <Box w={"100%"}>
+      {/* <Button
+        onClick={() => {
+          console.log(campaignList);
+        }}
+      >
+        MEEEEEEEEEEh
+      </Button> */}
       {posts.slice(0).map((el) => {
         return (
-          <Flex>
-            {isCampaign ?
-              (
-                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
-                  bgColor={"#ffffff"}
-                  borderRadius={"20"}
-                  transition={"transform 0.3s ease"}
-                  boxShadow="sm"
-                  _hover={{
-                    transform: "translateY(-8px)",
-                  }}
-                  overflowY={"auto"}>
-                  <Center pt={"10px"} bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"start"} flexDir={"column"} justifyContent={"start"}>
-                    <UpvoteIcon/>
-                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
-                    <DownvoteIcon/>
-                  </Center>
-                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+          <Flex key={el.title}>
+            {el.isPost ? (
+              <Flex
+                w={"100%"}
+                minH={"15vh"}
+                my={5}
+                pl={0}
+                bgColor={"#ffffff"}
+                borderRadius={"20"}
+                transition={"transform 0.3s ease"}
+                boxShadow="sm"
+                _hover={{
+                  transform: "translateY(-8px)",
+                }}
+                overflowY={"auto"}
+              >
+                <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
+                  <Button w={"2%"} h={"20%"} variant="ghost" colorScheme="blue">
+                    <ChevronUpIcon boxSize={8} />
+                  </Button>
+                  <Text fontSize={22} fontWeight={"600"} color={"blue.600"}>
+                    {" "}
+                    17{" "}
+                  </Text>
+                  <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => {}} colorScheme="blue">
+                    <ChevronDownIcon boxSize={8} />
+                  </Button>
+                </Center>
+                <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+                  <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
+                    <Text mr={"5px"} color={"gray.600"} fontSize={14}>
+                      Posted by
+                    </Text>
+                    <Button colorScheme="teal" variant="link" mr={"5px"}>
+                      <Text color={"gray.600"} fontSize={14}>
+                        u/{el.createdBy}
+                      </Text>
+                    </Button>
+                    <Text mr={"5px"} color={"gray.600"} fontSize={14}>
+                      Created On: {el.createdDate}
+                    </Text>
+                  </Flex>
 
-                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
-                      <Button colorScheme='teal' variant='link' mr={"5px"}>
-                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
-                      </Button>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
-                    </Flex>
+                  <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
+                    <Text fontSize={"30"} fontWeight={"600"}>
+                      {el.title}
+                    </Text>
+                    <Text fontSize={"16"}>{el.description}</Text>
+                  </Flex>
 
-                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
-                      <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text>
-                      <CampaignCardNew
-                        name={"harshak"}
-                        description={"harshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshakharshak harshakharshakharshakharshak harshakharshakharshakharshakharshakharshak"}
-                        creatorId={"harshak"}
-                        imageURL={"https://images.unsplash.com/photo-1481349518771-20055b2a7b24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fA%3D%3D&w=1000&q=80"}
-                        id={"harshak"}
-                        target={"100"}
-                        balance={"50"}
-                        ethPrice={"harshak"}
-                        users={"harshak"}
-                        dbCamp={"harshak"}
-                      />
-                    </Flex>
-
-                    {/* <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
-                      <Button variant={"link"} colorScheme="blue">
-                        <ChatIcon color={"gray.600"} />
-                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
-                      </Button>
-                      <Button variant={"link"} colorScheme="blue" ml={5}>
+                  <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
+                    <Button variant={"link"} colorScheme="blue">
+                      <ChatIcon color={"gray.600"} />
+                      <Text ml={2} color={"gray.600"}>
+                        9 Comments
+                      </Text>
+                    </Button>
+                    <Button variant={"link"} colorScheme="blue" ml={5}>
+                      <LinkIcon color={"gray.600"} />
+                      <Text color={"gray.600"} ml={2}>
+                        Share
+                      </Text>
+                    </Button>
+                    {userEmail == tempComm.moderators ? (
+                      <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
                         <LinkIcon color={"gray.600"} />
-                        <Text color={"gray.600"} ml={2}>Share</Text>
+                        <Text color={"gray.600"} ml={2}>
+                          Delete
+                        </Text>
                       </Button>
-                    </Flex> */}
+                    ) : (
+                      console.log("COOOL")
+                    )}
                   </Flex>
                 </Flex>
-              ) :
-
-              (
-                <Flex w={"100%"} minH={"15vh"} my={5} pl={0}
-                  bgColor={"#ffffff"}
-                  borderRadius={"20"}
-                  transition={"transform 0.3s ease"}
-                  boxShadow="sm"
-                  _hover={{
-                    transform: "translateY(-8px)",
-                  }}
-                  overflowY={"auto"}>
-                  <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
-                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
-                      <ChevronUpIcon boxSize={8} />
+              </Flex>
+            ) : (
+              <Flex
+                w={"100%"}
+                minH={"15vh"}
+                my={5}
+                pl={0}
+                bgColor={"#ffffff"}
+                borderRadius={"20"}
+                transition={"transform 0.3s ease"}
+                boxShadow="sm"
+                _hover={{
+                  transform: "translateY(-8px)",
+                }}
+                overflowY={"auto"}
+              >
+                <Center
+                  pt={"10px"}
+                  bgColor={"gray.100"}
+                  w={"6%"}
+                  minH={"100%"}
+                  alignContent={"start"}
+                  flexDir={"column"}
+                  justifyContent={"start"}
+                >
+                  <UpvoteIcon />
+                  <Text fontSize={22} fontWeight={"600"} color={"blue.600"}>
+                    {" "}
+                    17{" "}
+                  </Text>
+                  <DownvoteIcon />
+                </Center>
+                <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
+                  <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
+                    <Text mr={"5px"} color={"gray.600"} fontSize={14}>
+                      Posted by
+                    </Text>
+                    <Button colorScheme="teal" variant="link" mr={"5px"}>
+                      <Text color={"gray.600"} fontSize={14}>
+                        u/{el.createdBy}
+                      </Text>
                     </Button>
-                    <Text fontSize={22} fontWeight={"600"} color={"blue.600"}> 17 </Text>
-                    <Button w={"2%"} h={"20%"} variant='ghost' colorScheme='blue'>
-                      <ChevronDownIcon boxSize={8} />
-                    </Button>
-                  </Center>
-                  <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
-
-                    <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>Posted by</Text>
-                      <Button colorScheme='teal' variant='link' mr={"5px"}>
-                        <Text color={"gray.600"} fontSize={14}>u/harshak</Text>
-                      </Button>
-                      <Text mr={"5px"} color={"gray.600"} fontSize={14}>4 hours ago</Text>
-                    </Flex>
-
-                    <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
-                      <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text>
-                      <Text fontSize={"16"}>{el.description}</Text>
-                    </Flex>
-
-                    <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
-                      <Button variant={"link"} colorScheme="blue">
-                        <ChatIcon color={"gray.600"} />
-                        <Text ml={2} color={"gray.600"}>9 Comments</Text>
-                      </Button>
-                      <Button variant={"link"} colorScheme="blue" ml={5}>
-                        <LinkIcon color={"gray.600"} />
-                        <Text color={"gray.600"} ml={2}>Share</Text>
-                      </Button>
-                    </Flex>
+                    <Text mr={"5px"} color={"gray.600"} fontSize={14}>
+                      4 hours ago
+                    </Text>
                   </Flex>
+
+                  <Flex flexDir={"column"} px={4} pb={5} maxH={"30vh"} overflow={"hidden"} overflowX={"hidden"}>
+                    {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
+                    <CampaignCardNew name={el.title} id={el.campID} campaignList={campaignList} />
+                  </Flex>
+                  {userEmail == tempComm.moderators ? (
+                    <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
+                      <LinkIcon color={"gray.600"} />
+                      <Text color={"gray.600"} ml={2}>
+                        Delete
+                      </Text>
+                    </Button>
+                  ) : (
+                    console.log("COOOL")
+                  )}
                 </Flex>
-              )}
+              </Flex>
+            )}
           </Flex>
         );
       })}
@@ -283,38 +349,16 @@ function Feed({ posts }) {
   );
 }
 
-function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbUsers, dbCamp }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-
-  async function findEmail() {
-    for (var i = 0; i < dbCamp.length; i++) {
-      if (dbCamp[i].name == name) {
-        setEmail(dbCamp[i].creatorEmail);
-        return dbCamp[i].creatorEmail;
-      }
-    }
-    return;
-  }
-  async function findUsername(tempEmail) {
-    for (var i = 0; i < dbUsers.length; i++) {
-      if (dbUsers[i].email == tempEmail) {
-        const tempUsername = dbUsers[i].username;
-        setUsername(tempUsername);
-        return tempUsername;
-      }
-    }
-  }
+function CampaignCardNew({ name, id, campaignList }) {
+  const [thisCampaign, setThisCampaign] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const tempEmail = await findEmail();
-      setEmail(tempEmail);
-      const tempUsername = await findUsername(tempEmail);
-      setUsername(tempUsername);
-    };
-    fetchData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    for (var i = 0; i < campaignList.length; i++) {
+      if (campaignList[i][5] == cId2Name[id]) {
+        setThisCampaign(campaignList[i]);
+      }
+    }
+  }, [campaignList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     // eslint-disable-next-line react/jsx-no-undef
@@ -337,7 +381,8 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
       >
         <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
           <Img
-            src={imageURL}
+            src={thisCampaign[7]}
+            // src={thisC[7]}
             alt={`Picture of ${name}`}
             objectFit="cover"
             w="full"
@@ -360,60 +405,12 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           pb={"1.5rem"}
         >
           <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
-                  c/CommunityName
-                </Box>{" "}
-                <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {username} ✅
-                </Box>
-              </Box>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Text fontWeight={"bold"} paddingRight={"5px"}>
-                  19
-                </Text>
-                <Text>days left</Text>
-              </Box>
-            </Box>
-
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
             <Box maxW={"60%"}>
-              <Text noOfLines={3}>{description}</Text>
+              <Text noOfLines={3}>{thisCampaign[6]}</Text>
             </Box>
-          </Box>
-          <Box>
-            <Flex direction={"row"} justifyContent={"space-between"}>
-              <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
-                <Text as="span" pr={2}>
-                  {" "}
-                  ETH
-                </Text>
-                <Text
-                  as="span"
-                  fontSize="lg"
-                  display={balance > 0 ? "inline" : "none"}
-                  fontWeight={"normal"}
-                  color={useColorModeValue("gray.500", "gray.200")}
-                >
-                  (${getWEIPriceInUSD(ethPrice, balance)})
-                </Text>
-              </Box>
-              <Text fontSize={"md"} fontWeight="normal">
-                Target : {web3.utils.fromWei(target, "ether")} ETH ($
-                {getWEIPriceInUSD(ethPrice, target)})
-              </Text>
-            </Flex>
-            <Progress
-              colorScheme="blue"
-              size="sm"
-              value={web3.utils.fromWei(balance, "ether")}
-              max={web3.utils.fromWei(target, "ether")}
-              mt="2"
-            />
           </Box>
         </Box>
       </Box>
@@ -421,7 +418,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
   );
 }
 
-export default function CommunitySingle({ dbComm, users, dbCamps }) {
+export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   const router = useRouter();
 
   const [joined, setJoined] = useState(1);
@@ -434,21 +431,50 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
   const [createPostMode, setCreatePostMode] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const [campaignList, setCampaignList] = useState([]);
-
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostDescription, setNewPostDescription] = useState("");
   const [newCampTitle, setNewCampTitle] = useState("");
   const [newCampURL, setNewCampURL] = useState("");
 
   const [posts, setPosts] = useState([]);
+  const [postCount, setPostCount] = useState();
   const [campPosts, setCampPosts] = useState([]);
 
   const handleTabChange = (index) => {
     setSelectedTab(index);
   };
 
+  const [campaignList, setCampaignList] = useState([]);
+  const [ethPrice, updateEthPrice] = useState(null);
+  const [campaignListNumber, setCampaignListNumber] = useState(0);
+
+  async function getSummary() {
+    try {
+      const summary = await Promise.all(
+        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+      );
+      const ETHPrice = await getETHPrice();
+      updateEthPrice(ETHPrice);
+      setCampaignList(summary);
+      ccampaignss = summary;
+      setCampaignListNumber(3);
+      let i = 0;
+      for (let ele of campaigns) {
+        cId2Name[ele] = summary[i]["5"];
+        i++;
+      }
+      return summary;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
+    getSummary();
+    const fetchData = async () => {
+      await getSummary();
+    };
+    fetchData();
     userEmail = localStorage.getItem("email");
     var tempName = router.query.name;
     setCommunityName(tempName);
@@ -472,7 +498,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
         setModNo(tempMod.length);
       }
     }
-    // console.log(tempUser);
+    setPostCount(tempComm.posts.length);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -492,7 +518,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
       setCampaignList(summary);
       let i = 0;
       for (let ele of campaigns) {
-        campId2Name[ele] = summary[i]["5"];
+        // campId2Name[ele] = summary[i]["5"];
         i++;
       }
       return summary;
@@ -534,6 +560,39 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
     }
   }
 
+  async function leaveComm() {
+    if (userEmail == tempComm.moderators) return;
+    var ind = tempComm.members.indexOf(userEmail);
+    if (ind > -1) tempComm.members.splice(ind, 1);
+    setJoined(0);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    ind = tempUser.joinedCommunities.indexOf(tempComm.name);
+    if (ind > -1) tempUser.joinedCommunities.splice(ind, 1);
+    try {
+      fetch("/api/communities/addMem", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   async function addPost() {
     // console.log(newPostTitle);
     // console.log(newPostDescription);
@@ -542,6 +601,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
       isPost: true,
       title: newPostTitle,
       description: newPostDescription,
+      createdBy: tempUser.username,
       createdDate: utc,
     };
     tempComm.posts.push(tempObj);
@@ -564,33 +624,34 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
   }
 
   async function addShareCampaign() {
-    // console.log(newPostTitle);
-    // console.log(newPostDescription);
-    // !!! HERE code to add campaign to database.
-    // var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
-    // var tempObj = {
-    //   isPost: true,
-    //   title: newPostTitle,
-    //   description: newPostDescription,
-    //   createdDate: utc,
-    // };
-    // tempComm.posts.push(tempObj);
-    // console.log(tempComm);
-    // try {
-    //   fetch("/api/communities/addPost", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ tempComm }),
-    //   });
-    //   setCreatePostMode(false);
-    //   setNewCampTitle("");
-    //   setNewCampURL("");
-    // } catch (err) {
-    //   setError(err.message);
-    //   console.log(err);
-    // }
+    // console.log(newCampTitle);
+    var tempID = newCampURL.slice(31, 73);
+    // console.log(tempID);
+    var utc = new Date().toJSON().slice(0, 10).replace(/-/g, "/");
+    var tempObj = {
+      isPost: false,
+      title: newCampTitle,
+      campID: tempID,
+      createdBy: tempUser.username,
+      createdDate: utc,
+    };
+    tempComm.posts.push(tempObj);
+    console.log(tempComm);
+    try {
+      fetch("/api/communities/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempComm }),
+      });
+      setCreatePostMode(false);
+      setNewCampTitle("");
+      setNewCampURL("");
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
   }
 
   return (
@@ -621,7 +682,6 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
                 <Heading fontSize={"44px"}>{tempComm.name}</Heading>
                 {joined ? (
                   <Button
-                    disabled={true}
                     w={"25%"}
                     borderRadius={50}
                     bgColor={"#609966"}
@@ -634,7 +694,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      setJoined(!joined);
+                      leaveComm();
                     }}
                   >
                     Joined
@@ -832,7 +892,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
               </Flex>
 
               <Flex w={"100%"} overflowX={"hidden"}>
-                <Feed posts={posts} />
+                <Feed posts={posts} campaignList={ccampaignss} />
               </Flex>
             </Flex>
             <Box w={"30%"}>
@@ -856,7 +916,7 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
                   </Flex>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
                     <Text fontWeight={600} fontSize={"22px"} color={"#2C2C7B"}>
-                      17
+                      {postCount}
                     </Text>
                     <Text fontSize={"12px"} color={"gray.600"}>
                       Posts
@@ -865,24 +925,28 @@ export default function CommunitySingle({ dbComm, users, dbCamps }) {
                 </Flex>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Box my={5}>
-                  <Button
-                    w={"100%"}
-                    borderRadius={50}
-                    bgColor={"#43B0F1"}
-                    color={"white"}
-                    zIndex={99}
-                    _hover={{
-                      bgGradient: "linear(to-l, #0065A1, #43B0F1)",
-                      boxShadow: "xl",
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setCreatePostMode(true);
-                    }}
-                  >
-                    Create Post
-                  </Button>
+                  {joined ? (
+                    <Button
+                      w={"100%"}
+                      borderRadius={50}
+                      bgColor={"#43B0F1"}
+                      color={"white"}
+                      zIndex={99}
+                      _hover={{
+                        bgGradient: "linear(to-l, #0065A1, #43B0F1)",
+                        boxShadow: "xl",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCreatePostMode(true);
+                      }}
+                    >
+                      Create Post
+                    </Button>
+                  ) : (
+                    console.log("HIII")
+                  )}
                 </Box>
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Text mt={2} color={"gray.600"} fontWeight={500} fontSize={"18px"}>

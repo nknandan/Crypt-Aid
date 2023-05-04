@@ -61,6 +61,16 @@ import User from "../../models/user";
 import CampaignModel from "../../models/campaignModel";
 import RecommendedCampaigns from "../../components/RecommendedCampaigns";
 
+import {
+  TwitterShareButton,
+  FacebookShareButton,
+  FacebookMessengerShareButton,
+  LinkedinShareButton,
+  EmailShareButton,
+  RedditShareButton,
+} from "react-share";
+import { TwitterIcon, FacebookIcon, FacebookMessengerIcon, LinkedinIcon, EmailIcon, RedditIcon } from "react-share";
+
 var thisCamp = {};
 var userEmail = "";
 
@@ -510,6 +520,16 @@ export default function CampaignSingle({
       <main>
         {" "}
         <Flex px={"17.5vw"} direction={"column"} gap={"3vw"} marginTop={"5vh"}>
+          {/*  */}
+
+          <Button
+            onClick={() => {
+              console.log(thisCamp);
+            }}
+          >
+            {"MEEEEEEH"}
+          </Button>
+          {/*  */}
           {isSubmitted ? (
             <Container maxW={"7xl"} columns={{ base: 1, md: 2 }} spacing={{ base: 10, lg: 32 }} py={{ base: 6 }}>
               <Alert status="success" mt="2">
@@ -564,6 +584,84 @@ export default function CampaignSingle({
                     {upVotes - downVotes}
                   </Text>
                 </Flex>
+                <div>
+                  <TwitterShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " +
+                      name +
+                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                      description +
+                      "\n\n#CryptAid #" +
+                      name
+                    }
+                    // className="Demo__some-network__share-button"
+                  >
+                    <TwitterIcon size={32} round />
+                  </TwitterShareButton>
+                </div>
+                <div>
+                  <EmailShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    subject={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    body={description}
+                    className="Demo__some-network__share-button"
+                  >
+                    <EmailIcon size={32} round />
+                  </EmailShareButton>
+                </div>
+                <div>
+                  <RedditShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    windowWidth={660}
+                    windowHeight={460}
+                    className="Demo__some-network__share-button"
+                  >
+                    <RedditIcon size={32} round />
+                  </RedditShareButton>
+                </div>
+                <div>
+                  {/* <FacebookShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    title={
+                      "Kindly visit the " +
+                      name +
+                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                      description +
+                      "\n\n#CryptAid #" +
+                      name
+                    }
+                  >
+                    <FacebookIcon size={38} round />
+                  </FacebookShareButton> */}
+                </div>
+                <div>
+                  {/* <FacebookMessengerShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    appId="521270401588372"
+                    className="Demo__some-network__share-button"
+                  >
+                    <FacebookMessengerIcon size={32} round />
+                  </FacebookMessengerShareButton> */}
+                </div>
+                {/* <div>
+                  <LinkedinShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    className="Demo__some-network__share-button"
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    description={description}
+                    source={"https://www.cryptaid.com/"}
+                  >
+                    <LinkedinIcon size={32} round />
+                  </LinkedinShareButton>
+                </div> */}
               </Flex>
             </Flex>
           </Flex>

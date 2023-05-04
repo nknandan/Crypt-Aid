@@ -38,6 +38,10 @@ import { connectToDatabase } from "../lib/mongodb";
 import { connectMongo } from "../utils/connectMongo";
 
 var cName2Id = {};
+var userEmail = "";
+var tempMod = [];
+var tempMem = [];
+var tempUser = {};
 
 export async function getServerSideProps(context) {
   const { db } = await connectToDatabase();
@@ -46,6 +50,7 @@ export async function getServerSideProps(context) {
 
   // ! FETCHING FROM DATABASE...
   const dbCampaigns = await db.collection("campaigns").find().toArray();
+  const dbCommunities = await db.collection("communities").find().toArray();
   const dbUsers = await db.collection("users").find().toArray();
 
   return {
@@ -53,6 +58,7 @@ export async function getServerSideProps(context) {
       campaigns,
       users: JSON.parse(JSON.stringify(dbUsers)),
       dbCamp: JSON.parse(JSON.stringify(dbCampaigns)),
+      dbComm: JSON.parse(JSON.stringify(dbCommunities)),
     },
   };
 }
@@ -304,8 +310,154 @@ function CommunityCardNew({ name, description, creatorId, imageURL, id, balance,
   );
 }
 
-export default function Home({ campaigns, users, dbCamp }) {
+function CommunityCard({ name, description, imageURL, creator, moderators, members, commCamps, commPosts, dbUsers }) {
+  console.log(imageURL);
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [joined, setJoined] = useState(1);
+  const [memberNo, setMemberNo] = useState();
+  const [modNo, setModNo] = useState();
+  const [postCount, setPostCount] = useState();
+
+  useEffect(() => {
+    console.log("HERRREE");
+    console.log(name, description, imageURL, creator, moderators, members, commCamps, commPosts, dbUsers);
+    if (members == undefined) setMemberNo(0);
+    else setMemberNo(members.length);
+    setModNo(moderators.length);
+    const fetchData = async () => {};
+    fetchData();
+    userEmail = localStorage.getItem("email");
+    var tempName = name;
+    setPostCount(commPosts.length);
+    // console.log(users);
+    for (let i = 0; i < dbUsers.length; i++) {
+      if (dbUsers[i].email == userEmail) {
+        tempUser = dbUsers[i];
+      }
+    }
+    tempMod = moderators || [];
+    tempMem = members || [];
+    if (tempMem.includes(userEmail) || tempMod.includes(userEmail)) setJoined(1);
+    else setJoined(0);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <NextLink href={`/community/${encodeURIComponent(name)}`}>
+      <Box
+        minH={"250px"}
+        w={"400px"}
+        position="relative"
+        cursor="pointer"
+        bgColor={"#ffffff"}
+        borderRadius={"20"}
+        transition={"transform 0.3s ease"}
+        boxShadow="sm"
+        _hover={{
+          transform: "translateY(-8px)",
+        }}
+        overflow={"hidden"}
+        zIndex={95}
+        display={"flex"}
+        flexDir={"column"}
+        justifyContent={"space-between"}
+        paddingBottom={"5%"}
+      >
+        <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
+          <Box h={"100px"} w={"100%"} position="relative">
+            <Img
+              src={imageURL}
+              alt={`Picture of ${name}`}
+              objectFit="cover"
+              w="full"
+              h="full"
+              display="block"
+              opacity={"0.5"}
+              position={"absolute"}
+            />
+          </Box>
+        </Box>
+        <Text
+          maxW={"260px"}
+          noOfLines={1}
+          color={"white"}
+          fontSize={"24px"}
+          opacity={"1"}
+          zIndex={99}
+          position="absolute"
+          top={"65px"}
+          left={"20px"}
+          fontWeight={800}
+        >
+          {name}
+        </Text>
+        <Box bgColor={"white"} paddingLeft={"20px"} paddingRight={"20px"} minH={"30%"}>
+          <Text noOfLines={3}>{description}</Text>
+        </Box>
+        <Flex
+          flexDir={"row"}
+          paddingLeft={"20px"}
+          paddingRight={"20px"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Text fontWeight={600} color={"#2C2C7B"}>
+            {postCount} posts
+          </Text>
+          <Text fontWeight={600} color={"#2C2C7B"}>
+            {memberNo + modNo} members
+          </Text>
+          {joined ? (
+            <Button
+              disabled={true}
+              w={"25%"}
+              borderRadius={50}
+              bgColor={"#609966"}
+              color={"white"}
+              zIndex={99}
+              _hover={{
+                bgGradient: "linear(to-l, #609966, #9DC08B)",
+                boxShadow: "xl",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setJoined(!joined);
+              }}
+            >
+              Joined
+            </Button>
+          ) : (
+            <Button
+              disabled={true}
+              w={"25%"}
+              borderRadius={50}
+              bgColor={"#1CB5E0"}
+              color={"white"}
+              zIndex={99}
+              _hover={{
+                bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+                boxShadow: "xl",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setJoined(!joined);
+              }}
+            >
+              Join
+            </Button>
+          )}
+        </Flex>
+      </Box>
+    </NextLink>
+  );
+}
+
+export default function Home({ campaigns, users, dbCamp, dbComm }) {
   const [campaignList, setCampaignList] = useState([]);
+  const [communityList, setCommunityList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [campaignListNumber, setCampaignListNumber] = useState(0);
 
@@ -317,6 +469,7 @@ export default function Home({ campaigns, users, dbCamp }) {
       const ETHPrice = await getETHPrice();
       updateEthPrice(ETHPrice);
       setCampaignList(summary);
+      setCommunityList(dbComm);
       setCampaignListNumber(3);
       let i = 0;
       for (let ele of campaigns) {
@@ -585,30 +738,26 @@ export default function Home({ campaigns, users, dbCamp }) {
           </HStack>
           <Divider marginTop="4" />
           <Flex flexWrap={"nowrap"} overflowX={"auto"} py={"40px"}>
-            {campaignList
-              .slice(campaignList.length - campaignListNumber)
+            {communityList
+              .slice(communityList.length - 3 ? communityList.length - 2 : 0)
               .reverse()
               .map((el, i) => {
-                for (var j = 0; j < dbCamp.length; j++) {
-                  if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
-                    return (
-                      <div key={i}>
-                        <CommunityCardNew
-                          name={el[5]}
-                          description={el[6]}
-                          creatorId={el[4]}
-                          imageURL={el[7]}
-                          id={cName2Id[el[5]]}
-                          target={el[8]}
-                          balance={el[1]}
-                          ethPrice={ethPrice}
-                          users={users}
-                          dbCamp={dbCamp}
-                        />
-                      </div>
-                    );
-                  }
-                }
+                return (
+                  <div key={i}>
+                    <CommunityCard
+                      name={el.name}
+                      description={el.description}
+                      imageURL={el.imageUrl}
+                      creator={el.creator}
+                      moderators={el.moderators}
+                      members={el.members}
+                      commCamps={el.campaigns}
+                      commPosts={el.posts}
+                      key={i}
+                      dbUsers={users}
+                    />
+                  </div>
+                );
               })}
           </Flex>
         </Container>
