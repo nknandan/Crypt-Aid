@@ -195,9 +195,9 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                     <RedditIcon size={32} round />
                   </RedditShareButton>
                 </div>
-                <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
+                {/* <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
-                </Box>{" "}
+                </Box>{" "} */}
                 <Box color={"gray.600"} fontSize={"14px"}>
                   6 hours ago by {username} ✅
                 </Box>

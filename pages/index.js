@@ -165,14 +165,14 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
-                <Box
+                {/* <Box
                   fontWeight={"600"}
                   fontSize={"14px"}
                   marginRight={"10px"}
                   color={useColorModeValue("gray.600", "gray.400")}
                 >
                   c/CommunityName
-                </Box>{" "}
+                </Box>{" "} */}
                 <Box color={useColorModeValue("gray.600", "gray.400")} fontSize={"14px"}>
                   7 hours ago by {username} ✅
                 </Box>
@@ -363,6 +363,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
         flexDir={"column"}
         justifyContent={"space-between"}
         paddingBottom={"5%"}
+        mr={"40px"}
       >
         <Box h={"100px"} w={"100%"} bgColor={"black"} overflow={"hidden"} position="relative">
           <Box h={"100px"} w={"100%"} position="relative">
