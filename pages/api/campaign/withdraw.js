@@ -1,7 +1,6 @@
 import Campaign from "../../../models/campaignModel";
 import { connectMongo } from "../../../utils/connectMongo";
 import { connectToDatabase } from "../../../lib/mongodb";
-import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../../lib/getETHPrice";
 
 export default async function addCampaign(req, res) {
   // GET
@@ -23,8 +22,9 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      console.log(temp);
-      const u = await db.collection("campaigns").insertOne(temp);
+      const nm = temp.thisCamp.name;
+      const am = temp.thisCamp.withdrawnAmount;
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { withdrawnAmount: am } });
       console.log(u);
       res.json({ u });
     } catch (error) {
@@ -35,16 +35,9 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      //   console.log(temp);
-      const mail = temp.tempObj.donatorEmail;
-      const donations = temp.tempObj.donations;
-      const ra = temp.tempObj.raisedAmount;
-      console.log(mail);
-      const nm = temp.tempObj.name;
-      const u = await db
-        .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { donatorEmail: mail, donations: donations, raisedAmount: ra,} });
-      console.log(u);
+      const c = temp.thisCamp.comments;
+      const nm = temp.thisCamp.name;
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { comments: c } });
       res.json({ u });
     } catch (error) {
       console.log(error);

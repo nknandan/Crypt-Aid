@@ -410,6 +410,19 @@ export default function CampaignSingle({
       var tempName = tempUser.firstname + " " + tempUser.lastname;
       setCreatorName(manager);
       if (tempObj["donatorEmail"].includes(u) == false) tempObj["donatorEmail"].push(u);
+
+      var tObj = {
+        email: u,
+        donatedAmount: data["value"],
+        account: accounts[0]
+      }
+
+      if(tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
+      else tempObj["donations"].push(tObj);
+
+      if(tempObj.raisedAmount == undefined) tempObj.raisedAmount = data["value"];
+      else tempObj.raisedAmount = tempObj.raisedAmount + data["value"];
+
       try {
         fetch("/api/campaign/update", {
           method: "PUT",

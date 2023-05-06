@@ -89,6 +89,9 @@ export default function NewCampaign() {
           upVoters: [],
           downVoters: [],
           comments: [],
+          donations: [],
+          raisedAmount: 0.0,
+          withdrawnAmount: 0.0,
         }),
       });
 

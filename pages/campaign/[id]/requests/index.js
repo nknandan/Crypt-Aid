@@ -5,7 +5,9 @@ import Head from "next/head";
 import NextLink from "next/link";
 import NextImage from "next/image";
 import { useRouter } from "next/router";
-import { getETHPrice, getWEIPriceInUSD } from "../../../../lib/getETHPrice";
+import { connectMongo } from "../../../../utils/connectMongo";
+import { connectToDatabase } from "../../../../lib/mongodb";
+import { getETHPrice, getWEIPriceInUSD, getETHPriceInUSD } from "../../../../lib/getETHPrice";
 import {
   Heading,
   useBreakpointValue,
@@ -39,12 +41,18 @@ import Campaign from "../../../../smart-contract/campaign";
 import factory from "../../../../smart-contract/factory";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
+var thisCamp = {};
+
 export async function getServerSideProps({ params }) {
   const campaignId = params.id;
   const campaign = Campaign(campaignId);
   const requestCount = await campaign.methods.getRequestsCount().call();
   const approversCount = await campaign.methods.approversCount().call();
   const summary = await campaign.methods.getSummary().call();
+  const { db } = await connectToDatabase();
+  await connectMongo();
+  const dbCamp = await db.collection("campaigns").find().toArray();
+  console.log(dbCamp);
   const ETHPrice = await getETHPrice();
   withPageAuthRequired();
 
@@ -56,11 +64,12 @@ export async function getServerSideProps({ params }) {
       balance: summary[1],
       name: summary[5],
       ETHPrice,
+      dbCamp: JSON.parse(JSON.stringify(dbCamp)),
     },
   };
 }
 
-const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPrice }) => {
+const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPrice, name, dbCamp }) => {
   const router = useRouter();
   const readyToFinalize = request.approvalCount > approversCount / 2;
   const [errorMessageApprove, setErrorMessageApprove] = useState();
@@ -70,8 +79,20 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
 
   const [userAccount, setUserAccount] = useState("");
   const [creatorAccount, setCreatorAccount] = useState("");
+
+  const [amountInUSD, setAmountInUSD] = useState();
   useAsync(async () => {
     try {
+      var userEmail = localStorage.getItem("email");
+      for (let i = 0; i < dbCamp.length; i++) {
+        const campObj = dbCamp[i];
+        if (campObj.name === name) {
+          thisCamp = campObj;
+          // setCommentList(thisCamp.comments);
+        }
+      }
+      console.log(thisCamp);
+      // console.log(dbCamp);
       const userAccountArray = await web3.eth.getAccounts();
       setUserAccount(userAccountArray[0]);
       const campaign = Campaign(id);
@@ -103,6 +124,26 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
     try {
       const campaign = Campaign(campaignId);
       const accounts = await web3.eth.getAccounts();
+      var tempObj = {
+        name: name,
+        amount: web3.utils.fromWei(request.value, "ether"),
+      };
+      if(thisCamp.withdrawnAmount == undefined) thisCamp.withdrawnAmount = parseFloat(web3.utils.fromWei(request.value, "ether"));
+      else thisCamp.withdrawnAmount = thisCamp.withdrawnAmount + parseFloat(web3.utils.fromWei(request.value, "ether"));
+
+      console.log(thisCamp);
+      try {
+        fetch("/api/campaign/withdraw", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ thisCamp }),
+        });
+      } catch (err) {
+        setError(err.message);
+        console.log(err);
+      }
       await campaign.methods.finalizeRequest(id).send({
         from: accounts[0],
       });
@@ -172,7 +213,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
                   color: "white",
                 }}
                 onClick={onApprove}
-                isDisabled={disabled || request.approvalCount == approversCount || userAccount == request.recipient}
+                isDisabled={disabled || request.approvalCount == approversCount}
                 isLoading={loadingApprove}
               >
                 Approve
@@ -241,7 +282,7 @@ const RequestRow = ({ id, request, approversCount, campaignId, disabled, ETHPric
   );
 };
 
-export default function Requests({ campaignId, requestCount, approversCount, balance, name, ETHPrice }) {
+export default function Requests({ campaignId, requestCount, approversCount, balance, name, ETHPrice, dbCamp }) {
   const [requestsList, setRequestsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [FundNotAvailable, setFundNotAvailable] = useState(false);
@@ -373,6 +414,8 @@ export default function Requests({ campaignId, requestCount, approversCount, bal
                         campaignId={campaignId}
                         disabled={FundNotAvailable}
                         ETHPrice={ETHPrice}
+                        name={name}
+                        dbCamp={dbCamp}
                       />
                     );
                   })}
