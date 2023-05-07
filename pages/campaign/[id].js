@@ -420,8 +420,8 @@ export default function CampaignSingle({
       if(tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
       else tempObj["donations"].push(tObj);
 
-      if(tempObj.raisedAmount == undefined) tempObj.raisedAmount = data["value"];
-      else tempObj.raisedAmount = tempObj.raisedAmount + data["value"];
+      if(tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
+      else tempObj.raisedAmount = tempObj.raisedAmount + parseFloat(data["value"]);
 
       try {
         fetch("/api/campaign/update", {
