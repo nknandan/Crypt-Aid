@@ -170,7 +170,7 @@ function Feed({ posts, campaignList }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [campaignList]);
 
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   async function deletePost(name) {
     forceUpdate();
@@ -442,7 +442,6 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   const [posts, setPosts] = useState([]);
   const [postCount, setPostCount] = useState();
   const [campPosts, setCampPosts] = useState([]);
-
 
   const handleTabChange = (index) => {
     setSelectedTab(index);
