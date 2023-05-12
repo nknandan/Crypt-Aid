@@ -442,6 +442,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   const [posts, setPosts] = useState([]);
   const [postCount, setPostCount] = useState();
   const [campPosts, setCampPosts] = useState([]);
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleTabChange = (index) => {
     setSelectedTab(index);
@@ -533,6 +534,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
   async function joinComm() {
     if (tempComm["members"] == undefined) tempComm["members"] = [userEmail];
     else tempComm.members.push(userEmail);
+    setMemberNo(tempComm.members.length);
     // console.log(tempComm);
     setJoined(1);
     try {
@@ -561,6 +563,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
       setError(err.message);
       console.log(err);
     }
+    forceUpdate();
   }
 
   async function leaveComm() {
@@ -568,6 +571,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
     var ind = tempComm.members.indexOf(userEmail);
     if (ind > -1) tempComm.members.splice(ind, 1);
     setJoined(0);
+    setMemberNo(tempComm.members.length);
     try {
       fetch("/api/communities/addMem", {
         method: "POST",
@@ -594,6 +598,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
       setError(err.message);
       console.log(err);
     }
+    forceUpdate();
   }
 
   async function addPost() {
@@ -620,10 +625,12 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
       setCreatePostMode(false);
       setNewPostTitle("");
       setNewPostDescription("");
+      setPostCount(tempComm.posts.length);
     } catch (err) {
       setError(err.message);
       console.log(err);
     }
+    forceUpdate();
   }
 
   async function addShareCampaign() {
@@ -651,10 +658,12 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
       setCreatePostMode(false);
       setNewCampTitle("");
       setNewCampURL("");
+      setPostCount(tempComm.posts.length);
     } catch (err) {
       setError(err.message);
       console.log(err);
     }
+    forceUpdate();
   }
 
   return (
