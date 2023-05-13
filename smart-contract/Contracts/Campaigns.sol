@@ -1,15 +1,14 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.4.17;
 
 contract CampaignFactory {
     address[] public deployedCampaigns;
 
-    function createCampaign(uint minimum,string memory name,string memory description,string memory image,uint target) public {
-        address newCampaign = address(new Campaign(minimum, msg.sender,name,description,image,target));
+    function createCampaign(uint minimum,string name,string description,string image,uint target) public {
+        address newCampaign = new Campaign(minimum, msg.sender,name,description,image,target);
         deployedCampaigns.push(newCampaign);
     }
 
-    function getDeployedCampaigns() public view returns (address[] memory) {
+    function getDeployedCampaigns() public view returns (address[]) {
         return deployedCampaigns;
     }
 }
@@ -19,7 +18,7 @@ contract Campaign {
   struct Request {
       string description;
       uint value;
-      address payable recipient;
+      address recipient;
       bool complete;
       uint approvalCount;
       mapping(address => bool) approvals;
@@ -42,8 +41,7 @@ contract Campaign {
       _;
   }
 
-    constructor(uint minimun, address creator,string memory name,string memory description,string memory image,uint target)  {
-            //  public
+  function Campaign(uint minimun, address creator,string name,string description,string image,uint target) public {
       manager = creator;
       minimunContribution = minimun;
       CampaignName=name;
@@ -54,23 +52,28 @@ contract Campaign {
 
   function contibute() public payable {
       require(msg.value > minimunContribution );
+
       contributers.push(msg.sender);
       approvers[msg.sender] = true;
       approversCount++;
   }
 
-    function createRequest(string memory description, uint value, address payable recipient) public restricted {
-        Request storage newRequest = requests.push();
-        newRequest.description = description;
-        newRequest.value = value;
-        newRequest.recipient = recipient;
-        newRequest.complete = false;
-        newRequest.approvalCount = 0;
+  function createRequest(string description, uint value, address recipient) public restricted {
+      Request memory newRequest = Request({
+         description: description,
+         value: value,
+         recipient: recipient,
+         complete: false,
+         approvalCount: 0
+      });
+
+      requests.push(newRequest);
   }
 
   function approveRequest(uint index) public {
       require(approvers[msg.sender]);
       require(!requests[index].approvals[msg.sender]);
+
       requests[index].approvals[msg.sender] = true;
       requests[index].approvalCount++;
   }
@@ -78,15 +81,24 @@ contract Campaign {
   function finalizeRequest(uint index) public restricted{
       require(requests[index].approvalCount > (approversCount / 2));
       require(!requests[index].complete);
+
       requests[index].recipient.transfer(requests[index].value);
       requests[index].complete = true;
 
   }
 
-    function getSummary() public view returns (uint,uint,uint,uint,address,string memory,string memory,string memory,uint) {
+  
+    function revertt(address[] memory adds, uint[] memory amts, uint leftOver) public {
+    for (uint256 i = 0; i < adds.length; i++) {
+            adds[i].transfer(amts[i]* 1e18 * leftOver/100 );
+        }
+  }
+
+
+    function getSummary() public view returns (uint,uint,uint,uint,address,string,string,string,uint) {
         return(
             minimunContribution,
-            address(this).balance,
+            this.balance,
             requests.length,
             approversCount,
             manager,

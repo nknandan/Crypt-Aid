@@ -545,6 +545,7 @@ export default function Home({ campaigns, users, dbCamp, dbComm }) {
               Create Campaign
             </Button>
           </NextLink>
+          {/* <Button onClick={()=>{console.log(await )}}>DEBUGG</Button> */}
           <Img position={"absolute"} right={40} top={53} src={"/landing1.png"} roundedTop="lg" objectFit="cover" />
         </Container>
         <Container py={{ base: "4", md: "12" }} maxW={"7xl"}>

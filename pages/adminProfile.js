@@ -203,86 +203,123 @@ function SettingsPage({ setSettingsScreen, users }) {
   );
 }
 
-function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice }) {
-  return (
-    <NextLink href={`/campaign/${id}`}>
-      <Box
-        h={"20vh"}
-        w={"100%"}
-        display={"flex"}
-        flexDirection={"row"}
-        position="relative"
-        cursor="pointer"
-        bgColor={"#ffffff"}
-        borderRadius={"20"}
-        transition={"transform 0.3s ease"}
-        boxShadow="sm"
-        _hover={{
-          transform: "translateY(-8px)",
-        }}
-      >
-        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
-          <Img
-            src={imageURL}
-            alt={`Picture of ${name}`}
-            objectFit="cover"
-            w="full"
-            h="full"
-            display="block"
-            borderRadius={"20"}
-            borderRightRadius={"0"}
-          />
-        </Box>
-        <Box
-          h={"100%"}
-          w={"75%"}
-          borderRadius={"20"}
-          borderLeftRadius={"0"}
-          padding={"1rem"}
-          px={"2rem"}
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"space-between"}
-          pb={"1.5rem"}
-        >
-          <Box>
-            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
+function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
+  const onRevert = async () => {
+    var thisCamp;
+    var address2Amount = {};
+    var addresses = [];
+    var amounts = [];
+    var leftOver = 0;
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
-              {name}
-            </Box>
-            <Box maxW={"60%"}>
-              <Text noOfLines={3}>{description}</Text>
-            </Box>
+    for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
+    for (const donor of thisCamp.donations) {
+      address2Amount[donor.account] = Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100);
+      addresses.push(donor.account);
+      amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
+    }
+    leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
+    try {
+      const campaign = Campaign(id);
+      const accounts = await web3.eth.getAccounts();
+      console.log(addresses);
+      console.log(amounts);
+      console.log(leftOver);
+      console.log(campaign.methods);
+      await campaign.methods.revertt(addresses, amounts, leftOver).send({
+        from: accounts[0],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div>
+      <NextLink href={`/campaign/${id}`}>
+        <Box
+          h={"20vh"}
+          w={"100%"}
+          display={"flex"}
+          flexDirection={"row"}
+          position="relative"
+          cursor="pointer"
+          bgColor={"#ffffff"}
+          borderRadius={"20"}
+          transition={"transform 0.3s ease"}
+          boxShadow="sm"
+          _hover={{
+            transform: "translateY(-8px)",
+          }}
+        >
+          <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+            <Img
+              src={imageURL}
+              alt={`Picture of ${name}`}
+              objectFit="cover"
+              w="full"
+              h="full"
+              display="block"
+              borderRadius={"20"}
+              borderRightRadius={"0"}
+            />
           </Box>
-          <Box>
-            <Flex direction={"row"} justifyContent={"space-between"}>
-              <Box maxW={{ base: "	15rem", sm: "sm" }}>
-                <Text as="span">{balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}</Text>
-                <Text as="span" pr={2}>
-                  {" "}
-                  ETH
-                </Text>
-                <Text
-                  as="span"
-                  fontSize="lg"
-                  display={balance > 0 ? "inline" : "none"}
-                  fontWeight={"normal"}
-                  color={useColorModeValue("gray.500", "gray.200")}
-                >
-                  (${getWEIPriceInUSD(ethPrice, balance)})
-                </Text>
+          <Box
+            h={"100%"}
+            w={"75%"}
+            borderRadius={"20"}
+            borderLeftRadius={"0"}
+            padding={"1rem"}
+            px={"2rem"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"space-between"}
+            pb={"1.5rem"}
+          >
+            <Box>
+              <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
+
+              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+                {name}
               </Box>
-              <Text fontSize={"md"} fontWeight="normal">
-                Target : {web3.utils.fromWei(target, "ether")} ETH ($
-                {getWEIPriceInUSD(ethPrice, target)})
-              </Text>
-            </Flex>
-            <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
+              <Box maxW={"60%"}>
+                <Text noOfLines={3}>{description}</Text>
+              </Box>
+            </Box>
+            <Box>
+              <Flex direction={"row"} justifyContent={"space-between"}>
+                <Box maxW={{ base: "	15rem", sm: "sm" }}>
+                  <Text as="span">
+                    {balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}
+                  </Text>
+                  <Text as="span" pr={2}>
+                    {" "}
+                    ETH
+                  </Text>
+                  <Text
+                    as="span"
+                    fontSize="lg"
+                    display={balance > 0 ? "inline" : "none"}
+                    fontWeight={"normal"}
+                    color={useColorModeValue("gray.500", "gray.200")}
+                  >
+                    (${getWEIPriceInUSD(ethPrice, balance)})
+                  </Text>
+                </Box>
+                <Text fontSize={"md"} fontWeight="normal">
+                  Target : {web3.utils.fromWei(target, "ether")} ETH ($
+                  {getWEIPriceInUSD(ethPrice, target)})
+                </Text>
+              </Flex>
+              <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </NextLink>
+      </NextLink>
+      {/* !!! REVERT BUTTON */}
+      <Button bgColor={"green.200"} fontSize={12} p={3} h={2} onClick={onRevert} component="a">
+        Revert
+      </Button>
+    </div>
   );
 }
 
@@ -465,7 +502,7 @@ function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, cam
 }
 
 // This function shows the Approved Campaigns
-function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice }) {
+function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex>
@@ -498,6 +535,7 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
                       target={el[8]}
                       balance={el[1]}
                       ethPrice={ethPrice}
+                      dbCamp={dbCamp}
                     />
                   </div>
                 );
@@ -794,6 +832,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         campaignList1={dbCamp}
                         campaigns={campaigns}
                         ethPrice={ethPrice}
+                        dbCamp={dbCamp}
                       />
                     ) : (
                       <PendingCampaigns
