@@ -171,21 +171,12 @@ function CommentInbox({}) {
   const commentInputRef = useRef(null);
 
   useEffect(() => {
-    var arr1 = [];
-    // thisCamp.comments?.forEach((element) => {
-    //   arr1.unshift(element);
-    // });
     setCommentList(thisCamp.comments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function submitComment() {
     thisCamp.comments.push(comment);
-    // var arr1 = [];
-    // thisCamp.comments?.forEach((element) => {
-    //   arr1.unshift(element);
-    // });
-    // setCommentList(arr1);
     setCommentList(thisCamp.comments);
     setComment({ creator: userEmail, description: "" });
     commentInputRef.current.value = "";
@@ -202,7 +193,6 @@ function CommentInbox({}) {
       setError(err.message);
       console.log(err);
     }
-    // Router.reload(window.location.pathname);
   }
 
   function reverseArr(input) {
@@ -221,9 +211,6 @@ function CommentInbox({}) {
         ? commentListNumber + 4
         : commentList.length
     );
-    // console.log("showing" + commentListNumber);
-    // console.log("total" + commentList.length);
-    // console.log(commentList);
   }
 
   return (
@@ -369,7 +356,6 @@ export default function CampaignSingle({
   const [downVotes, setDownVotes] = useState(0);
   const [requestsList, setRequestsList] = useState([]);
   const [pendingCount, setPendingCount] = useState();
-  // const [commentList, setCommentList] = useState([]);
 
   const campaign = Campaign(id);
 
@@ -396,13 +382,13 @@ export default function CampaignSingle({
     for (var i = 0; i < requestsList.length; i++) {
       if (requestsList[i].complete == false) count++;
     }
-    console.log(count);
     setPendingCount(count);
     if (localStorage.getItem("email") == null) {
       setIsAuthenticated(false);
     } else {
       setIsAuthenticated(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -411,7 +397,6 @@ export default function CampaignSingle({
       const campObj = dbCamp[i];
       if (campObj.name === name) {
         thisCamp = campObj;
-        // setCommentList(thisCamp.comments);
       }
     }
     setUpVotes(thisCamp.upVoters?.length);
@@ -520,18 +505,13 @@ export default function CampaignSingle({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    // console.log(tempObj["upVoters"].includes(u));
     if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"].push(u);
     else {
-      // console.log("1");
       if (tempObj["downVoters"].includes(u) == true) {
-        // console.log(tempObj["downVoters"]);
         var i = tempObj["downVoters"].indexOf(u);
         tempObj["downVoters"].splice(i, 1);
-        // console.log(tempObj["downVoters"]);
         if (tempObj["upVoters"].includes(u) == false) tempObj["upVoters"].push(u);
       } else if (tempObj["upVoters"].includes(u) == true) {
-        // console.log("continue");
       } else tempObj["upVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
@@ -559,13 +539,10 @@ export default function CampaignSingle({
     if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"].push(u);
     else {
       if (tempObj["upVoters"].includes(u) == true) {
-        // console.log(tempObj["upVoters"]);
         var i = tempObj["upVoters"].indexOf(u);
         tempObj["upVoters"].splice(i, 1);
-        // console.log(tempObj["upVoters"]);
         if (tempObj["downVoters"].includes(u) == false) tempObj["downVoters"].push(u);
       } else if (tempObj["downVoters"].includes(u) == true) {
-        // console.log("continue");
       } else tempObj["downVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
@@ -606,7 +583,7 @@ export default function CampaignSingle({
               console.log(thisCamp);
             }}
           >
-            {"MEEEEEEH"}
+            DEBUG
           </Button> */}
           {/*  */}
           {isSubmitted ? (
@@ -674,7 +651,6 @@ export default function CampaignSingle({
                       "\n\n#CryptAid #" +
                       name
                     }
-                    // className="Demo__some-network__share-button"
                   >
                     <TwitterIcon size={32} round />
                   </TwitterShareButton>
@@ -704,43 +680,6 @@ export default function CampaignSingle({
                     <RedditIcon size={32} round />
                   </RedditShareButton>
                 </div>
-                <div>
-                  {/* <FacebookShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    title={
-                      "Kindly visit the " +
-                      name +
-                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
-                      description +
-                      "\n\n#CryptAid #" +
-                      name
-                    }
-                  >
-                    <FacebookIcon size={38} round />
-                  </FacebookShareButton> */}
-                </div>
-                <div>
-                  {/* <FacebookMessengerShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    appId="521270401588372"
-                    className="Demo__some-network__share-button"
-                  >
-                    <FacebookMessengerIcon size={32} round />
-                  </FacebookMessengerShareButton> */}
-                </div>
-                {/* <div>
-                  <LinkedinShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    className="Demo__some-network__share-button"
-                    title={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    description={description}
-                    source={"https://www.cryptaid.com/"}
-                  >
-                    <LinkedinIcon size={32} round />
-                  </LinkedinShareButton>
-                </div> */}
               </Flex>
             </Flex>
           </Flex>
