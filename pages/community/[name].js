@@ -95,73 +95,73 @@ export async function getServerSideProps({}) {
   };
 }
 
-function CommentInbox() {
-  const [comments, setComments] = useState([]);
+// function CommentInbox() {
+//   const [comments, setComments] = useState([]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newComment = event.target.comment.value;
-    setComments([...comments, newComment]);
-    event.target.comment.value = "";
-  };
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     const newComment = event.target.comment.value;
+//     setComments([...comments, newComment]);
+//     event.target.comment.value = "";
+//   };
 
-  return (
-    <Box w={"100%"} justifyContent={"space-between"}>
-      <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"} mt={4}>
-        <Box w={"80%"}>
-          <form>
-            <FormControl id="value">
-              <InputGroup w={"100%"}>
-                <Input type="string" borderColor={"gray.300"} placeholder={"Enter your post here"} />
-              </InputGroup>
-            </FormControl>
-          </form>
-        </Box>
-        <Button
-          w={"15%"}
-          bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
-          color={"white"}
-          _hover={{
-            bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
-            boxShadow: "xl",
-          }}
-          onClick={() => {}}
-          borderRadius={20}
-        >
-          Post
-        </Button>
-      </Flex>
-    </Box>
-  );
-}
+//   return (
+//     <Box w={"100%"} justifyContent={"space-between"}>
+//       <Flex flexDir={"row"} w={"100%"} justifyContent={"space-between"} mb={"2%"} mt={4}>
+//         <Box w={"80%"}>
+//           <form>
+//             <FormControl id="value">
+//               <InputGroup w={"100%"}>
+//                 <Input type="string" borderColor={"gray.300"} placeholder={"Enter your post here"} />
+//               </InputGroup>
+//             </FormControl>
+//           </form>
+//         </Box>
+//         <Button
+//           w={"15%"}
+//           bgGradient="linear(to-l, #2C2C7B, #1CB5E0)"
+//           color={"white"}
+//           _hover={{
+//             bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
+//             boxShadow: "xl",
+//           }}
+//           onClick={() => {}}
+//           borderRadius={20}
+//         >
+//           Post
+//         </Button>
+//       </Flex>
+//     </Box>
+//   );
+// }
 
-function UpvoteIcon() {
-  const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
+// function UpvoteIcon() {
+//   const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
 
-  const handleClick = () => {
-    setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
-  };
+//   const handleClick = () => {
+//     setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
+//   };
 
-  return (
-    <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
-      <ChevronUpIcon boxSize={8} />
-    </Button>
-  );
-}
+//   return (
+//     <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
+//       <ChevronUpIcon boxSize={8} />
+//     </Button>
+//   );
+// }
 
-function DownvoteIcon() {
-  const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
+// function DownvoteIcon() {
+//   const [iconColor, setIconColor] = useState("blue"); // initial color of the icon
 
-  const handleClick = () => {
-    setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
-  };
+//   const handleClick = () => {
+//     setIconColor(iconColor === "blue" ? "orange" : "blue"); // toggle the color of the icon
+//   };
 
-  return (
-    <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
-      <ChevronDownIcon boxSize={8} />
-    </Button>
-  );
-}
+//   return (
+//     <Button w={"2%"} h={"10%"} variant="ghost" colorScheme={iconColor} onClick={handleClick}>
+//       <ChevronDownIcon boxSize={8} />
+//     </Button>
+//   );
+// }
 
 function Feed({ posts, campaignList }) {
   useEffect(() => {
@@ -222,7 +222,7 @@ function Feed({ posts, campaignList }) {
                 }}
                 overflowY={"auto"}
               >
-                <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
+                {/* <Center bgColor={"gray.100"} w={"6%"} minH={"100%"} alignContent={"center"} flexDir={"column"}>
                   <Button w={"2%"} h={"20%"} variant="ghost" colorScheme="blue">
                     <ChevronUpIcon boxSize={8} />
                   </Button>
@@ -233,7 +233,7 @@ function Feed({ posts, campaignList }) {
                   <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => {}} colorScheme="blue">
                     <ChevronDownIcon boxSize={8} />
                   </Button>
-                </Center>
+                </Center> */}
                 <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
                   <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
                     <Text mr={"5px"} color={"gray.600"} fontSize={14}>
@@ -257,7 +257,7 @@ function Feed({ posts, campaignList }) {
                   </Flex>
 
                   <Flex minH={"4vh"} alignItems={"center"} w={"100%"} px={4}>
-                    <Button variant={"link"} colorScheme="blue">
+                    {/* <Button variant={"link"} colorScheme="blue">
                       <ChatIcon color={"gray.600"} />
                       <Text ml={2} color={"gray.600"}>
                         9 Comments
@@ -268,7 +268,7 @@ function Feed({ posts, campaignList }) {
                       <Text color={"gray.600"} ml={2}>
                         Share
                       </Text>
-                    </Button>
+                    </Button> */}
                     {userEmail == tempComm.moderators ? (
                       <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
                         <LinkIcon color={"gray.600"} />
@@ -297,7 +297,7 @@ function Feed({ posts, campaignList }) {
                 }}
                 overflowY={"auto"}
               >
-                <Center
+                {/* <Center
                   pt={"10px"}
                   bgColor={"gray.100"}
                   w={"6%"}
@@ -307,12 +307,13 @@ function Feed({ posts, campaignList }) {
                   justifyContent={"start"}
                 >
                   <UpvoteIcon />
-                  <Text fontSize={22} fontWeight={"600"} color={"blue.600"}>
+                 <Text fontSize={22} fontWeight={"600"} color={"blue.600"}>
                     {" "}
                     17{" "}
-                  </Text>
-                  <DownvoteIcon />
-                </Center>
+                  </Text> 
+                 <DownvoteIcon /> 
+                </Center>  */}
+
                 <Flex flexDir={"column"} w={"100%"} overflowX={"hidden"} justifyContent={"space-between"}>
                   <Flex pt={2} alignItems={"center"} w={"100%"} px={4}>
                     <Text mr={"5px"} color={"gray.600"} fontSize={14}>

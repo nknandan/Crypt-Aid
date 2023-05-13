@@ -51,10 +51,12 @@ export default function NewRequest() {
       const result = await getETHPrice();
       const userAccountArray = await web3.eth.getAccounts();
       setUserAccount(userAccountArray[0]);
+      console.log(userAccountArray[0]);
       setETHPrice(result);
       const campaign = Campaign(id);
       const summary = await campaign.methods.getSummary().call();
       setCreatorAccount(summary[4]);
+      console.log(summary[4]);
     } catch (error) {
       console.log(error);
     }

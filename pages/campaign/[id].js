@@ -3,7 +3,7 @@ import Head from "next/head";
 import React from "react";
 import Router from "next/router";
 import ReactDOM from "react-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
@@ -167,7 +167,7 @@ function CommentCard({ creator, description }) {
 function CommentInbox({}) {
   const [commentList, setCommentList] = useState([]);
   const [comment, setComment] = useState({ creator: userEmail, description: "" });
-  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const [commentListNumber, setCommentListNumber] = useState(3);
   const commentInputRef = useRef(null);
 
   useEffect(() => {
@@ -193,7 +193,24 @@ function CommentInbox({}) {
       setError(err.message);
       console.log(err);
     }
-    // Router.reload(window.location.pathname);
+  }
+
+  function reverseArr(input) {
+    var ret = new Array();
+    for (var i = input.length - 1; i >= 0; i--) {
+      ret.push(input[i]);
+    }
+    return ret;
+  }
+
+  function handleShowMoreComment() {
+    setCommentListNumber(
+      commentListNumber >= commentList.length
+        ? commentList.length
+        : commentListNumber + 4 <= commentList.length
+        ? commentListNumber + 4
+        : commentList.length
+    );
   }
 
   return (
@@ -259,16 +276,18 @@ function CommentInbox({}) {
           </SimpleGrid>
         ) : (
           <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
-            {commentList.slice(0).map((el, i) => {
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <CommentCard creator={el.creator} description={el.description} key={i} />
-              );
-            })}
+            {reverseArr(commentList)
+              .slice(0, commentListNumber)
+              .map((el, i) => {
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <CommentCard creator={el.creator} description={el.description} key={i} />
+                );
+              })}
           </SimpleGrid>
         )}
         {/* ?? SHOW VIEW MORE DISABLED. */}
-        {/* {showViewMoreComment ? (
+        {commentListNumber < commentList?.length && commentList?.length != 0 ? (
           <Button
             display={{ sm: "inline-flex" }}
             w={"200px"}
@@ -285,7 +304,7 @@ function CommentInbox({}) {
             marginLeft={"50%"}
             marginTop={"1%"}
             transform={"translate(-50%, 0)"}
-            // onClick={handleShowMoreComment}
+            onClick={handleShowMoreComment}
             _hover={{
               bg: "#0065A1",
               color: "#ffffff",
@@ -295,7 +314,7 @@ function CommentInbox({}) {
           </Button>
         ) : (
           <></>
-        )} */}
+        )}
       </Stat>
     </Box>
   );
@@ -327,6 +346,7 @@ export default function CampaignSingle({
   const router = useRouter();
   const { width, height } = useWindowSize();
 
+  const [, forceUpdate] = React.useState(0);
   const [donorName, setDonorName] = useState("");
   const [creatorName, setCreatorName] = useState("");
   const [campName, setCampName] = useState("");
@@ -334,14 +354,41 @@ export default function CampaignSingle({
   const [donAmount, setDonAmount] = useState("");
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
-  // const [commentList, setCommentList] = useState([]);
+  const [requestsList, setRequestsList] = useState([]);
+  const [pendingCount, setPendingCount] = useState();
+
+  const campaign = Campaign(id);
+
+  async function getRequests() {
+    try {
+      const requests = await Promise.all(
+        Array(parseInt(requestsCount))
+          .fill()
+          .map((element, index) => {
+            return campaign.methods.requests(index).call();
+          })
+      );
+      setRequestsList(requests);
+      return requests;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
+    forceUpdate((n) => !n);
+    getRequests();
+    var count = 0;
+    for (var i = 0; i < requestsList.length; i++) {
+      if (requestsList[i].complete == false) count++;
+    }
+    setPendingCount(count);
     if (localStorage.getItem("email") == null) {
       setIsAuthenticated(false);
     } else {
       setIsAuthenticated(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -350,7 +397,6 @@ export default function CampaignSingle({
       const campObj = dbCamp[i];
       if (campObj.name === name) {
         thisCamp = campObj;
-        // setCommentList(thisCamp.comments);
       }
     }
     setUpVotes(thisCamp.upVoters?.length);
@@ -359,6 +405,11 @@ export default function CampaignSingle({
   }, []);
 
   async function onSubmit(data) {
+    if (data.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount) {
+      setError("VALUE EXCEEDED");
+      return;
+    }
+    setError("");
     try {
       const u = localStorage.getItem("email");
       var tempUser = {};
@@ -414,13 +465,13 @@ export default function CampaignSingle({
       var tObj = {
         email: u,
         donatedAmount: data["value"],
-        account: accounts[0]
-      }
+        account: accounts[0],
+      };
 
-      if(tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
+      if (tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
       else tempObj["donations"].push(tObj);
 
-      if(tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
+      if (tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
       else tempObj.raisedAmount = tempObj.raisedAmount + parseFloat(data["value"]);
 
       try {
@@ -454,18 +505,13 @@ export default function CampaignSingle({
     for (var i = 0; i < dbCamp.length; i++) {
       if (dbCamp[i].name == name) tempObj = dbCamp[i];
     }
-    // console.log(tempObj["upVoters"].includes(u));
     if (tempObj["upVoters"].length == 0 && tempObj["downVoters"].includes(u) == false) tempObj["upVoters"].push(u);
     else {
-      // console.log("1");
       if (tempObj["downVoters"].includes(u) == true) {
-        // console.log(tempObj["downVoters"]);
         var i = tempObj["downVoters"].indexOf(u);
         tempObj["downVoters"].splice(i, 1);
-        // console.log(tempObj["downVoters"]);
         if (tempObj["upVoters"].includes(u) == false) tempObj["upVoters"].push(u);
       } else if (tempObj["upVoters"].includes(u) == true) {
-        // console.log("continue");
       } else tempObj["upVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
@@ -493,13 +539,10 @@ export default function CampaignSingle({
     if (tempObj["downVoters"].length == 0 && tempObj["upVoters"].includes(u) == false) tempObj["downVoters"].push(u);
     else {
       if (tempObj["upVoters"].includes(u) == true) {
-        // console.log(tempObj["upVoters"]);
         var i = tempObj["upVoters"].indexOf(u);
         tempObj["upVoters"].splice(i, 1);
-        // console.log(tempObj["upVoters"]);
         if (tempObj["downVoters"].includes(u) == false) tempObj["downVoters"].push(u);
       } else if (tempObj["downVoters"].includes(u) == true) {
-        // console.log("continue");
       } else tempObj["downVoters"].push(u);
     }
     setUpVotes(tempObj["upVoters"].length);
@@ -535,13 +578,13 @@ export default function CampaignSingle({
         <Flex px={"17.5vw"} direction={"column"} gap={"3vw"} marginTop={"5vh"}>
           {/*  */}
 
-          <Button
+          {/* <Button
             onClick={() => {
               console.log(thisCamp);
             }}
           >
-            {"MEEEEEEH"}
-          </Button>
+            DEBUG
+          </Button> */}
           {/*  */}
           {isSubmitted ? (
             <Container maxW={"7xl"} columns={{ base: 1, md: 2 }} spacing={{ base: 10, lg: 32 }} py={{ base: 6 }}>
@@ -608,7 +651,6 @@ export default function CampaignSingle({
                       "\n\n#CryptAid #" +
                       name
                     }
-                    // className="Demo__some-network__share-button"
                   >
                     <TwitterIcon size={32} round />
                   </TwitterShareButton>
@@ -638,43 +680,6 @@ export default function CampaignSingle({
                     <RedditIcon size={32} round />
                   </RedditShareButton>
                 </div>
-                <div>
-                  {/* <FacebookShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    title={
-                      "Kindly visit the " +
-                      name +
-                      " crowdfunding campaign page to make a donation to the cause. \n\n" +
-                      description +
-                      "\n\n#CryptAid #" +
-                      name
-                    }
-                  >
-                    <FacebookIcon size={38} round />
-                  </FacebookShareButton> */}
-                </div>
-                <div>
-                  {/* <FacebookMessengerShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    appId="521270401588372"
-                    className="Demo__some-network__share-button"
-                  >
-                    <FacebookMessengerIcon size={32} round />
-                  </FacebookMessengerShareButton> */}
-                </div>
-                {/* <div>
-                  <LinkedinShareButton
-                    url={`http://localhost:3002/campaign/${id}`}
-                    className="Demo__some-network__share-button"
-                    title={
-                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
-                    }
-                    description={description}
-                    source={"https://www.cryptaid.com/"}
-                  >
-                    <LinkedinIcon size={32} round />
-                  </LinkedinShareButton>
-                </div> */}
               </Flex>
             </Flex>
           </Flex>
@@ -728,10 +733,15 @@ export default function CampaignSingle({
                   target of {web3.utils.fromWei(target, "ether")} ETH ($
                   {getWEIPriceInUSD(ETHPrice, target)})
                 </Text>
+                <Text fontSize={"md"} fontWeight="normal">
+                  balance to be raised {web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount} ETH
+                </Text>
+                <div>Campaign Progress</div>
                 <Progress
                   colorScheme="teal"
                   size="sm"
-                  value={web3.utils.fromWei(balance, "ether")}
+                  // value={web3.utils.fromWei(balance, "ether")}
+                  value={thisCamp.raisedAmount}
                   max={web3.utils.fromWei(target, "ether")}
                   mt={4}
                 />
@@ -762,6 +772,7 @@ export default function CampaignSingle({
                     View Withdrawal Requests
                   </Button>
                 </NextLink>
+                <Text>No. Of Pending Requests: {pendingCount}</Text>
 
                 <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                   <AlertDialogOverlay>
@@ -817,8 +828,13 @@ export default function CampaignSingle({
                         isDisabled={formState.isSubmitting}
                         onChange={(e) => {
                           setAmountInUSD(Math.abs(e.target.value));
-                          // TODO Check if it exceeds?.
-                          // console.log(typeof e.target.value);
+                          if (e.target.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount) {
+                            setError("VALUE EXCEEDED");
+                            return;
+                          } else {
+                            setError("");
+                          }
+                          console.log(e);
                         }}
                         step="any"
                         min="0"
