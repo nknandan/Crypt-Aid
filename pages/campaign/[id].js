@@ -48,8 +48,10 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { FlagIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Confetti from "react-confetti";
 import web3 from "../../smart-contract/web3";
@@ -165,7 +167,7 @@ function CommentCard({ creator, description }) {
   );
 }
 
-function CommentInbox({}) {
+function CommentInbox({ }) {
   const [commentList, setCommentList] = useState([]);
   const [comment, setComment] = useState({ creator: userEmail, description: "" });
   const [commentListNumber, setCommentListNumber] = useState(3);
@@ -209,8 +211,8 @@ function CommentInbox({}) {
       commentListNumber >= commentList.length
         ? commentList.length
         : commentListNumber + 4 <= commentList.length
-        ? commentListNumber + 4
-        : commentList.length
+          ? commentListNumber + 4
+          : commentList.length
     );
   }
 
@@ -353,8 +355,9 @@ export default function CampaignSingle({
   const [downVotes, setDownVotes] = useState(0);
   const [requestsList, setRequestsList] = useState([]);
   const [pendingCount, setPendingCount] = useState();
-
   const campaign = Campaign(id);
+
+  const toast = useToast();
 
   async function getRequests() {
     try {
@@ -561,6 +564,18 @@ export default function CampaignSingle({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const [isFlagged, setIsFlagged] = useState(false);
+
+  const handleFlag = () => {
+    setIsFlagged(true);
+    toast({
+      title: "Campaign flagged!",
+      description: "This campaign has been flagged and will be reviewed by administrators.",
+      status: "warning",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   return (
     <div>
@@ -907,6 +922,11 @@ export default function CampaignSingle({
             />
           </SimpleGrid>
           <CommentInbox />
+          <Flex w={"100%"} justifyContent={"end"}>
+            {isFlagged ? (<Text mt={2} color="gray.500">This campaign has been flagged and is pending review by administrators.</Text>) 
+            : 
+            (<Button onClick={handleFlag} bgColor={"red.300"}>Flag Campaign</Button>)}
+          </Flex>
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>
