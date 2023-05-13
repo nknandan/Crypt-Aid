@@ -167,16 +167,25 @@ function CommentCard({ creator, description }) {
 function CommentInbox({}) {
   const [commentList, setCommentList] = useState([]);
   const [comment, setComment] = useState({ creator: userEmail, description: "" });
-  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const [commentListNumber, setCommentListNumber] = useState(3);
   const commentInputRef = useRef(null);
 
   useEffect(() => {
+    var arr1 = [];
+    // thisCamp.comments?.forEach((element) => {
+    //   arr1.unshift(element);
+    // });
     setCommentList(thisCamp.comments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function submitComment() {
     thisCamp.comments.push(comment);
+    // var arr1 = [];
+    // thisCamp.comments?.forEach((element) => {
+    //   arr1.unshift(element);
+    // });
+    // setCommentList(arr1);
     setCommentList(thisCamp.comments);
     setComment({ creator: userEmail, description: "" });
     commentInputRef.current.value = "";
@@ -194,6 +203,27 @@ function CommentInbox({}) {
       console.log(err);
     }
     // Router.reload(window.location.pathname);
+  }
+
+  function reverseArr(input) {
+    var ret = new Array();
+    for (var i = input.length - 1; i >= 0; i--) {
+      ret.push(input[i]);
+    }
+    return ret;
+  }
+
+  function handleShowMoreComment() {
+    setCommentListNumber(
+      commentListNumber >= commentList.length
+        ? commentList.length
+        : commentListNumber + 4 <= commentList.length
+        ? commentListNumber + 4
+        : commentList.length
+    );
+    // console.log("showing" + commentListNumber);
+    // console.log("total" + commentList.length);
+    // console.log(commentList);
   }
 
   return (
@@ -259,16 +289,18 @@ function CommentInbox({}) {
           </SimpleGrid>
         ) : (
           <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
-            {commentList.slice(0).map((el, i) => {
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <CommentCard creator={el.creator} description={el.description} key={i} />
-              );
-            })}
+            {reverseArr(commentList)
+              .slice(0, commentListNumber)
+              .map((el, i) => {
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <CommentCard creator={el.creator} description={el.description} key={i} />
+                );
+              })}
           </SimpleGrid>
         )}
         {/* ?? SHOW VIEW MORE DISABLED. */}
-        {/* {showViewMoreComment ? (
+        {commentListNumber < commentList?.length && commentList?.length != 0 ? (
           <Button
             display={{ sm: "inline-flex" }}
             w={"200px"}
@@ -285,7 +317,7 @@ function CommentInbox({}) {
             marginLeft={"50%"}
             marginTop={"1%"}
             transform={"translate(-50%, 0)"}
-            // onClick={handleShowMoreComment}
+            onClick={handleShowMoreComment}
             _hover={{
               bg: "#0065A1",
               color: "#ffffff",
@@ -295,7 +327,7 @@ function CommentInbox({}) {
           </Button>
         ) : (
           <></>
-        )} */}
+        )}
       </Stat>
     </Box>
   );
