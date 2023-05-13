@@ -358,12 +358,11 @@ export default function CampaignSingle({
   }
 
   useEffect(() => {
-    forceUpdate(n => !n);
+    forceUpdate((n) => !n);
     getRequests();
     var count = 0;
-    for(var i=0; i<requestsList.length; i++){
-      if(requestsList[i].complete == false)
-        count++; 
+    for (var i = 0; i < requestsList.length; i++) {
+      if (requestsList[i].complete == false) count++;
     }
     console.log(count);
     setPendingCount(count);
@@ -389,10 +388,11 @@ export default function CampaignSingle({
   }, []);
 
   async function onSubmit(data) {
-    if(data.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount){
+    if (data.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount) {
       setError("VALUE EXCEEDED");
       return;
     }
+    setError("");
     try {
       const u = localStorage.getItem("email");
       var tempUser = {};
@@ -448,13 +448,13 @@ export default function CampaignSingle({
       var tObj = {
         email: u,
         donatedAmount: data["value"],
-        account: accounts[0]
-      }
+        account: accounts[0],
+      };
 
-      if(tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
+      if (tempObj["donations"] == undefined) tempObj["donations"] = [tObj];
       else tempObj["donations"].push(tObj);
 
-      if(tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
+      if (tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
       else tempObj.raisedAmount = tempObj.raisedAmount + parseFloat(data["value"]);
 
       try {
@@ -763,12 +763,14 @@ export default function CampaignSingle({
                   {getWEIPriceInUSD(ETHPrice, target)})
                 </Text>
                 <Text fontSize={"md"} fontWeight="normal">
-                  balance to be raised {web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount} ETH 
+                  balance to be raised {web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount} ETH
                 </Text>
+                <div>Campaign Progress</div>
                 <Progress
                   colorScheme="teal"
                   size="sm"
-                  value={web3.utils.fromWei(balance, "ether")}
+                  // value={web3.utils.fromWei(balance, "ether")}
+                  value={thisCamp.raisedAmount}
                   max={web3.utils.fromWei(target, "ether")}
                   mt={4}
                 />
@@ -855,6 +857,12 @@ export default function CampaignSingle({
                         isDisabled={formState.isSubmitting}
                         onChange={(e) => {
                           setAmountInUSD(Math.abs(e.target.value));
+                          if (e.target.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount) {
+                            setError("VALUE EXCEEDED");
+                            return;
+                          } else {
+                            setError("");
+                          }
                           console.log(e);
                         }}
                         step="any"
