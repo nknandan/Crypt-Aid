@@ -164,7 +164,7 @@ export default function RecommendedCampaigns({ name, description }) {
           <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
         </Center>
       ) : (
-        <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+        <Flex minH={"30vh"} maxH={"100vh"} overflowY={"auto"}>
           <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
             {dataDispNames.map((ele, i) => {
               for (var k = 0; k < campaignList.length; k++) {

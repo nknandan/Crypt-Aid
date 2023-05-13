@@ -143,14 +143,15 @@ function CommentCard({ creator, description }) {
     <Box
       w={"100%"}
       position="relative"
-      bgColor={useColorModeValue("white", "#303030")}
+      bgColor={useColorModeValue("gray.100", "#303030")}
       borderRadius={"10"}
       transition={"transform 0.3s ease"}
       boxShadow="sm"
       _hover={{
         transform: "translateY(-3px)",
       }}
-      padding={5}
+      py={1}
+      px={10}
     >
       <NextLink href={`/user/${creator}`}>
         <a>
@@ -269,13 +270,9 @@ function CommentInbox({}) {
         </Box>
 
         {commentList?.length == (0 || null) ? (
-          <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
-            <CommentCard />
-            <CommentCard />
-            <CommentCard />
-          </SimpleGrid>
+          <></>
         ) : (
-          <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
+          <SimpleGrid row={{ base: 1, md: 3 }} spacing={2}>
             {reverseArr(commentList)
               .slice(0, commentListNumber)
               .map((el, i) => {
