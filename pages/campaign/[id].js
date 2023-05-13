@@ -3,7 +3,7 @@ import Head from "next/head";
 import React from "react";
 import Router from "next/router";
 import ReactDOM from "react-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { useWallet } from "use-wallet";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
@@ -327,6 +327,7 @@ export default function CampaignSingle({
   const router = useRouter();
   const { width, height } = useWindowSize();
 
+  const [, forceUpdate] = React.useState(0);
   const [donorName, setDonorName] = useState("");
   const [creatorName, setCreatorName] = useState("");
   const [campName, setCampName] = useState("");
@@ -334,9 +335,38 @@ export default function CampaignSingle({
   const [donAmount, setDonAmount] = useState("");
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
+  const [requestsList, setRequestsList] = useState([]);
+  const [pendingCount, setPendingCount] = useState();
   // const [commentList, setCommentList] = useState([]);
 
+  const campaign = Campaign(id);
+
+  async function getRequests() {
+    try {
+      const requests = await Promise.all(
+        Array(parseInt(requestsCount))
+          .fill()
+          .map((element, index) => {
+            return campaign.methods.requests(index).call();
+          })
+      );
+      setRequestsList(requests);
+      return requests;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
+    forceUpdate(n => !n);
+    getRequests();
+    var count = 0;
+    for(var i=0; i<requestsList.length; i++){
+      if(requestsList[i].complete == false)
+        count++; 
+    }
+    console.log(count);
+    setPendingCount(count);
     if (localStorage.getItem("email") == null) {
       setIsAuthenticated(false);
     } else {
@@ -359,6 +389,10 @@ export default function CampaignSingle({
   }, []);
 
   async function onSubmit(data) {
+    if(data.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount){
+      setError("VALUE EXCEEDED");
+      return;
+    }
     try {
       const u = localStorage.getItem("email");
       var tempUser = {};
@@ -728,6 +762,9 @@ export default function CampaignSingle({
                   target of {web3.utils.fromWei(target, "ether")} ETH ($
                   {getWEIPriceInUSD(ETHPrice, target)})
                 </Text>
+                <Text fontSize={"md"} fontWeight="normal">
+                  balance to be raised {web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount} ETH 
+                </Text>
                 <Progress
                   colorScheme="teal"
                   size="sm"
@@ -762,6 +799,7 @@ export default function CampaignSingle({
                     View Withdrawal Requests
                   </Button>
                 </NextLink>
+                <Text>No. Of Pending Requests: {pendingCount}</Text>
 
                 <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                   <AlertDialogOverlay>
@@ -817,8 +855,7 @@ export default function CampaignSingle({
                         isDisabled={formState.isSubmitting}
                         onChange={(e) => {
                           setAmountInUSD(Math.abs(e.target.value));
-                          // TODO Check if it exceeds?.
-                          // console.log(typeof e.target.value);
+                          console.log(e);
                         }}
                         step="any"
                         min="0"
