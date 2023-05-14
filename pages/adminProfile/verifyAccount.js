@@ -464,20 +464,20 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           </Flex>
                         </Flex>
                       </Flex>
-                      <Button
+                      {/* <Button
                         onClick={() => {
                           console.log(urlPAN);
                           console.log(urlSign);
                         }}
                       >
                         DEBUG
-                      </Button>
+                      </Button> */}
                     </Flex>
                     <Heading fontSize={26} my={10} color={"blue.600"}>
                       <Text>Personal Documents</Text>
                     </Heading>
                     <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"} flexWrap="wrap">
-                      <a href={urlAadhar ?? "/"} target="_blank" rel="noreferrer">
+                      <NextLink href={urlAadhar ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -501,9 +501,9 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </a>
+                      </NextLink>
                       {/* <NextLink href={urlAddress ?? "/"}> */}
-                      <a href={urlAddress ?? "/"} target="_blank" rel="noreferrer">
+                      <NextLink href={urlAddress ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -527,10 +527,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </a>
+                      </NextLink>
                       {/* </NextLink> */}
                       {/* <NextLink href={urlPAN ?? "/"} target="_blank"> */}
-                      <a href={urlPAN ?? "/"} target="_blank" rel="noreferrer">
+                      <NextLink href={urlPAN ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -553,10 +553,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </a>
+                      </NextLink>
                       {/* </NextLink> */}
                       {/* <NextLink href={urlPhotograph ?? "/"}> */}
-                      <a href={urlPhotograph ?? "/"} target="_blank" rel="noreferrer">
+                      <Link href={urlPhotograph ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -579,11 +579,11 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </a>
+                      </Link >
                       {/* </NextLink> */}
                       {/* <a target="_blank">
                         <NextLink href={urlSign ?? "/"}> */}
-                      <a href={urlSign ?? "/"} target="_blank" rel="noreferrer">
+                      <Link href={urlSign ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -607,12 +607,12 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </a>
+                      </Link >
 
                       {/* </NextLink> */}
                       {/* </a> */}
                     </Flex>
-                    <Flex w={"100%"} justifyContent={"center"} my={20}>
+                    <Flex w={"100%"} justifyContent={"center"} my={20} justifyContent={"space-evenly"}>
                       <Button
                         display={{ sm: "inline-flex" }}
                         w={"200px"}
@@ -644,9 +644,9 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                         // eslint-disable-next-line react-hooks/rules-of-hooks
                         color={useColorModeValue("white", "#252525")}
                         borderRadius={"20"}
-                        bg={"#43B0F1"}
+                        bg={"red.400"}
                         _hover={{
-                          bg: "#0065A1",
+                          bg: "red.600",
                           color: "#ffffff",
                         }}
                         onClick={() => {
