@@ -187,6 +187,23 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
     }
   }
 
+  async function rejectAcc(){
+    thisUser["pendingVerification"] = false;
+    thisUser["verificationComplete"] = false;
+    try {
+      fetch("/api/user4", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -523,7 +540,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       </NextLink>
                     </Flex>
                     <Flex w={"100%"} justifyContent={"center"} my={20}>
-                        <Button
+                    <Button
                           display={{ sm: "inline-flex" }}
                           w={"200px"}
                           p={5}
@@ -542,6 +559,27 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           }}
                         >
                           Verify
+                        </Button>
+
+                        <Button
+                          display={{ sm: "inline-flex" }}
+                          w={"200px"}
+                          p={5}
+                          fontSize={"md"}
+                          fontWeight={600}
+                          // eslint-disable-next-line react-hooks/rules-of-hooks
+                          color={useColorModeValue("white", "#252525")}
+                          borderRadius={"20"}
+                          bg={"#43B0F1"}
+                          _hover={{
+                            bg: "#0065A1",
+                            color: "#ffffff",
+                          }}
+                          onClick={() => {
+                            rejectAcc();
+                          }}
+                        >
+                          Reject
                         </Button>
                     </Flex>
                   </Flex>
