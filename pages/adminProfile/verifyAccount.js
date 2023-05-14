@@ -44,6 +44,7 @@ import { storage } from "../../firebase/clientApp";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 var cName2Id = {};
+var thisUser = {};
 
 // CampaignList : consists of campaigns from blockchain
 // CampaignList1 : consists of campaigns from database
@@ -208,6 +209,9 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   useEffect(() => {
     getDocs();
     console.log(email);
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].email == email) thisUser = users[i];
+    }
     getDbCampaigns();
     getUser();
     getSummary();
@@ -217,6 +221,23 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function verifyAcc() {
+    thisUser["pendingVerification"] = false;
+    thisUser["verificationComplete"] = true;
+    try {
+      fetch("/api/user4", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
 
   return (
     <div>
@@ -382,7 +403,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           color={"gray.600"}
                           justifyContent={"space-between"}
                         >
-                          nknandan@gmail.com
+                          {thisUser.email}
                           <Img height={7} src={"/mail.png"} />
                         </Flex>
                       </Flex>
@@ -402,7 +423,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             color={"gray.600"}
                             justifyContent={"space-between"}
                           >
-                            testuser3
+                            {thisUser.username}
                           </Flex>
                         </Flex>
                         <Flex flexDir={"column"} mt={10} w={"45%"}>
@@ -420,7 +441,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             color={"gray.600"}
                             justifyContent={"space-between"}
                           >
-                            5465425265
+                            {thisUser.phoneNumber}
                           </Flex>
                         </Flex>
                       </Flex>
@@ -561,25 +582,26 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       </NextLink>
                     </Flex>
                     <Flex w={"100%"} justifyContent={"center"} my={20}>
-                      <NextLink href="/campaign/new">
-                        <Button
-                          display={{ sm: "inline-flex" }}
-                          w={"200px"}
-                          p={5}
-                          fontSize={"md"}
-                          fontWeight={600}
-                          // eslint-disable-next-line react-hooks/rules-of-hooks
-                          color={useColorModeValue("white", "#252525")}
-                          borderRadius={"20"}
-                          bg={"#43B0F1"}
-                          _hover={{
-                            bg: "#0065A1",
-                            color: "#ffffff",
-                          }}
-                        >
-                          Verify
-                        </Button>
-                      </NextLink>
+                      <Button
+                        display={{ sm: "inline-flex" }}
+                        w={"200px"}
+                        p={5}
+                        fontSize={"md"}
+                        fontWeight={600}
+                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                        color={useColorModeValue("white", "#252525")}
+                        borderRadius={"20"}
+                        bg={"#43B0F1"}
+                        _hover={{
+                          bg: "#0065A1",
+                          color: "#ffffff",
+                        }}
+                        onClick={() => {
+                          verifyAcc();
+                        }}
+                      >
+                        Verify
+                      </Button>
                     </Flex>
                   </Flex>
                 </Flex>
