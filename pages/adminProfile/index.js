@@ -516,7 +516,7 @@ function UserCard({ name, email }) {
 
   return (
     <div>
-      <NextLink href="adminProfile/verifyAccount">
+      <NextLink href={{pathname: "adminProfile/verifyAccount", query: {email: email}}}>
         <Flex
           cursor={"pointer"}
           p={4}

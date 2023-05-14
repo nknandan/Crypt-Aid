@@ -1006,6 +1006,9 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   const [obj, setObj] = useState({});
   const [user, setUser] = useState({});
 
+  const router = useRouter();
+  const {email} = router.query;
+
   async function getDbCampaigns() {
     let res = await fetch("/api/campaign/create", {
       method: "GET",
@@ -1077,6 +1080,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   }
 
   useEffect(() => {
+    console.log(email);
     getDbCampaigns();
     getUser();
     getSummary();
