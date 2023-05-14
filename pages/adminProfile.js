@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import NextLink from "next/link";
 import styles from "../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
@@ -337,12 +337,12 @@ function PendingCard({
   campaignList,
 }) {
   const router = useRouter();
-
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   function multiFunct() {
     updateStatus();
     setCampaignList(campaignList);
     redirect();
-    // window.location.reload();
+    // forceUpdate();
   }
   useEffect(() => {}, [campaignList]);
 
