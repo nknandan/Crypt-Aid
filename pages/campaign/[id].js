@@ -167,7 +167,7 @@ function CommentCard({ creator, description }) {
   );
 }
 
-function CommentInbox({ }) {
+function CommentInbox({}) {
   const [commentList, setCommentList] = useState([]);
   const [comment, setComment] = useState({ creator: userEmail, description: "" });
   const [commentListNumber, setCommentListNumber] = useState(3);
@@ -211,8 +211,8 @@ function CommentInbox({ }) {
       commentListNumber >= commentList.length
         ? commentList.length
         : commentListNumber + 4 <= commentList.length
-          ? commentListNumber + 4
-          : commentList.length
+        ? commentListNumber + 4
+        : commentList.length
     );
   }
 
@@ -617,7 +617,7 @@ export default function CampaignSingle({
           <Flex direction={"row"}>
             <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
-              <Heading lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
+              <Heading color={"blue.800"} lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }} mb={"1rem"}>
                 {name}
               </Heading>
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
@@ -923,9 +923,15 @@ export default function CampaignSingle({
           </SimpleGrid>
           <CommentInbox />
           <Flex w={"100%"} justifyContent={"end"}>
-            {isFlagged ? (<Text mt={2} color="gray.500">This campaign has been flagged and is pending review by administrators.</Text>) 
-            : 
-            (<Button onClick={handleFlag} bgColor={"red.300"}>Flag Campaign</Button>)}
+            {isFlagged ? (
+              <Text mt={2} color="gray.500">
+                This campaign has been flagged and is pending review by administrators.
+              </Text>
+            ) : (
+              <Button onClick={handleFlag} bgColor={"red.300"}>
+                Flag Campaign
+              </Button>
+            )}
           </Flex>
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
