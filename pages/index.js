@@ -86,7 +86,6 @@ const Feature = ({ title, text, icon }) => {
 
 function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, target, ethPrice, users, dbCamp }) {
   var emmmmmmm = "";
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 

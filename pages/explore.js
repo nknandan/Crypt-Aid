@@ -154,7 +154,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
-                <div>
+                {/* <div>
                   <TwitterShareButton
                     url={`http://localhost:3002/campaign/${id}`}
                     title={
@@ -194,7 +194,7 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                   >
                     <RedditIcon size={32} round />
                   </RedditShareButton>
-                </div>
+                </div> */}
                 {/* <Box fontWeight={"600"} fontSize={"14px"} marginRight={"10px"}>
                   c/CommunityName
                 </Box>{" "} */}

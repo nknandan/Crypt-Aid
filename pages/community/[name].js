@@ -57,7 +57,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { Line } from "@react-pdf/renderer";
-import { ChevronUpIcon, ChevronDownIcon, SunIcon, ChatIcon, LinkIcon } from "@chakra-ui/icons";
+import { ChevronUpIcon, ChevronDownIcon, SunIcon, ChatIcon, LinkIcon, DeleteIcon } from "@chakra-ui/icons";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { connectMongo } from "../../utils/connectMongo";
 import { connectToDatabase } from "../../lib/mongodb";
@@ -230,7 +230,7 @@ function Feed({ posts, campaignList }) {
                     {" "}
                     17{" "}
                   </Text>
-                  <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => {}} colorScheme="blue">
+                  <Button w={"2%"} h={"20%"} variant="ghost" onClick={() => { }} colorScheme="blue">
                     <ChevronDownIcon boxSize={8} />
                   </Button>
                 </Center> */}
@@ -333,16 +333,19 @@ function Feed({ posts, campaignList }) {
                     {/* <Text fontSize={"30"} fontWeight={"600"}>{el.title}</Text> */}
                     <CampaignCardNew name={el.title} id={el.campID} campaignList={campaignList} />
                   </Flex>
-                  {userEmail == tempComm.moderators ? (
-                    <Button variant={"link"} colorScheme="blue" ml={5} onClick={() => deletePost(el.title)}>
-                      <LinkIcon color={"gray.600"} />
-                      <Text color={"gray.600"} ml={2}>
-                        Delete
-                      </Text>
-                    </Button>
-                  ) : (
-                    console.log("COOOL")
-                  )}
+
+                  <Flex minH={"4vh"} alignItems={"center"} w={"100%"} justifyContent={"end"} pr={"40px"} mt={-4}>
+                    {userEmail == tempComm.moderators ? (
+                      <Button variant={"link"} colorScheme="red" ml={5} onClick={() => deletePost(el.title)}>
+                        <DeleteIcon color={"gray.600"} />
+                        <Text color={"gray.600"} ml={2}>
+                          Delete
+                        </Text>
+                      </Button>
+                    ) : (
+                      console.log("COOOL")
+                    )}
+                  </Flex>
                 </Flex>
               </Flex>
             )}
