@@ -882,6 +882,12 @@ export default function CampaignSingle({
             >
               <>
                 <NextLink href={`/campaign/${id}/requests`}>
+                  {thisCamp.isFraud ? (
+                      <Alert status="warning" mt={4} bgColor={"red.100"}>
+                        <AlertIcon color={"red"} />
+                        <AlertDescription mr={2}>This campaign is flagged as fraud</AlertDescription>
+                      </Alert>
+                    ): 
                   <Button
                     w={"full"}
                     bgGradient="linear(to-r, teal.400,green.400)"
@@ -892,7 +898,7 @@ export default function CampaignSingle({
                     }}
                   >
                     View Withdrawal Requests
-                  </Button>
+                  </Button>}
                 </NextLink>
                 <Text>No. Of Pending Requests: {pendingCount}</Text>
 
@@ -974,7 +980,13 @@ export default function CampaignSingle({
                   ) : null}
 
                   <Stack spacing={10}>
-                    {isAuthenticated === false ? (
+                    {thisCamp.isFraud ? (
+                      <Alert status="warning" mt={4} bgColor={"red.100"}>
+                        <AlertIcon color={"red"} />
+                        <AlertDescription mr={2}>This campaign is flagged as fraud</AlertDescription>
+                      </Alert>
+                    ) : 
+                    isAuthenticated === false ? (
                       <Alert status="warning" mt={4} bgColor={"red.100"}>
                         <AlertIcon color={"red"} />
                         <AlertDescription mr={2}>Please Sign In to continue</AlertDescription>
