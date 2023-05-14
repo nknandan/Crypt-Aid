@@ -347,7 +347,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                     .reverse()
                     .map((el, i) => {
                       for (var j = 0; j < dbCamp.length; j++) {
-                        if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true) {
+                        if (dbCamp[j].name == el[5] && dbCamp[j].isApproved == true && !dbCamp[j].isFraud) {
                           return (
                             <div key={i}>
                               <CampaignCardNew
