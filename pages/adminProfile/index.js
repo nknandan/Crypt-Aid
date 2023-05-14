@@ -511,53 +511,8 @@ function PendingCard({
   imagetimagetimaget;
 }
 
-function UserCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
-  const onRevert = async (event) => {
-    event.preventDefault();
-
-    var thisCamp;
-    var address2Amount = {};
-    var addresses = [];
-    var amounts = [];
-    var leftOver = 0;
-
-    for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
-    if (thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
-    else thisCamp["isFraud"] = true;
-    console.log(thisCamp);
-    try {
-      fetch("/api/campaign/revert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ thisCamp }),
-      });
-    } catch (err) {
-      setError(err.message);
-      console.log(err);
-    }
-    for (const donor of thisCamp.donations) {
-      address2Amount[donor.account] = Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100);
-      addresses.push(donor.account);
-      amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
-    }
-    leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
-
-    try {
-      const campaign = Campaign(id);
-      const accounts = await web3.eth.getAccounts();
-      console.log(addresses);
-      console.log(amounts);
-      console.log(leftOver);
-      console.log(campaign.methods);
-      await campaign.methods.revertt(addresses, amounts, leftOver).send({
-        from: accounts[0],
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+function UserCard({ name, email }) {
+  
 
   return (
     <div>
@@ -580,9 +535,9 @@ function UserCard({ name, description, creatorId, imageURL, id, balance, target,
           <Img src={"/totalaccountspending.png"} height={"60px"} />
           <Box mr={20}>
             <Text fontSize="xl" fontWeight={"600"} color={"blue.600"}>
-              Nandan N K
+              {name}
             </Text>
-            <Text>nknandan@gmail.com</Text>
+            <Text>{email}</Text>
           </Box>
         </Flex>
       </NextLink>
@@ -590,7 +545,7 @@ function UserCard({ name, description, creatorId, imageURL, id, balance, target,
   );
 }
 
-function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp, users }) {
   return (
     <Flex w={"100%"} flexDir={"column"}>
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
@@ -608,25 +563,16 @@ function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignLi
           maxH={"100vh"}
           w={"100%"}
         >
-          {campaignList.map((el, i) => {
-            for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].name == el[5]) {
-                return (
-                  <div key={i}>
-                    <UserCard
-                      name={el[5]}
-                      description={el[6]}
-                      creatorId={el[4]}
-                      imageURL={el[7]}
-                      id={cName2Id[el[5]]}
-                      target={el[8]}
-                      balance={el[1]}
-                      ethPrice={ethPrice}
-                      dbCamp={dbCamp}
-                    />
-                  </div>
-                );
-              }
+          {users.map((el, i) => {
+            if(el["pendingVerification"] == true){
+              return (
+                <div key={i}>
+                  <UserCard
+                    name={el["username"]}
+                    email={el["email"]}
+                  />
+                </div>
+              );
             }
           })}
         </SimpleGrid>
@@ -1229,6 +1175,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                             campaigns={campaigns}
                             ethPrice={ethPrice}
                             dbCamp={dbCamp}
+                            users={users}
                           />
                         </Flex>
                       </TabPanel>
