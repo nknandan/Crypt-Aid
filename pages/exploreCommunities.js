@@ -87,23 +87,23 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
   const [postCount, setPostCount] = useState();
 
   useEffect(() => {
-    if(members == undefined) setMemberNo(0);
+    if (members == undefined) setMemberNo(0);
     else setMemberNo(members.length);
     setModNo(moderators.length);
-    const fetchData = async () => {};
+    const fetchData = async () => { };
     fetchData();
     userEmail = localStorage.getItem("email");
     var tempName = name;
     setPostCount(commPosts.length);
     // console.log(users);
-    for(let i=0; i<dbUsers.length; i++){
-      if(dbUsers[i].email == userEmail){
+    for (let i = 0; i < dbUsers.length; i++) {
+      if (dbUsers[i].email == userEmail) {
         tempUser = dbUsers[i];
       }
     }
     tempMod = moderators || [];
     tempMem = members || [];
-    if(tempMem.includes(userEmail) || tempMod.includes(userEmail))
+    if (tempMem.includes(userEmail) || tempMod.includes(userEmail))
       setJoined(1);
     else
       setJoined(0);
@@ -172,7 +172,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
             {postCount} posts
           </Text>
           <Text fontWeight={600} color={"#2C2C7B"}>
-            {memberNo+modNo} members
+            {memberNo + modNo} members
           </Text>
           {joined ? (
             <Button
@@ -195,25 +195,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
               Joined
             </Button>
           ) : (
-            <Button
-              disabled={true}
-              w={"25%"}
-              borderRadius={50}
-              bgColor={"#1CB5E0"}
-              color={"white"}
-              zIndex={99}
-              _hover={{
-                bgGradient: "linear(to-l, #2C2C7B, #1CB5E0)",
-                boxShadow: "xl",
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setJoined(!joined);
-              }}
-            >
-              Join
-            </Button>
+            <></>
           )}
         </Flex>
       </Box>
