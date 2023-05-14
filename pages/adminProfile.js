@@ -212,16 +212,32 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
     var leftOver = 0;
 
     for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
+    if(thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
+    else thisCamp["isFraud"] = true;
+    console.log(thisCamp);
+    try {
+      fetch("/api/campaign/revert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisCamp }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
     for (const donor of thisCamp.donations) {
       address2Amount[donor.account] = Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100);
       addresses.push(donor.account);
       amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
     }
     leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
+    
     try {
       const campaign = Campaign(id);
       const accounts = await web3.eth.getAccounts();
-      console.log(addresses);
+      console.log(addresses); 
       console.log(amounts);
       console.log(leftOver);
       console.log(campaign.methods);
