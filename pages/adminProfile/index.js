@@ -203,7 +203,7 @@ function SettingsPage({ setSettingsScreen, users }) {
   );
 }
 
-function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
+function TerminatedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
   const onRevert = async (event) => {
 
     event.preventDefault();
@@ -212,10 +212,10 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
     var address2Amount = {};
     var addresses = [];
     var amounts = [];
-    var leftOver = 0;    
+    var leftOver = 0;
 
     for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
-    if(thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
+    if (thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
     else thisCamp["isFraud"] = true;
     console.log(thisCamp);
     try {
@@ -236,11 +236,11 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
       amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
     }
     leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
-    
+
     try {
       const campaign = Campaign(id);
       const accounts = await web3.eth.getAccounts();
-      console.log(addresses); 
+      console.log(addresses);
       console.log(amounts);
       console.log(leftOver);
       console.log(campaign.methods);
@@ -256,7 +256,7 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
     <div>
       <NextLink href={`/campaign/${id}`}>
         <Box
-          h={"20vh"}
+          minH={"20vh"}
           w={"100%"}
           display={"flex"}
           flexDirection={"row"}
@@ -270,13 +270,171 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
             transform: "translateY(-8px)",
           }}
         >
-          <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+          <Box w={"30%"} borderRadius={"20"} borderRightRadius={"0"} pos={"relative"} overflow={"hidden"}>
             <Img
               src={imageURL}
               alt={`Picture of ${name}`}
               objectFit="cover"
               w="full"
-              h="full"
+              h="100%"
+              display="block"
+              borderRadius={"20"}
+              borderRightRadius={"0"}
+            />
+            <Text
+              position="absolute"
+              bottom={0}
+              w={"100%"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              textAlign={"center"}
+              left={0}
+              background="red.500"
+              color="white"
+              padding="0.2rem"
+              fontWeight={"600"}
+              fontStyle={"36px"}
+            >
+              Terminated
+            </Text>
+          </Box>
+          <Box
+            h={"100%"}
+            w={"75%"}
+            borderRadius={"20"}
+            borderLeftRadius={"0"}
+            padding={"1rem"}
+            px={"2rem"}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"space-between"}
+            pb={"1.5rem"}
+          >
+            <Box>
+              <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
+
+              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+                {name}
+                {/* <Button bgColor={"red.500"} fontSize={12} p={3} h={2} onClick={(event) => onRevert(event)} component="a">
+                  Terminated
+                </Button> */}
+              </Box>
+              <Box maxW={"60%"}>
+                <Text noOfLines={3}>{description}</Text>
+              </Box>
+            </Box>
+            <Box>
+              <Flex direction={"row"} justifyContent={"space-between"}>
+                <Box maxW={{ base: "	15rem", sm: "sm" }}>
+                  <Text as="span">
+                    {balance > 0 ? "Raised : " + web3.utils.fromWei(balance, "ether") : "Raised : 0"}
+                  </Text>
+                  <Text as="span" pr={2}>
+                    {" "}
+                    ETH
+                  </Text>
+                  <Text
+                    as="span"
+                    fontSize="lg"
+                    display={balance > 0 ? "inline" : "none"}
+                    fontWeight={"normal"}
+                    color={useColorModeValue("gray.500", "gray.200")}
+                  >
+                    (${getWEIPriceInUSD(ethPrice, balance)})
+                  </Text>
+                </Box>
+                <Text fontSize={"md"} fontWeight="normal">
+                  Target : {web3.utils.fromWei(target, "ether")} ETH ($
+                  {getWEIPriceInUSD(ethPrice, target)})
+                </Text>
+              </Flex>
+              <Progress colorScheme="blue" size="sm" value={balance} max={target} mt="2" />
+            </Box>
+          </Box>
+        </Box>
+      </NextLink>
+      {/* !!! REVERT BUTTON */}
+      {/* <Button bgColor={"green.200"} fontSize={12} p={3} h={2} onClick={onRevert} component="a">
+        Revert
+      </Button> */}
+    </div>
+  );
+}
+
+function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
+  const onRevert = async (event) => {
+
+    event.preventDefault();
+
+    var thisCamp;
+    var address2Amount = {};
+    var addresses = [];
+    var amounts = [];
+    var leftOver = 0;
+
+    for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
+    if (thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
+    else thisCamp["isFraud"] = true;
+    console.log(thisCamp);
+    try {
+      fetch("/api/campaign/revert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisCamp }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    for (const donor of thisCamp.donations) {
+      address2Amount[donor.account] = Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100);
+      addresses.push(donor.account);
+      amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
+    }
+    leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
+
+    try {
+      const campaign = Campaign(id);
+      const accounts = await web3.eth.getAccounts();
+      console.log(addresses);
+      console.log(amounts);
+      console.log(leftOver);
+      console.log(campaign.methods);
+      await campaign.methods.revertt(addresses, amounts, leftOver).send({
+        from: accounts[0],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div>
+      <NextLink href={`/campaign/${id}`}>
+        <Box
+          minH={"20vh"}
+          w={"100%"}
+          display={"flex"}
+          flexDirection={"row"}
+          position="relative"
+          cursor="pointer"
+          bgColor={"#ffffff"}
+          borderRadius={"20"}
+          transition={"transform 0.3s ease"}
+          boxShadow="sm"
+          _hover={{
+            transform: "translateY(-8px)",
+          }}
+        >
+          <Box w={"30%"} borderRadius={"20"} borderRightRadius={"0"}>
+            <Img
+              src={imageURL}
+              alt={`Picture of ${name}`}
+              objectFit="cover"
+              w="full"
+              h="100%"
               display="block"
               borderRadius={"20"}
               borderRightRadius={"0"}
@@ -300,7 +458,7 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
               <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
                 {name}
                 <Button bgColor={"red.300"} fontSize={12} p={3} h={2} onClick={(event) => onRevert(event)} component="a">
-                  Terminate 
+                  Terminate
                 </Button>
               </Box>
               <Box maxW={"60%"}>
@@ -348,7 +506,7 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
 function PendingCard({
   name,
   description,
-  approvedPending,
+  approvedPendingTerminated,
   // creatorId,
   imageURL,
   id,
@@ -390,7 +548,7 @@ function PendingCard({
 
   return (
     <Box
-      h={"20vh"}
+      minH={"20vh"}
       w={"100%"}
       display={"flex"}
       flexDirection={"row"}
@@ -406,7 +564,7 @@ function PendingCard({
       zIndex={1}
     >
       <NextLink href={`/campaign/${id}`}>
-        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"} zIndex={1}>
+        <Box w={"30%"} borderRadius={"20"} borderRightRadius={"0"} zIndex={1}>
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
@@ -454,7 +612,7 @@ function PendingCard({
           </Box>
         </Box>
       </NextLink>
-      {approvedPending ? (
+      {approvedPendingTerminated ? (
         <> </>
       ) : (
         <Flex
@@ -475,22 +633,32 @@ function PendingCard({
 }
 
 // This function shows the Pending Campaigns
-function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
+function PendingCampaigns({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
   return (
-    <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
-      <Flex mb={3}>
-        <Heading fontSize={30} mr={10}>
-          Pending Campaigns
-        </Heading>
+    <Flex w={"100%"} flexDir={"column"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+      <Heading fontSize={24} whiteSpace="nowrap">Pending Campaigns</Heading>
         <Heading
-          fontSize={30}
+          fontSize={24}
           color={"gray.500"}
           onClick={() => {
-            setApprovedPending(1);
+            setApprovedPendingTerminated(1);
           }}
           cursor={"pointer"}
+          whiteSpace="nowrap"
         >
           Approved Campaigns
+        </Heading>
+        <Heading
+          fontSize={24}
+          color={"gray.500"}
+          onClick={() => {
+            setApprovedPendingTerminated(2);
+          }}
+          cursor={"pointer"}
+          whiteSpace="nowrap"
+        >
+          Terminated Campaigns
         </Heading>
       </Flex>
       <Flex>
@@ -524,28 +692,40 @@ function PendingCampaigns({ setApprovedPending, campaignList, campaignList1, cam
 }
 
 // This function shows the Approved Campaigns
-function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+function ApprovedCampaigns({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
   return (
-    <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
-      <Flex>
+    <Flex w={"100%"} flexDir={"column"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Heading
-          fontSize={30}
-          mr={10}
+          fontSize={24}
           color={"gray.500"}
           onClick={() => {
-            setApprovedPending(0);
+            setApprovedPendingTerminated(0);
           }}
           cursor={"pointer"}
+          whiteSpace="nowrap"
         >
           Pending Campaigns
         </Heading>
-        <Heading fontSize={30}>Approved Campaigns</Heading>
+        <Heading fontSize={24} whiteSpace="nowrap">Approved Campaigns</Heading>
+        <Heading
+          fontSize={24}
+          color={"gray.500"}
+          onClick={() => {
+            setApprovedPendingTerminated(2);
+          }}
+          cursor={"pointer"}
+          whiteSpace="nowrap"
+        >
+          Terminated Campaigns
+        </Heading>
+
       </Flex>
       <Flex>
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5]) {
+              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && campaignList1[k].isFraud != true) {
                 return (
                   <div key={i}>
                     <ApprovedCard
@@ -570,8 +750,65 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
   );
 }
 
+function TerminatedCampaigns({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+  return (
+    <Flex flexDir={"column"} w={"100%"} alignItems={"center"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+        <Heading
+          fontSize={24}
+          color={"gray.500"}
+          onClick={() => {
+            setApprovedPendingTerminated(0);
+          }}
+          cursor={"pointer"}
+          whiteSpace="nowrap"
+        >
+          Pending Campaigns
+        </Heading>
+        <Heading
+          fontSize={24}
+          color={"gray.500"}
+          onClick={() => {
+            setApprovedPendingTerminated(1);
+          }}
+          cursor={"pointer"}
+          whiteSpace="nowrap"
+        >
+          Approved Campaigns
+        </Heading>
+        <Heading fontSize={24} whiteSpace="nowrap">Terminated Campaigns</Heading>
+      </Flex>
+      <Flex>
+        <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && campaignList1[k].isFraud == true) {
+                return (
+                  <div key={i}>
+                    <TerminatedCard
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={cName2Id[el[5]]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                      dbCamp={dbCamp}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
+        </SimpleGrid>
+      </Flex>
+    </Flex>
+  );
+}
+
 export default function AdminProfile({ campaigns, users, dbCamp }) {
-  const [approvedPending, setApprovedPending] = useState(false);
+  const [approvedPendingTerminated, setApprovedPendingTerminated] = useState(0);
   // No Settings Screen as of now.
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
@@ -847,9 +1084,9 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                     </Flex>
                   </Flex>
                   <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-                    {approvedPending ? (
+                    {approvedPendingTerminated == 1 ? (
                       <ApprovedCampaigns
-                        setApprovedPending={setApprovedPending}
+                        setApprovedPendingTerminated={setApprovedPendingTerminated}
                         campaignList={campaignList}
                         campaignList1={dbCamp}
                         campaigns={campaigns}
@@ -857,15 +1094,26 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         dbCamp={dbCamp}
                       />
                     ) : (
-                      <PendingCampaigns
-                        setApprovedPending={setApprovedPending}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                        setCampaignList={setCampaignList}
-                      />
+                      approvedPendingTerminated == 2 ? (
+                        <TerminatedCampaigns
+                          setApprovedPendingTerminated={setApprovedPendingTerminated}
+                          campaignList={campaignList}
+                          campaignList1={dbCamp}
+                          campaigns={campaigns}
+                          ethPrice={ethPrice}
+                          setCampaignList={setCampaignList}
+                        />
+                      ) : (
+                        <PendingCampaigns
+                          setApprovedPendingTerminated={setApprovedPendingTerminated}
+                          campaignList={campaignList}
+                          campaignList1={dbCamp}
+                          campaigns={campaigns}
+                          ethPrice={ethPrice}
+                          setCampaignList={setCampaignList}
+                        />)
                     )}
+
                   </Flex>
                 </Flex>
               </Flex>
