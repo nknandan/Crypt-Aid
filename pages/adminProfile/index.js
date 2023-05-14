@@ -545,7 +545,7 @@ function ApprovedCampaigns({ setApprovedPending, campaignList, campaignList1, ca
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5]) {
+              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && !campaignList1[k].isFraud) {
                 return (
                   <div key={i}>
                     <ApprovedCard

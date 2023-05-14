@@ -47,11 +47,26 @@ import { PlusSquareIcon, CheckCircleIcon } from "@chakra-ui/icons";
 import { storage } from "../../firebase/clientApp";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { set } from "mongoose";
+import { useRouter, withRouter } from "next/router";
+import { connectMongo } from "../../utils/connectMongo";
+import User from "../../models/user";
 
 var OTP;
 var userEmail;
+var thisUser;
 
-export default function Home({ campaigns }) {
+export async function getServerSideProps() {
+  await connectMongo();
+  const users = await User.find();
+
+  return {
+    props: {
+      users: JSON.parse(JSON.stringify(users)),
+    },
+  };
+}
+
+export default function Home({users}) {
   const [verificationPhase, setverificationPhase] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -70,6 +85,10 @@ export default function Home({ campaigns }) {
 
   useEffect(() => {
     userEmail = localStorage.getItem("email");
+    for(var i=0; i<users.length; i++){
+      if(users[i].email == userEmail)
+        thisUser = users[i];
+    }
     // handleNextPhase()
   }, []);
 
@@ -212,6 +231,21 @@ export default function Home({ campaigns }) {
       alert("OTP Verified");
       setIsModalOpen(false);
       handleNextPhase();
+      if(thisUser["phoneNumber"] == undefined) thisUser["phoneNumber"] = phoneNumber;
+      else thisUser["phoneNumber"] = phoneNumber;
+      console.log(thisUser);
+      try {
+        fetch("/api/user3", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ thisUser }),
+        });
+      } catch (err) {
+        setError(err.message);
+        console.log(err);
+      }
       // Add this verified phoneNumber to the currently logged In User's Database.
       // "phoneNumber" in user's database.
     } else {

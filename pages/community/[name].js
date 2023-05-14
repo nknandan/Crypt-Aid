@@ -979,7 +979,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                   })}
                 </Flex>
               </Box>
-              <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
+              {/* <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   Note from the moderation team
                 </Text>
@@ -987,8 +987,9 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                   Bassiste, contrebassiste et compositeur, après avoir travaillé pour de nombreux artistes depuis plus
                   de 20 ans et enregistré près de 50 albums, je présente en 2023 mon 3 em Album
                 </Text>
-              </Box>
-              <Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
+              </Box> */}
+              {tempMem.length != 0 ? 
+              (<Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
                 <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
                   Members
                 </Text>
@@ -1000,31 +1001,14 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                     </Flex>
                   );
                 })}
-                {/* <Flex px={4} alignItems={"center"} mt={2}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex>
-                <Flex px={4} alignItems={"center"}>
-                  <Box borderRadius={"50%"} bgColor={"#609966"} w={"10px"} h={"10px"} mr={2}></Box>
-                  <Text color={"black"}>HarshaRocks</Text>
-                </Flex> */}
-              </Box>
+                
+              </Box>) 
+              : 
+              (<Box borderWidth={1} borderColor={"gray.300"} borderRadius={8} p={5} mt={6}>
+                <Text color={"#2C2C7B"} fontWeight={600} fontSize={"22px"}>
+                  No members joined
+                </Text>
+              </Box>) }
             </Box>
           </Flex>
         </Flex>
