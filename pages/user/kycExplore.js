@@ -66,7 +66,7 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Home({users}) {
+export default function Home({ users }) {
   const [verificationPhase, setverificationPhase] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -85,30 +85,27 @@ export default function Home({users}) {
 
   useEffect(() => {
     userEmail = localStorage.getItem("email");
-    for(var i=0; i<users.length; i++){
-      if(users[i].email == userEmail)
-        thisUser = users[i];
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].email == userEmail) thisUser = users[i];
     }
-    if(thisUser["pendingVerification"] == true)
-      setverificationPhase(3);
+    if (thisUser["pendingVerification"] == true) setverificationPhase(3);
     // handleNextPhase()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePANChange = (e) => {
     if (e.target.files[0]) {
-      if(e.target.files[0].type == "application/pdf")
-        setPAN(e.target.files[0]);
-      else{
-          alert("Upload PDF File Only.");
-          return;
+      if (e.target.files[0].type == "application/pdf") setPAN(e.target.files[0]);
+      else {
+        alert("Upload PDF File Only.");
+        return;
       }
     }
   };
   const handleAadharChange = (e) => {
     if (e.target.files[0]) {
-      if(e.target.files[0].type == "application/pdf")
-        setAadhar(e.target.files[0]);
-      else{
+      if (e.target.files[0].type == "application/pdf") setAadhar(e.target.files[0]);
+      else {
         alert("Upload PDF File Only.");
         return;
       }
@@ -116,20 +113,17 @@ export default function Home({users}) {
   };
   const handleAddressChange = (e) => {
     if (e.target.files[0]) {
-    if(e.target.files[0].type == "application/pdf")
-      setAddress(e.target.files[0]);
-    else{
+      if (e.target.files[0].type == "application/pdf") setAddress(e.target.files[0]);
+      else {
         alert("Upload PDF File Only.");
         return;
-    }
-      
+      }
     }
   };
   const handlePhotographChange = (e) => {
     if (e.target.files[0]) {
-      if(e.target.files[0].type == "image/jpeg")
-        setPhotograph(e.target.files[0]);
-      else{
+      if (e.target.files[0].type == "image/jpeg") setPhotograph(e.target.files[0]);
+      else {
         alert("Upload JPEG File Only.");
         return;
       }
@@ -138,9 +132,8 @@ export default function Home({users}) {
 
   const handleSignChange = (e) => {
     if (e.target.files[0]) {
-      if(e.target.files[0].type == "image/jpeg")
-        setSign(e.target.files[0]);
-      else{
+      if (e.target.files[0].type == "image/jpeg") setSign(e.target.files[0]);
+      else {
         alert("Upload JPEG File Only.");
         return;
       }
@@ -244,9 +237,9 @@ export default function Home({users}) {
   };
 
   const handleNextPhase = () => {
-    if(thisUser["pendingVerification"] == undefined) thisUser["pendingVerification"] = true
+    if (thisUser["pendingVerification"] == undefined) thisUser["pendingVerification"] = true;
     else thisUser["pendingVerification"] = true;
-    if(thisUser["verificationComplete"] == undefined) thisUser["verificationComplete"] = false;
+    if (thisUser["verificationComplete"] == undefined) thisUser["verificationComplete"] = false;
     else thisUser["verificationComplete"] = false;
     try {
       fetch("/api/user3", {
@@ -275,7 +268,7 @@ export default function Home({users}) {
       alert("OTP Verified");
       setIsModalOpen(false);
       handleNextPhase();
-      if(thisUser["phoneNumber"] == undefined) thisUser["phoneNumber"] = phoneNumber;
+      if (thisUser["phoneNumber"] == undefined) thisUser["phoneNumber"] = phoneNumber;
       else thisUser["phoneNumber"] = phoneNumber;
       console.log(thisUser);
       try {

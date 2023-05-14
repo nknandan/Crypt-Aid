@@ -40,6 +40,8 @@ import User from "../../models/user";
 import CampaignModel from "../../models/campaignModel";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
+import { storage } from "../../firebase/clientApp";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 var cName2Id = {};
 
@@ -79,8 +81,57 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   const [obj, setObj] = useState({});
   const [user, setUser] = useState({});
 
+  const [urlPAN, setUrlPAN] = useState(null);
+  const [urlAadhar, setUrlAadhar] = useState(null);
+  const [urlAddress, setUrlAddress] = useState(null);
+  const [urlPhotograph, setUrlPhotograph] = useState(null);
+  const [urlSign, setUrlSign] = useState(null);
+
   const router = useRouter();
-  const {email} = router.query;
+  const { email } = router.query;
+
+  const getDocs = () => {
+    const PANRef = storageRef(storage, email + "/pan.pdf");
+    const AadharRef = storageRef(storage, email + "/aadhar.pdf");
+    const AddressRef = storageRef(storage, email + "/address.pdf");
+    const PhotographRef = storageRef(storage, email + "/photograph.jpg");
+    const SignRef = storageRef(storage, email + "/sign.jpg");
+    getDownloadURL(PANRef)
+      .then((url) => {
+        setUrlPAN(url);
+      })
+      .catch((error) => {
+        console.log(error.message, "error getting the image url");
+      });
+    getDownloadURL(AadharRef)
+      .then((url) => {
+        setUrlAadhar(url);
+      })
+      .catch((error) => {
+        console.log(error.message, "error getting the image url");
+      });
+    getDownloadURL(AddressRef)
+      .then((url) => {
+        setUrlAddress(url);
+      })
+      .catch((error) => {
+        console.log(error.message, "error getting the image url");
+      });
+    getDownloadURL(PhotographRef)
+      .then((url) => {
+        setUrlPhotograph(url);
+      })
+      .catch((error) => {
+        console.log(error.message, "error getting the image url");
+      });
+    getDownloadURL(SignRef)
+      .then((url) => {
+        setUrlSign(url);
+      })
+      .catch((error) => {
+        console.log(error.message, "error getting the image url");
+      });
+  };
 
   async function getDbCampaigns() {
     let res = await fetch("/api/campaign/create", {
@@ -153,6 +204,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   }
 
   useEffect(() => {
+    getDocs();
     console.log(email);
     getDbCampaigns();
     getUser();
@@ -370,12 +422,19 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           </Flex>
                         </Flex>
                       </Flex>
+                      <Button
+                        onClick={() => {
+                          console.log(urlPAN);
+                        }}
+                      >
+                        DEBUG
+                      </Button>
                     </Flex>
                     <Heading fontSize={26} my={10} color={"blue.600"}>
                       <Text>Personal Documents</Text>
                     </Heading>
                     <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"} flexWrap="wrap">
-                      <NextLink href="/">
+                      <NextLink href={"/"}>
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -444,7 +503,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           <Img src={"/pan.png"} height={10} mr={5} />
                           <Flex flexDir={"column"}>
                             <Text fontSize={20} fontWeight={"600"}>
-                              Signature
+                              PAN card
                             </Text>
                           </Flex>
                         </Center>
