@@ -629,6 +629,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                         }}
                         onClick={() => {
                           verifyAcc();
+                          router.push("/adminProfile/");
                         }}
                       >
                         Verify
@@ -650,6 +651,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                         }}
                         onClick={() => {
                           rejectAcc();
+                          router.push("/adminProfile/");
                         }}
                       >
                         Reject
