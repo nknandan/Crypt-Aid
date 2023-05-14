@@ -94,28 +94,54 @@ export default function Home({users}) {
 
   const handlePANChange = (e) => {
     if (e.target.files[0]) {
-      setPAN(e.target.files[0]);
+      if(e.target.files[0].type == "application/pdf")
+        setPAN(e.target.files[0]);
+      else{
+          alert("Upload PDF File Only.");
+          return;
+      }
     }
   };
   const handleAadharChange = (e) => {
     if (e.target.files[0]) {
-      setAadhar(e.target.files[0]);
+      if(e.target.files[0].type == "application/pdf")
+        setAadhar(e.target.files[0]);
+      else{
+        alert("Upload PDF File Only.");
+        return;
+      }
     }
   };
   const handleAddressChange = (e) => {
     if (e.target.files[0]) {
+    if(e.target.files[0].type == "application/pdf")
       setAddress(e.target.files[0]);
+    else{
+        alert("Upload PDF File Only.");
+        return;
+    }
+      
     }
   };
   const handlePhotographChange = (e) => {
     if (e.target.files[0]) {
-      setPhotograph(e.target.files[0]);
+      if(e.target.files[0].type == "image/jpeg")
+        setPhotograph(e.target.files[0]);
+      else{
+        alert("Upload JPEG File Only.");
+        return;
+      }
     }
   };
 
   const handleSignChange = (e) => {
     if (e.target.files[0]) {
-      setSign(e.target.files[0]);
+      if(e.target.files[0].type == "image/jpeg")
+        setSign(e.target.files[0]);
+      else{
+        alert("Upload JPEG File Only.");
+        return;
+      }
     }
   };
 
