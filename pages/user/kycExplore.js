@@ -46,13 +46,12 @@ import {
 
 import { PlusSquareIcon, CheckCircleIcon } from "@chakra-ui/icons";
 
-
 var OTP;
 
 export default function Home({ campaigns }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationPhase, setverificationPhase] = useState(4);
+  const [verificationPhase, setverificationPhase] = useState(1);
 
   const handleNextPhase = () => {
     setverificationPhase(verificationPhase + 1);
@@ -90,33 +89,31 @@ export default function Home({ campaigns }) {
     const file = event.target.files[0];
 
     // validate file type
-    if (!file.type.startsWith('image/')) {
-      setFileError('Only image files are allowed.');
+    if (!file.type.startsWith("image/")) {
+      setFileError("Only image files are allowed.");
       return;
     }
 
     setSelectedFile(file);
     setFileError(null);
-
-  }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     // create a FormData object to send file data
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
 
     // make an API call to upload the file
-    fetch('/api/upload-kyc', {
-      method: 'POST',
+    fetch("/api/upload-kyc", {
+      method: "POST",
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
   };
-
 
   return (
     <div>
@@ -135,12 +132,14 @@ export default function Home({ campaigns }) {
           <Divider marginTop="4" />
           <Box p="6" shadow="lg" rounded="lg" bg="white">
             <Flex justify="space-between">
-              <Text fontWeight="semibold" fontSize={"26px"}>Verification Progress</Text>
+              <Text fontWeight="semibold" fontSize={"26px"}>
+                Verification Progress
+              </Text>
               <Text color="gray.500" fontSize="sm">
                 Step {verificationPhase} of 4
               </Text>
             </Flex>
-            <Progress value={(verificationPhase) * 25} my="6" hasStripe colorScheme='green'/>
+            <Progress value={verificationPhase * 25} my="6" hasStripe colorScheme="green" />
 
             {/* <Stack spacing="6">
               <Box>
@@ -185,10 +184,11 @@ export default function Home({ campaigns }) {
               </Box>
             </Stack> */}
           </Box>
-          {verificationPhase == 1 ?
-            (<Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
+          {verificationPhase == 1 ? (
+            <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
               <Img height={"400px"} objectFit={"contain"} src={"/kyc.png"} borderRadius={20} />
               <Flex flexDir={"column"} w={"40%"}>
+                {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
                 <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
                   <Heading fontSize={"26px"} mb={4}>
                     Enter your details
@@ -223,13 +223,16 @@ export default function Home({ campaigns }) {
                   </form>
                 </Box>
               </Flex>
-            </Flex>)
-            : (<></>)}
+            </Flex>
+          ) : (
+            <></>
+          )}
 
           {verificationPhase == 2 ? (
             <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
               <Img height={"400px"} objectFit={"contain"} src={"/kyc.png"} borderRadius={20} />
               <Flex flexDir={"column"} w={"40%"}>
+                {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
                 <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
                   <Heading fontSize={"26px"} mb={4}>
                     Upload your documents
@@ -237,15 +240,19 @@ export default function Home({ campaigns }) {
                   <form>
                     <Stack spacing={4}>
                       <Box as="form">
-                        <FormControl as='fieldset'>
-                          <FormLabel htmlFor="file" fontWeight={"semibold"}>Upload PAN Card</FormLabel>
+                        <FormControl as="fieldset">
+                          <FormLabel htmlFor="file" fontWeight={"semibold"}>
+                            Upload PAN Card
+                          </FormLabel>
                           <InputGroup>
                             <InputLeftElement pointerEvents="none">
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
-                            <Input variant="filled" type="file" id="file"
+                            <Input
+                              variant="filled"
+                              type="file"
+                              id="file"
                               sx={{
-
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -257,16 +264,20 @@ export default function Home({ campaigns }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{ }</FormErrorMessage>
+                            <FormErrorMessage>{}</FormErrorMessage>
                           </InputGroup>
-                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>Upload Aadhar Card</FormLabel>
+                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
+                            Upload Aadhar Card
+                          </FormLabel>
                           <InputGroup>
                             <InputLeftElement pointerEvents="none">
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
-                            <Input variant="filled" type="file" id="file"
+                            <Input
+                              variant="filled"
+                              type="file"
+                              id="file"
                               sx={{
-
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -278,16 +289,20 @@ export default function Home({ campaigns }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{ }</FormErrorMessage>
+                            <FormErrorMessage>{}</FormErrorMessage>
                           </InputGroup>
-                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>Permanent Address Proof</FormLabel>
+                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
+                            Permanent Address Proof
+                          </FormLabel>
                           <InputGroup>
                             <InputLeftElement pointerEvents="none">
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
-                            <Input variant="filled" type="file" id="file"
+                            <Input
+                              variant="filled"
+                              type="file"
+                              id="file"
                               sx={{
-
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -299,16 +314,20 @@ export default function Home({ campaigns }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{ }</FormErrorMessage>
+                            <FormErrorMessage>{}</FormErrorMessage>
                           </InputGroup>
-                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>Upload Your Photograph</FormLabel>
+                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
+                            Upload Your Photograph
+                          </FormLabel>
                           <InputGroup>
                             <InputLeftElement pointerEvents="none">
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
-                            <Input variant="filled" type="file" id="file"
+                            <Input
+                              variant="filled"
+                              type="file"
+                              id="file"
                               sx={{
-
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -320,16 +339,20 @@ export default function Home({ campaigns }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{ }</FormErrorMessage>
+                            <FormErrorMessage>{}</FormErrorMessage>
                           </InputGroup>
-                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>Upload Your Signature</FormLabel>
+                          <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
+                            Upload Your Signature
+                          </FormLabel>
                           <InputGroup>
                             <InputLeftElement pointerEvents="none">
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
-                            <Input variant="filled" type="file" id="file"
+                            <Input
+                              variant="filled"
+                              type="file"
+                              id="file"
                               sx={{
-
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -341,7 +364,7 @@ export default function Home({ campaigns }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{ }</FormErrorMessage>
+                            <FormErrorMessage>{}</FormErrorMessage>
                           </InputGroup>
                         </FormControl>
                       </Box>
@@ -367,7 +390,9 @@ export default function Home({ campaigns }) {
                 </Box>
               </Flex>
             </Flex>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
 
           {verificationPhase == 3 ? (
             <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
@@ -395,7 +420,9 @@ export default function Home({ campaigns }) {
                 </Box>
               </Flex>
             </Flex>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
 
           {verificationPhase == 4 ? (
             <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
@@ -415,9 +442,7 @@ export default function Home({ campaigns }) {
                       <Text>Your identity has been successfully verified.</Text>
                     </Center>
                     <Center mb={4}>
-                      <Text textAlign={"center"}>
-                        You can now access all the features of our platform.
-                      </Text>
+                      <Text textAlign={"center"}>You can now access all the features of our platform.</Text>
                     </Center>
                     <Center mb={4} fontWeight={"600"} color={"blue.400"}>
                       <Text>Thank you for choosing our service!</Text>
@@ -426,8 +451,9 @@ export default function Home({ campaigns }) {
                 </Box>
               </Flex>
             </Flex>
-          ) : (<></>)}
-
+          ) : (
+            <></>
+          )}
         </Container>
       </main>
     </div>
