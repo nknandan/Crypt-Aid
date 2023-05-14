@@ -22,11 +22,17 @@ import {
   Input,
   Img,
   Progress,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  TabIndicator,
 } from "@chakra-ui/react";
 import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3";
 import Campaign from "../../smart-contract/campaign";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { CheckIcon, SpinnerIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectMongo } from "../../utils/connectMongo";
@@ -651,6 +657,86 @@ function PendingCard({
       )}
     </Box>
   );
+  imagetimagetimaget;
+}
+
+function UserCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
+  const onRevert = async (event) => {
+    event.preventDefault();
+
+    var thisCamp;
+    var address2Amount = {};
+    var addresses = [];
+    var amounts = [];
+    var leftOver = 0;
+
+    for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
+    if (thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
+    else thisCamp["isFraud"] = true;
+    console.log(thisCamp);
+    try {
+      fetch("/api/campaign/revert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisCamp }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+    for (const donor of thisCamp.donations) {
+      address2Amount[donor.account] = Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100);
+      addresses.push(donor.account);
+      amounts.push(Math.floor((donor.donatedAmount / thisCamp.raisedAmount) * 100));
+    }
+    leftOver = thisCamp.raisedAmount - thisCamp.withdrawnAmount;
+
+    try {
+      const campaign = Campaign(id);
+      const accounts = await web3.eth.getAccounts();
+      console.log(addresses);
+      console.log(amounts);
+      console.log(leftOver);
+      console.log(campaign.methods);
+      await campaign.methods.revertt(addresses, amounts, leftOver).send({
+        from: accounts[0],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div>
+      <NextLink href="adminProfile/verifyAccount">
+        <Flex
+          cursor={"pointer"}
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="lg"
+          alignItems={"center"}
+          _hover={{
+            transform: "translateY(-2px)",
+          }}
+          minW={"15vw"}
+          justifyContent={"space-evenly"}
+          transition={"transform 0.3s ease"}
+          pl={0}
+        >
+          <Img src={"/totalaccountspending.png"} height={"60px"} />
+          <Box mr={20}>
+            <Text fontSize="xl" fontWeight={"600"} color={"blue.600"}>
+              Nandan N K
+            </Text>
+            <Text>nknandan@gmail.com</Text>
+          </Box>
+        </Flex>
+      </NextLink>
+    </div>
+  );
 }
 
 // This function shows the Pending Campaigns
@@ -781,6 +867,7 @@ function ApprovedCampaigns({ setApprovedPendingTerminated, campaignList, campaig
   );
 }
 
+// This function shows the Terminated Campaigns
 function TerminatedCampaigns({
   setApprovedPendingTerminated,
   campaignList,
@@ -851,8 +938,54 @@ function TerminatedCampaigns({
   );
 }
 
+function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+  return (
+    <Flex w={"100%"} flexDir={"column"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+        <Heading fontSize={24} whiteSpace="nowrap">
+          Verify Accounts
+        </Heading>
+      </Flex>
+      <Flex>
+        <SimpleGrid
+          columns={{ base: 1, md: 1, lg: 2 }}
+          py={8}
+          spacingX={10}
+          spacingY={10}
+          overflowY={"auto"}
+          maxH={"100vh"}
+          w={"100%"}
+        >
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              if (campaignList1[k].name == el[5]) {
+                return (
+                  <div key={i}>
+                    <UserCard
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={cName2Id[el[5]]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                      dbCamp={dbCamp}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
+        </SimpleGrid>
+      </Flex>
+    </Flex>
+  );
+}
+
 export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [approvedPendingTerminated, setApprovedPendingTerminated] = useState(0);
+  const [campaignsPage, setCampaignsPage] = useState(0);
   // No Settings Screen as of now.
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
@@ -958,7 +1091,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <main className={styles.main}>
-        <Flex minH={"100vh"}>
+        <Flex minH={"100vh"} align={"stretch"}>
           {adminLogIn ? (
             <Box
               height={"80%"}
@@ -1029,7 +1162,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               </Flex>
             </Box>
           ) : (
-            <Container
+            <Flex
               maxW={"100vw"}
               minH={"100vh"}
               scrollBehavior={"auto"}
@@ -1038,15 +1171,22 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
               p={0}
               m={0}
               alignItems={"flex-start"}
-              display={"flex"}
               flexDirection={"row"}
               position={"absolute"}
               top={0}
               left={0}
+              align={"stretch"}
             >
               <NavbarAdmin />
-              <Flex height={"200vh"} width={"25vw"} bgColor={"gray.100"} borderRightColor={"gray.500"}></Flex>
-              <Flex height={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+              <Flex
+                align={"stretch"}
+                minH={"200vh"}
+                width={"25vw"}
+                bgColor={"gray.100"}
+                borderWidth={"2px"}
+                borderRightColor={"gray.500"}
+              ></Flex>
+              <Flex align={"stretch"} minH={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
                 <Flex
                   w={"90%"}
                   h={"20vh"}
@@ -1084,11 +1224,11 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                   >
                     DEBUG{" "}
                   </Button> */}
-                  <Flex w={"100%"} mt={"5%"} px={"10%"} py={5} flexDirection={"column"}>
+                  <Flex w={"100%"} mt={"2%"} px={"10%"} py={5} flexDirection={"column"}>
                     <Heading mb={6} fontSize={30}>
                       Dashboard
                     </Heading>
-                    <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"}>
+                    <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"} flexWrap="wrap">
                       <Center
                         bgColor={"gray.200"}
                         borderRadius={10}
@@ -1096,8 +1236,13 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         py={2}
                         transition={"transform 0.3s ease"}
                         _hover={{
-                          transform: "translateX(8px)",
+                          transform: "translateY(-4px)",
                         }}
+                        mb={5}
+                        w={"45%"}
+                        border={"2px solid"}
+                        borderColor={"#43B0F1"}
+                        shadow={"sm"}
                       >
                         <Img src={"/totalamount.png"} height={10} mr={5} />
                         <Flex flexDir={"column"}>
@@ -1114,8 +1259,13 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         py={2}
                         transition={"transform 0.3s ease"}
                         _hover={{
-                          transform: "translateX(8px)",
+                          transform: "translateY(-4px)",
                         }}
+                        w={"45%"}
+                        mb={5}
+                        border={"2px solid"}
+                        borderColor={"#43B0F1"}
+                        shadow={"sm"}
                       >
                         <Img src={"/totalcreated.png"} height={10} mr={5} />
                         <Flex flexDir={"column"}>
@@ -1125,49 +1275,126 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                           </Text>
                         </Flex>
                       </Center>
+                      <Center
+                        bgColor={"gray.200"}
+                        borderRadius={10}
+                        p={5}
+                        py={2}
+                        transition={"transform 0.3s ease"}
+                        _hover={{
+                          transform: "translateY(-4px)",
+                        }}
+                        w={"45%"}
+                        border={"2px solid"}
+                        borderColor={"#43B0F1"}
+                        shadow={"sm"}
+                      >
+                        <Img src={"/totalaccountspending.png"} height={9} mr={5} />
+                        <Flex flexDir={"column"}>
+                          <Text fontSize={16}>Verifications Pending</Text>
+                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                            {approvedNumber}
+                          </Text>
+                        </Flex>
+                      </Center>
+                      <Center
+                        bgColor={"gray.200"}
+                        borderRadius={10}
+                        p={5}
+                        py={2}
+                        transition={"transform 0.3s ease"}
+                        _hover={{
+                          transform: "translateY(-4px)",
+                        }}
+                        w={"45%"}
+                        border={"2px solid"}
+                        borderColor={"#43B0F1"}
+                        shadow={"sm"}
+                      >
+                        <Img src={"/user.png"} height={8} mr={5} opacity={"80%"} />
+                        <Flex flexDir={"column"}>
+                          <Text fontSize={16}>Total Verified Accounts</Text>
+                          <Text fontSize={26} fontWeight={600} color={"blue.500"}>
+                            {approvedNumber}
+                          </Text>
+                        </Flex>
+                      </Center>
                     </Flex>
                   </Flex>
-                  <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"}>
-                    {approvedPendingTerminated == 1 ? (
-                      <ApprovedCampaigns
-                        setApprovedPendingTerminated={setApprovedPendingTerminated}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                        dbCamp={dbCamp}
-                      />
-                    ) : approvedPendingTerminated == 2 ? (
-                      <TerminatedCampaigns
-                        setApprovedPendingTerminated={setApprovedPendingTerminated}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                        setCampaignList={setCampaignList}
-                      />
-                    ) : (
-                      <PendingCampaigns
-                        setApprovedPendingTerminated={setApprovedPendingTerminated}
-                        campaignList={campaignList}
-                        campaignList1={dbCamp}
-                        campaigns={campaigns}
-                        ethPrice={ethPrice}
-                        setCampaignList={setCampaignList}
-                      />
-                    )}
-                  </Flex>
+                  <Tabs isFitted variant="enclosed-colored" colorScheme="blue" size="lg" mt={"4%"}>
+                    <TabList>
+                      <Tab _selected={{ color: "gray.100", bg: "blue.500" }} fontWeight={"600"} fontSize={24}>
+                        Campaigns
+                      </Tab>
+                      <Tab _selected={{ color: "gray.100", bg: "blue.500" }} fontWeight={"600"} fontSize={24}>
+                        Accounts
+                      </Tab>
+                    </TabList>
+                    <TabIndicator
+                      // mt="-1.5px"
+                      height="2px"
+                      bg="blue.500"
+                      borderRadius="1px"
+                    />
+                    <TabPanels>
+                      <TabPanel>
+                        <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"} bgColor={"gray.100"}>
+                          {approvedPendingTerminated == 1 ? (
+                            <ApprovedCampaigns
+                              setApprovedPendingTerminated={setApprovedPendingTerminated}
+                              campaignList={campaignList}
+                              campaignList1={dbCamp}
+                              campaigns={campaigns}
+                              ethPrice={ethPrice}
+                              dbCamp={dbCamp}
+                            />
+                          ) : approvedPendingTerminated == 2 ? (
+                            <TerminatedCampaigns
+                              setApprovedPendingTerminated={setApprovedPendingTerminated}
+                              campaignList={campaignList}
+                              campaignList1={dbCamp}
+                              campaigns={campaigns}
+                              ethPrice={ethPrice}
+                              setCampaignList={setCampaignList}
+                            />
+                          ) : (
+                            <PendingCampaigns
+                              setApprovedPendingTerminated={setApprovedPendingTerminated}
+                              campaignList={campaignList}
+                              campaignList1={dbCamp}
+                              campaigns={campaigns}
+                              ethPrice={ethPrice}
+                              setCampaignList={setCampaignList}
+                            />
+                          )}
+                        </Flex>
+                      </TabPanel>
+                      <TabPanel>
+                        <Flex w={"100%"} px={"10%"} py={5} flexDirection={"column"} bgColor={"gray.100"}>
+                          <VerifyAccounts
+                            setApprovedPendingTerminated={setApprovedPendingTerminated}
+                            campaignList={campaignList}
+                            campaignList1={dbCamp}
+                            campaigns={campaigns}
+                            ethPrice={ethPrice}
+                            dbCamp={dbCamp}
+                          />
+                        </Flex>
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
                 </Flex>
               </Flex>
               <Flex
-                height={"200vh"}
+                minH={"200vh"}
                 width={"25vw"}
                 bgColor={"gray.100"}
                 borderLeftColor={"gray.500"}
                 flexDir={"column"}
+                borderWidth={"2px"}
                 padding={10}
               ></Flex>
-            </Container>
+            </Flex>
           )}
         </Flex>
       </main>
