@@ -9,11 +9,11 @@ import web3 from "../smart-contract/web3";
 
 var cName2Id = {};
 
-function PendingCard({ name, description, approvedPending, imageURL, id, balance, target, ethPrice }) {
+function RecommendedCampaignsCard({ name, description, approvedPending, imageURL, id, balance, target, ethPrice }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
-        h={"20vh"}
+        minH={"20vh"}
         w={"100%"}
         display={"flex"}
         flexDirection={"row"}
@@ -27,7 +27,7 @@ function PendingCard({ name, description, approvedPending, imageURL, id, balance
           transform: "translateY(-8px)",
         }}
       >
-        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"}>
+        <Box h={"100%"} w={"25%"} borderRadius={"20"} borderRightRadius={"0"} bgColor={"blackAlpha.300"}>
           <Img
             src={imageURL}
             alt={`Picture of ${name}`}
@@ -45,7 +45,7 @@ function PendingCard({ name, description, approvedPending, imageURL, id, balance
           borderRadius={"20"}
           borderLeftRadius={"0"}
           padding={"1rem"}
-          px={"2rem"}
+          px={"3rem"}
           display={"flex"}
           flexDirection={"column"}
           justifyContent={"space-between"}
@@ -54,18 +54,20 @@ function PendingCard({ name, description, approvedPending, imageURL, id, balance
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-            <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+            <Box fontSize="34px" fontWeight="semibold" as="h4" lineHeight="tight">
               {name}
             </Box>
-            <Box maxW={"60%"}>
-              <Text noOfLines={3}>{description}</Text>
+            <Box maxW={"100%"} mt={"5px"}>
+              <Text noOfLines={3} fontSize={"18px"}>
+                {description}
+              </Text>
             </Box>
           </Box>
           <Box>
-            <Flex direction={"row"} justifyContent={"space-between"}>
+            <Flex direction={"row"} justifyContent={"space-between"} mt={1}>
               <Box maxW={{ base: "	15rem", sm: "sm" }}></Box>
-              <Text fontSize={"md"} fontWeight="normal">
-                Target : {web3.utils.fromWei(target, "ether")} ETH{" "}
+              <Text fontSize={"18px"} fontWeight="normal" color={"blue.800"}>
+                <b>Target</b> : {web3.utils.fromWei(target, "ether")} ETH{" "}
               </Text>
             </Flex>
           </Box>
@@ -155,7 +157,7 @@ export default function RecommendedCampaigns({ name, description }) {
   return (
     <Flex w={"100%"} flexDir={"column"}>
       <Flex mb={3}>
-        <Heading fontSize={30} mr={10}>
+        <Heading fontSize={36} mr={10} color={"blue.600"}>
           Similar Campaigns that you may like...
         </Heading>
       </Flex>
@@ -164,22 +166,16 @@ export default function RecommendedCampaigns({ name, description }) {
           <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
         </Center>
       ) : (
-        <Flex minH={"100vh"} maxH={"100vh"} overflowY={"auto"}>
+        <Flex maxH={"100vh"} overflowY={"auto"}>
           <SimpleGrid row={{ base: 1, md: 3 }} spacing={10} py={8}>
             {dataDispNames.map((ele, i) => {
               for (var k = 0; k < campaignList.length; k++) {
                 if (ele === campaignList[k][5]) {
                   let el = campaignList[k];
                   {
-                    /* console.log("RANGE"); */
-                  }
-                  {
-                    /* console.log(el[5]); */
-                  }
-                  {
                     return (
                       <div key={i}>
-                        <PendingCard
+                        <RecommendedCampaignsCard
                           name={el[5]}
                           description={el[6]}
                           creatorId={el[4]}

@@ -25,8 +25,13 @@ const OTPModal = ({ isOpen, onClose, onVerify }) => {
     onVerify(otp);
   };
 
+  const onCLoseWrapper = () => {
+    setOTP("");
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm">
+    <Modal isOpen={isOpen} onClose={onCLoseWrapper} size="sm">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Enter OTP</ModalHeader>
@@ -35,13 +40,7 @@ const OTPModal = ({ isOpen, onClose, onVerify }) => {
           <Stack spacing={3}>
             <FormControl>
               <FormLabel>Enter the 6-digit OTP</FormLabel>
-              <Input
-                type="tel"
-                pattern="[0-9]{6}"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={handleOTPChange}
-              />
+              <Input type="tel" pattern="[0-9]{6}" placeholder="Enter OTP" value={otp} onChange={handleOTPChange} />
             </FormControl>
           </Stack>
         </ModalBody>
@@ -49,7 +48,7 @@ const OTPModal = ({ isOpen, onClose, onVerify }) => {
           <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
             Verify
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onCLoseWrapper}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

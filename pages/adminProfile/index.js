@@ -1,10 +1,10 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import NextLink from "next/link";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
-import { getETHPrice, getWEIPriceInUSD } from "../lib/getETHPrice";
-import NavbarAdmin from "../components/NavbarAdmin";
+import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
+import NavbarAdmin from "../../components/NavbarAdmin";
 import axios from "axios";
 import {
   Heading,
@@ -23,15 +23,15 @@ import {
   Img,
   Progress,
 } from "@chakra-ui/react";
-import factory from "../smart-contract/factory";
-import web3 from "../smart-contract/web3";
-import Campaign from "../smart-contract/campaign";
+import factory from "../../smart-contract/factory";
+import web3 from "../../smart-contract/web3";
+import Campaign from "../../smart-contract/campaign";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
-import { connectMongo } from "../utils/connectMongo";
-import User from "../models/user";
-import CampaignModel from "../models/campaignModel";
+import { connectMongo } from "../../utils/connectMongo";
+import User from "../../models/user";
+import CampaignModel from "../../models/campaignModel";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
 
@@ -353,12 +353,12 @@ function PendingCard({
   campaignList,
 }) {
   const router = useRouter();
-
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   function multiFunct() {
     updateStatus();
     setCampaignList(campaignList);
     redirect();
-    // window.location.reload();
+    // forceUpdate();
   }
   useEffect(() => {}, [campaignList]);
 

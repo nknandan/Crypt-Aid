@@ -48,8 +48,10 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { FlagIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Confetti from "react-confetti";
 import web3 from "../../smart-contract/web3";
@@ -143,14 +145,15 @@ function CommentCard({ creator, description }) {
     <Box
       w={"100%"}
       position="relative"
-      bgColor={useColorModeValue("white", "#303030")}
+      bgColor={useColorModeValue("gray.100", "#303030")}
       borderRadius={"10"}
       transition={"transform 0.3s ease"}
       boxShadow="sm"
       _hover={{
         transform: "translateY(-3px)",
       }}
-      padding={5}
+      py={1}
+      px={10}
     >
       <NextLink href={`/user/${creator}`}>
         <a>
@@ -269,13 +272,9 @@ function CommentInbox({}) {
         </Box>
 
         {commentList?.length == (0 || null) ? (
-          <SimpleGrid row={{ base: 1, md: 3 }} spacing={2} py={1}>
-            <CommentCard />
-            <CommentCard />
-            <CommentCard />
-          </SimpleGrid>
+          <></>
         ) : (
-          <SimpleGrid row={{ base: 1, md: 3 }} spacing={5} py={8}>
+          <SimpleGrid row={{ base: 1, md: 3 }} spacing={2}>
             {reverseArr(commentList)
               .slice(0, commentListNumber)
               .map((el, i) => {
@@ -356,8 +355,9 @@ export default function CampaignSingle({
   const [downVotes, setDownVotes] = useState(0);
   const [requestsList, setRequestsList] = useState([]);
   const [pendingCount, setPendingCount] = useState();
-
   const campaign = Campaign(id);
+
+  const toast = useToast();
 
   async function getRequests() {
     try {
@@ -564,6 +564,18 @@ export default function CampaignSingle({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const [isFlagged, setIsFlagged] = useState(false);
+
+  const handleFlag = () => {
+    setIsFlagged(true);
+    toast({
+      title: "Campaign flagged!",
+      description: "This campaign has been flagged and will be reviewed by administrators.",
+      status: "warning",
+      duration: 5000,
+      isClosable: true,
+    });
+  };
 
   return (
     <div>
@@ -605,7 +617,7 @@ export default function CampaignSingle({
           <Flex direction={"row"}>
             <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
-              <Heading lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
+              <Heading color={"blue.800"} lineHeight={1.1} fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }} mb={"1rem"}>
                 {name}
               </Heading>
               <Text color={useColorModeValue("gray.500", "gray.200")} fontSize={{ base: "lg" }}>
@@ -640,8 +652,91 @@ export default function CampaignSingle({
                     {upVotes - downVotes}
                   </Text>
                 </Flex>
-                <div>
-                  <TwitterShareButton
+              </Flex>
+              <Flex
+                minH={"50px"}
+                mt={"40px"}
+                justifyContent={"space-between"}
+                bgColor={"#ededed"}
+                alignItems={"center"}
+                borderRadius={"20px"}
+              >
+                <Flex
+                  flexDir={"column"}
+                  bgColor={"lightcyan"}
+                  h={"100%"}
+                  maxW={"60%"}
+                  minW={"60%"}
+                  borderRadius={"20px"}
+                  borderRightRadius={"20px"}
+                  mr={"10px"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  px={"10px"}
+                  pl={"5px"}
+                >
+                  <Text fontSize={"18px"} fontWeight={"600"}>
+                    Tell your friends, family and neighbours.
+                  </Text>
+                  <Text color={"darkcyan"} fontSize={"20px"} fontWeight={"800"}>
+                    Share it to the world !
+                  </Text>
+                </Flex>
+                <Flex
+                  bgColor={"#ededed"}
+                  h={"100%"}
+                  maxW={"40%"}
+                  minW={"40%"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  borderRadius={"20px"}
+                  borderLeftRadius={"20px"}
+                >
+                  <Flex>
+                    <TwitterShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " +
+                        name +
+                        " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                        description +
+                        "\n\n#CryptAid #" +
+                        name
+                      }
+                      // className="Demo__some-network__share-button"
+                    >
+                      <TwitterIcon size={32} round />
+                    </TwitterShareButton>
+                  </Flex>
+                  <Flex>
+                    <EmailShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      subject={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      body={description}
+                      className="Demo__some-network__share-button"
+                    >
+                      <EmailIcon size={32} round />
+                    </EmailShareButton>
+                  </Flex>
+                  <Flex mr={"10px"}>
+                    <RedditShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      windowWidth={660}
+                      windowHeight={460}
+                      className="Demo__some-network__share-button"
+                    >
+                      <RedditIcon size={32} round />
+                    </RedditShareButton>
+                  </Flex>
+                </Flex>
+                {/* <div> */}
+                {/* <FacebookShareButton
+
                     url={`http://localhost:3002/campaign/${id}`}
                     title={
                       "Kindly visit the " +
@@ -652,6 +747,7 @@ export default function CampaignSingle({
                       name
                     }
                   >
+
                     <TwitterIcon size={32} round />
                   </TwitterShareButton>
                 </div>
@@ -680,6 +776,32 @@ export default function CampaignSingle({
                     <RedditIcon size={32} round />
                   </RedditShareButton>
                 </div>
+
+                    <FacebookIcon size={38} round />
+                  </FacebookShareButton> */}
+                {/* </div>
+                <div> */}
+                {/* <FacebookMessengerShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    appId="521270401588372"
+                    className="Demo__some-network__share-button"
+                  >
+                    <FacebookMessengerIcon size={32} round />
+                  </FacebookMessengerShareButton> */}
+                {/* </div> */}
+                {/* <div>
+                  <LinkedinShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    className="Demo__some-network__share-button"
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    description={description}
+                    source={"https://www.cryptaid.com/"}
+                  >
+                    <LinkedinIcon size={32} round />
+                  </LinkedinShareButton>
+                </div> */}
               </Flex>
             </Flex>
           </Flex>
@@ -922,6 +1044,17 @@ export default function CampaignSingle({
             />
           </SimpleGrid>
           <CommentInbox />
+          <Flex w={"100%"} justifyContent={"end"}>
+            {isFlagged ? (
+              <Text mt={2} color="gray.500">
+                This campaign has been flagged and is pending review by administrators.
+              </Text>
+            ) : (
+              <Button onClick={handleFlag} bgColor={"red.300"}>
+                Flag Campaign
+              </Button>
+            )}
+          </Flex>
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>
