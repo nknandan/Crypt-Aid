@@ -270,7 +270,9 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Text fontSize={24} fontWeight={"400"} mt={10}>
             Account Verification
           </Text>
-          <NextLink href={`/user/kycExplore`}>
+          <NextLink href={{
+            pathname: `/user/kycExplore`,
+          }}>
             <Button mt={3} bgColor={"blue.200"}>
               Verify your account
             </Button>

@@ -205,7 +205,6 @@ function SettingsPage({ setSettingsScreen, users }) {
 
 function TerminatedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
   const onRevert = async (event) => {
-
     event.preventDefault();
 
     var thisCamp;
@@ -313,7 +312,15 @@ function TerminatedCard({ name, description, creatorId, imageURL, id, balance, t
             <Box>
               <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+              <Box
+                fontSize="2xl"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
                 {name}
                 {/* <Button bgColor={"red.500"} fontSize={12} p={3} h={2} onClick={(event) => onRevert(event)} component="a">
                   Terminated
@@ -363,7 +370,6 @@ function TerminatedCard({ name, description, creatorId, imageURL, id, balance, t
 
 function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
   const onRevert = async (event) => {
-
     event.preventDefault();
 
     var thisCamp;
@@ -455,9 +461,24 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
             <Box>
               <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+              <Box
+                fontSize="2xl"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
                 {name}
-                <Button bgColor={"red.300"} fontSize={12} p={3} h={2} onClick={(event) => onRevert(event)} component="a">
+                <Button
+                  bgColor={"red.300"}
+                  fontSize={12}
+                  p={3}
+                  h={2}
+                  onClick={(event) => onRevert(event)}
+                  component="a"
+                >
                   Terminate
                 </Button>
               </Box>
@@ -524,7 +545,7 @@ function PendingCard({
     redirect();
     // forceUpdate();
   }
-  useEffect(() => { }, [campaignList]);
+  useEffect(() => {}, [campaignList]);
 
   const redirect = () => {
     router.reload("/");
@@ -633,11 +654,20 @@ function PendingCard({
 }
 
 // This function shows the Pending Campaigns
-function PendingCampaigns({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, setCampaignList }) {
+function PendingCampaigns({
+  setApprovedPendingTerminated,
+  campaignList,
+  campaignList1,
+  campaigns,
+  ethPrice,
+  setCampaignList,
+}) {
   return (
     <Flex w={"100%"} flexDir={"column"}>
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-      <Heading fontSize={24} whiteSpace="nowrap">Pending Campaigns</Heading>
+        <Heading fontSize={24} whiteSpace="nowrap">
+          Pending Campaigns
+        </Heading>
         <Heading
           fontSize={24}
           color={"gray.500"}
@@ -707,7 +737,9 @@ function ApprovedCampaigns({ setApprovedPendingTerminated, campaignList, campaig
         >
           Pending Campaigns
         </Heading>
-        <Heading fontSize={24} whiteSpace="nowrap">Approved Campaigns</Heading>
+        <Heading fontSize={24} whiteSpace="nowrap">
+          Approved Campaigns
+        </Heading>
         <Heading
           fontSize={24}
           color={"gray.500"}
@@ -719,13 +751,12 @@ function ApprovedCampaigns({ setApprovedPendingTerminated, campaignList, campaig
         >
           Terminated Campaigns
         </Heading>
-
       </Flex>
       <Flex>
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && campaignList1[k].isFraud != true) {
+              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && !campaignList1[k].isFraud) {
                 return (
                   <div key={i}>
                     <ApprovedCard
@@ -750,7 +781,14 @@ function ApprovedCampaigns({ setApprovedPendingTerminated, campaignList, campaig
   );
 }
 
-function TerminatedCampaigns({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+function TerminatedCampaigns({
+  setApprovedPendingTerminated,
+  campaignList,
+  campaignList1,
+  campaigns,
+  ethPrice,
+  dbCamp,
+}) {
   return (
     <Flex flexDir={"column"} w={"100%"} alignItems={"center"}>
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
@@ -776,13 +814,19 @@ function TerminatedCampaigns({ setApprovedPendingTerminated, campaignList, campa
         >
           Approved Campaigns
         </Heading>
-        <Heading fontSize={24} whiteSpace="nowrap">Terminated Campaigns</Heading>
+        <Heading fontSize={24} whiteSpace="nowrap">
+          Terminated Campaigns
+        </Heading>
       </Flex>
       <Flex>
         <SimpleGrid spacing={10} py={8} overflowY={"auto"} maxH={"100vh"}>
           {campaignList.map((el, i) => {
             for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].isApproved == true && campaignList1[k].name == el[5] && campaignList1[k].isFraud == true) {
+              if (
+                campaignList1[k].isApproved == true &&
+                campaignList1[k].name == el[5] &&
+                campaignList1[k].isFraud == true
+              ) {
                 return (
                   <div key={i}>
                     <TerminatedCard
@@ -1093,27 +1137,25 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         ethPrice={ethPrice}
                         dbCamp={dbCamp}
                       />
+                    ) : approvedPendingTerminated == 2 ? (
+                      <TerminatedCampaigns
+                        setApprovedPendingTerminated={setApprovedPendingTerminated}
+                        campaignList={campaignList}
+                        campaignList1={dbCamp}
+                        campaigns={campaigns}
+                        ethPrice={ethPrice}
+                        setCampaignList={setCampaignList}
+                      />
                     ) : (
-                      approvedPendingTerminated == 2 ? (
-                        <TerminatedCampaigns
-                          setApprovedPendingTerminated={setApprovedPendingTerminated}
-                          campaignList={campaignList}
-                          campaignList1={dbCamp}
-                          campaigns={campaigns}
-                          ethPrice={ethPrice}
-                          setCampaignList={setCampaignList}
-                        />
-                      ) : (
-                        <PendingCampaigns
-                          setApprovedPendingTerminated={setApprovedPendingTerminated}
-                          campaignList={campaignList}
-                          campaignList1={dbCamp}
-                          campaigns={campaigns}
-                          ethPrice={ethPrice}
-                          setCampaignList={setCampaignList}
-                        />)
+                      <PendingCampaigns
+                        setApprovedPendingTerminated={setApprovedPendingTerminated}
+                        campaignList={campaignList}
+                        campaignList1={dbCamp}
+                        campaigns={campaigns}
+                        ethPrice={ethPrice}
+                        setCampaignList={setCampaignList}
+                      />
                     )}
-
                   </Flex>
                 </Flex>
               </Flex>
