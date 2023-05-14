@@ -204,12 +204,15 @@ function SettingsPage({ setSettingsScreen, users }) {
 }
 
 function ApprovedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
-  const onRevert = async () => {
+  const onRevert = async (event) => {
+
+    event.preventDefault();
+
     var thisCamp;
     var address2Amount = {};
     var addresses = [];
     var amounts = [];
-    var leftOver = 0;
+    var leftOver = 0;    
 
     for (const camp of dbCamp) if (camp.name == name) thisCamp = camp;
     if(thisCamp["isFraud"] == undefined) thisCamp["isFraud"] = true;
@@ -294,8 +297,11 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
             <Box>
               <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}></Box>
 
-              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
+              <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight" display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
                 {name}
+                <Button bgColor={"red.300"} fontSize={12} p={3} h={2} onClick={(event) => onRevert(event)} component="a">
+                  Terminate 
+                </Button>
               </Box>
               <Box maxW={"60%"}>
                 <Text noOfLines={3}>{description}</Text>
@@ -332,9 +338,9 @@ function ApprovedCard({ name, description, creatorId, imageURL, id, balance, tar
         </Box>
       </NextLink>
       {/* !!! REVERT BUTTON */}
-      <Button bgColor={"green.200"} fontSize={12} p={3} h={2} onClick={onRevert} component="a">
+      {/* <Button bgColor={"green.200"} fontSize={12} p={3} h={2} onClick={onRevert} component="a">
         Revert
-      </Button>
+      </Button> */}
     </div>
   );
 }
@@ -360,7 +366,7 @@ function PendingCard({
     redirect();
     // forceUpdate();
   }
-  useEffect(() => {}, [campaignList]);
+  useEffect(() => { }, [campaignList]);
 
   const redirect = () => {
     router.reload("/");

@@ -99,50 +99,49 @@ export default function NavbarAdmin() {
         align={"center"}
         pos="fixed"
         top="0"
-        w={"full"}
+        w={"100vw"}
         minH={"60px"}
         boxShadow={"sm"}
         zIndex="999"
-        justify={"center"}
         css={{
           backdropFilter: "saturate(180%) blur(5px)",
         }}
       >
-        <Container as={Flex} maxW={"7xl"} align={"center"}>
-          <Flex flex={{ base: 1 }} justify="start">
+        <Flex align={"center"} w={"100vw"} px={"10%"} justifyContent={"space-between"}>
+          <Flex>
             <Heading textAlign="left" color={useColorModeValue("red", "white")} as="h2" size="lg">
               <Box
                 as={"span"}
                 color={useColorModeValue("#fefefe", "teal.300")}
                 position={"relative"}
                 zIndex={10}
-                ml={-100}
-                mr={0}
               >
                 <NextLink href="/">CryptAid</NextLink>
               </Box>
             </Heading>
           </Flex>
           <Stack
-            flex={{ base: 1, md: 0 }}
-            justify={"flex-end"}
             direction={"row"}
-            spacing={20}
-            display={{ base: "none", md: "flex" }}
+            gap={20}
           >
             <Flex
-              backgroundColor={"gray.100"}
+              backgroundColor={useColorModeValue("gray.100", "gray.400")}
               width={"30vw"}
               borderRadius={10}
               alignContent={"center"}
               alignItems={"center"}
             >
-              <InputGroup w={"90%"} border={"0px"}>
+              <InputGroup w={"100%"} border={"0px"}>
                 <Input
                   type="string"
                   border={"0px"}
                   placeholder={"Search for campaigns"}
-                  onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+                  style={{ color: useColorModeValue("black", "black") }}
+                  _placeholder={{ color: useColorModeValue("black", "white") }}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value.toLowerCase());
+                    setSearchMenu(1);
+                  }}
                 />
               </InputGroup>
 
@@ -208,7 +207,7 @@ export default function NavbarAdmin() {
               </Button>
             </NextLink>
           </Stack>
-        </Container>
+        </Flex>
       </Flex>
 
       <Flex
@@ -244,7 +243,7 @@ export default function NavbarAdmin() {
           zIndex={9999}
           flexDirection={"column"}
           borderBottomRadius={10}
-          // ! ref={refs} ???
+        // ! ref={refs} ???
         >
           <Center>
             <Img borderRadius={"50%"} height={20} src={user.picture} />
