@@ -88,7 +88,8 @@ export default function Home({ users }) {
     for (var i = 0; i < users.length; i++) {
       if (users[i].email == userEmail) thisUser = users[i];
     }
-    if (thisUser["pendingVerification"] == true) setverificationPhase(3);
+    if (thisUser["verificationComplete"] == true) setverificationPhase(4);
+    else if (thisUser["pendingVerification"] == true) setverificationPhase(3);
     // handleNextPhase()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
