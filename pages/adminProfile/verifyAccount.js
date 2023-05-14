@@ -133,6 +133,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
       });
   };
 
+  var emp = "aaa";
+
   async function getDbCampaigns() {
     let res = await fetch("/api/campaign/create", {
       method: "GET",
