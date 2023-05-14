@@ -430,6 +430,7 @@ export default function Home({users}) {
                           placeholder={"XXXX-XXXX-XX"}
                           type={"tel"}
                           value={phoneNumber}
+                          name="phoneNumber"
                           onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                       </FormControl>
@@ -440,6 +441,7 @@ export default function Home({users}) {
                           bg: "#0065A1",
                           color: "white",
                         }}
+                        disabled={!phoneNumber}
                         onClick={() => {
                           setIsModalOpen(true);
                           sendOTP();
@@ -605,7 +607,7 @@ export default function Home({users}) {
 
                       <Button
                         type="submit"
-                        // disabled={!selectedFile}
+                        disabled={!PAN || !aadhar || !address || !photograph || !sign}
                         color={"white"}
                         bg={"#43B0F1"}
                         _hover={{
