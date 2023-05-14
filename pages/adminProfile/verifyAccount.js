@@ -168,6 +168,23 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function verifyAcc(){
+    thisUser["pendingVerification"] = false;
+    thisUser["verificationComplete"] = true;
+    try {
+      fetch("/api/user4", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -504,7 +521,6 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       </NextLink>
                     </Flex>
                     <Flex w={"100%"} justifyContent={"center"} my={20}>
-                      <NextLink href="/campaign/new">
                         <Button
                           display={{ sm: "inline-flex" }}
                           w={"200px"}
@@ -519,10 +535,12 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             bg: "#0065A1",
                             color: "#ffffff",
                           }}
+                          onClick={() => {
+                            verifyAcc();
+                          }}
                         >
                           Verify
                         </Button>
-                      </NextLink>
                     </Flex>
                   </Flex>
                 </Flex>
