@@ -452,7 +452,7 @@ function CommunityCard({ name, description, imageURL, creator, moderators, membe
         </Flex>
       </Box>
     </NextLink>
-  );
+  );0
 }
 
 export default function Home({ campaigns, users, dbCamp, dbComm }) {
