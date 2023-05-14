@@ -60,155 +60,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-function SettingsPage({ setSettingsScreen, users }) {
-  const [user, setUser] = useState({});
-  const [obj, setObj] = useState({});
-
-  async function getSummary() {
-    try {
-      const summary = await Promise.all(
-        campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
-      );
-      const ETHPrice = await getETHPrice();
-      updateEthPrice(ETHPrice);
-      setCampaignList(summary);
-      let i = 0;
-      for (let ele of campaigns) {
-        cName2Id[summary[i]["5"]] = ele;
-        i++;
-      }
-      // setCampaignListNumber(3);
-      return summary;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  function getUser() {
-    try {
-      const u = localStorage.getItem("email");
-      const o = JSON.parse(localStorage.getItem("user"));
-      setObj(o);
-      for (var i = 0; i < users.length; i++) {
-        if (users[i].email == u) {
-          setUser(users[i]);
-          break;
-        }
-      }
-    } catch (e) {
-      console.log("Error in getUser().");
-      console.log(e);
-    }
-  }
-
-  useEffect(() => {
-    getUser();
-    getSummary();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
-      <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
-        <Button p={0} mr={"2vh"} bgColor={"transparent"}>
-          <Img
-            src={"/back.png"}
-            h={"4vh"}
-            objectFit={"contain"}
-            onClick={() => {
-              setSettingsScreen(0);
-            }}
-          />
-        </Button>
-        <Text fontSize={30} fontWeight={"600"}>
-          Account Settings
-        </Text>
-      </Center>
-      <Flex w={"100%"}>
-        <Flex w={"60%"} flexDir={"column"}>
-          <Text fontSize={24} fontWeight={"400"} mt={4}>
-            User Information
-          </Text>
-          <Text fontSize={18} color={"gray"}>
-            Here you can edit public information about yourself.
-          </Text>
-          <Text fontSize={18} color={"gray"} mt={-1}>
-            The changes will be displayed to other users within 5 minutes.
-          </Text>
-          <Flex flexDir={"column"} mt={10}>
-            <Text fontSize={18} mb={2}>
-              Email address
-            </Text>
-            <Flex
-              cursor={"no-drop"}
-              borderWidth={1}
-              borderRadius={5}
-              borderColor={"blue.300"}
-              p={2}
-              pb={1}
-              px={5}
-              w={"100%"}
-              color={"gray.600"}
-              justifyContent={"space-between"}
-            >
-              {obj.email}
-              <Img height={7} src={"/mail.png"} />
-            </Flex>
-          </Flex>
-          <Flex flexDir={"column"} mt={8}>
-            <Text fontSize={18} mb={2}>
-              Username
-            </Text>
-            <InputGroup w={"100%"}>
-              <Input type="string" borderColor={"gray.300"} placeholder={obj.nickname} />
-              <InputRightAddon bgColor={"#9ed1f0"}>
-                <Img src="/edit.png" h={6} />
-              </InputRightAddon>
-            </InputGroup>
-          </Flex>
-          <Flex mt={8} justifyContent={"space-between"}>
-            <Flex flexDir={"column"}>
-              <Text fontSize={18} mb={2}>
-                First name
-              </Text>
-              <InputGroup w={"100%"}>
-                <Input type="string" borderColor={"gray.300"} placeholder={"First Name"} />
-                <InputRightAddon bgColor={"#9ed1f0"}>
-                  <Img src="/edit.png" h={6} />
-                </InputRightAddon>
-              </InputGroup>
-            </Flex>
-            <Flex flexDir={"column"}>
-              <Text fontSize={18} mb={2}>
-                Last name
-              </Text>
-              <InputGroup w={"100%"}>
-                <Input type="string" borderColor={"gray.300"} placeholder={"Last Name"} />
-                <InputRightAddon bgColor={"#9ed1f0"}>
-                  <Img src="/edit.png" h={6} />
-                </InputRightAddon>
-              </InputGroup>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex w={"40%"} flexDir={"column"} pl={10}>
-          <Text fontSize={24} fontWeight={"400"} mt={4}>
-            Profile picture
-          </Text>
-          <Center w={"100%"}>
-            <Center mt={8} ml={8} pos="relative">
-              <Img src={obj.picture} h={"25vh"} borderRadius={"50%"} objectFit={"cover"} />
-              <Button h={16} w={16} bgColor={"blue.300"} borderRadius={"50%"} pos={"absolute"} bottom={0} right={0}>
-                <Img src="/edit.png" objectFit={"cover"} h={7} />
-              </Button>
-            </Center>
-          </Center>
-        </Flex>
-      </Flex>
-    </Flex>
-  );
-}
-
 function TerminatedCard({ name, description, creatorId, imageURL, id, balance, target, ethPrice, dbCamp }) {
   const onRevert = async (event) => {
     event.preventDefault();
@@ -739,6 +590,51 @@ function UserCard({ name, description, creatorId, imageURL, id, balance, target,
   );
 }
 
+function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
+  return (
+    <Flex w={"100%"} flexDir={"column"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+        <Heading fontSize={24} whiteSpace="nowrap">
+          Verify Accounts
+        </Heading>
+      </Flex>
+      <Flex>
+        <SimpleGrid
+          columns={{ base: 1, md: 1, lg: 2 }}
+          py={8}
+          spacingX={10}
+          spacingY={10}
+          overflowY={"auto"}
+          maxH={"100vh"}
+          w={"100%"}
+        >
+          {campaignList.map((el, i) => {
+            for (var k = 0; k < campaignList1.length; k++) {
+              if (campaignList1[k].name == el[5]) {
+                return (
+                  <div key={i}>
+                    <UserCard
+                      name={el[5]}
+                      description={el[6]}
+                      creatorId={el[4]}
+                      imageURL={el[7]}
+                      id={cName2Id[el[5]]}
+                      target={el[8]}
+                      balance={el[1]}
+                      ethPrice={ethPrice}
+                      dbCamp={dbCamp}
+                    />
+                  </div>
+                );
+              }
+            }
+          })}
+        </SimpleGrid>
+      </Flex>
+    </Flex>
+  );
+}
+
 // This function shows the Pending Campaigns
 function PendingCampaigns({
   setApprovedPendingTerminated,
@@ -917,51 +813,6 @@ function TerminatedCampaigns({
                 return (
                   <div key={i}>
                     <TerminatedCard
-                      name={el[5]}
-                      description={el[6]}
-                      creatorId={el[4]}
-                      imageURL={el[7]}
-                      id={cName2Id[el[5]]}
-                      target={el[8]}
-                      balance={el[1]}
-                      ethPrice={ethPrice}
-                      dbCamp={dbCamp}
-                    />
-                  </div>
-                );
-              }
-            }
-          })}
-        </SimpleGrid>
-      </Flex>
-    </Flex>
-  );
-}
-
-function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp }) {
-  return (
-    <Flex w={"100%"} flexDir={"column"}>
-      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-        <Heading fontSize={24} whiteSpace="nowrap">
-          Verify Accounts
-        </Heading>
-      </Flex>
-      <Flex>
-        <SimpleGrid
-          columns={{ base: 1, md: 1, lg: 2 }}
-          py={8}
-          spacingX={10}
-          spacingY={10}
-          overflowY={"auto"}
-          maxH={"100vh"}
-          w={"100%"}
-        >
-          {campaignList.map((el, i) => {
-            for (var k = 0; k < campaignList1.length; k++) {
-              if (campaignList1[k].name == el[5]) {
-                return (
-                  <div key={i}>
-                    <UserCard
                       name={el[5]}
                       description={el[6]}
                       creatorId={el[4]}
@@ -1401,3 +1252,152 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     </div>
   );
 }
+
+// function SettingsPage({ setSettingsScreen, users }) {
+//   const [user, setUser] = useState({});
+//   const [obj, setObj] = useState({});
+
+//   async function getSummary() {
+//     try {
+//       const summary = await Promise.all(
+//         campaigns.map((campaign, i) => Campaign(campaigns[i]).methods.getSummary().call())
+//       );
+//       const ETHPrice = await getETHPrice();
+//       updateEthPrice(ETHPrice);
+//       setCampaignList(summary);
+//       let i = 0;
+//       for (let ele of campaigns) {
+//         cName2Id[summary[i]["5"]] = ele;
+//         i++;
+//       }
+//       // setCampaignListNumber(3);
+//       return summary;
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   }
+
+//   function getUser() {
+//     try {
+//       const u = localStorage.getItem("email");
+//       const o = JSON.parse(localStorage.getItem("user"));
+//       setObj(o);
+//       for (var i = 0; i < users.length; i++) {
+//         if (users[i].email == u) {
+//           setUser(users[i]);
+//           break;
+//         }
+//       }
+//     } catch (e) {
+//       console.log("Error in getUser().");
+//       console.log(e);
+//     }
+//   }
+
+//   useEffect(() => {
+//     getUser();
+//     getSummary();
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+
+//   return (
+//     <Flex w={"100%"} mt={"15vh"} px={"5vw"} flexDir={"column"}>
+//       <Center justifyContent={"flex-start"} borderBottomWidth={1} borderColor={"blue.800"} py={2}>
+//         <Button p={0} mr={"2vh"} bgColor={"transparent"}>
+//           <Img
+//             src={"/back.png"}
+//             h={"4vh"}
+//             objectFit={"contain"}
+//             onClick={() => {
+//               setSettingsScreen(0);
+//             }}
+//           />
+//         </Button>
+//         <Text fontSize={30} fontWeight={"600"}>
+//           Account Settings
+//         </Text>
+//       </Center>
+//       <Flex w={"100%"}>
+//         <Flex w={"60%"} flexDir={"column"}>
+//           <Text fontSize={24} fontWeight={"400"} mt={4}>
+//             User Information
+//           </Text>
+//           <Text fontSize={18} color={"gray"}>
+//             Here you can edit public information about yourself.
+//           </Text>
+//           <Text fontSize={18} color={"gray"} mt={-1}>
+//             The changes will be displayed to other users within 5 minutes.
+//           </Text>
+//           <Flex flexDir={"column"} mt={10}>
+//             <Text fontSize={18} mb={2}>
+//               Email address
+//             </Text>
+//             <Flex
+//               cursor={"no-drop"}
+//               borderWidth={1}
+//               borderRadius={5}
+//               borderColor={"blue.300"}
+//               p={2}
+//               pb={1}
+//               px={5}
+//               w={"100%"}
+//               color={"gray.600"}
+//               justifyContent={"space-between"}
+//             >
+//               {obj.email}
+//               <Img height={7} src={"/mail.png"} />
+//             </Flex>
+//           </Flex>
+//           <Flex flexDir={"column"} mt={8}>
+//             <Text fontSize={18} mb={2}>
+//               Username
+//             </Text>
+//             <InputGroup w={"100%"}>
+//               <Input type="string" borderColor={"gray.300"} placeholder={obj.nickname} />
+//               <InputRightAddon bgColor={"#9ed1f0"}>
+//                 <Img src="/edit.png" h={6} />
+//               </InputRightAddon>
+//             </InputGroup>
+//           </Flex>
+//           <Flex mt={8} justifyContent={"space-between"}>
+//             <Flex flexDir={"column"}>
+//               <Text fontSize={18} mb={2}>
+//                 First name
+//               </Text>
+//               <InputGroup w={"100%"}>
+//                 <Input type="string" borderColor={"gray.300"} placeholder={"First Name"} />
+//                 <InputRightAddon bgColor={"#9ed1f0"}>
+//                   <Img src="/edit.png" h={6} />
+//                 </InputRightAddon>
+//               </InputGroup>
+//             </Flex>
+//             <Flex flexDir={"column"}>
+//               <Text fontSize={18} mb={2}>
+//                 Last name
+//               </Text>
+//               <InputGroup w={"100%"}>
+//                 <Input type="string" borderColor={"gray.300"} placeholder={"Last Name"} />
+//                 <InputRightAddon bgColor={"#9ed1f0"}>
+//                   <Img src="/edit.png" h={6} />
+//                 </InputRightAddon>
+//               </InputGroup>
+//             </Flex>
+//           </Flex>
+//         </Flex>
+//         <Flex w={"40%"} flexDir={"column"} pl={10}>
+//           <Text fontSize={24} fontWeight={"400"} mt={4}>
+//             Profile picture
+//           </Text>
+//           <Center w={"100%"}>
+//             <Center mt={8} ml={8} pos="relative">
+//               <Img src={obj.picture} h={"25vh"} borderRadius={"50%"} objectFit={"cover"} />
+//               <Button h={16} w={16} bgColor={"blue.300"} borderRadius={"50%"} pos={"absolute"} bottom={0} right={0}>
+//                 <Img src="/edit.png" objectFit={"cover"} h={7} />
+//               </Button>
+//             </Center>
+//           </Center>
+//         </Flex>
+//       </Flex>
+//     </Flex>
+//   );
+// }
