@@ -1106,8 +1106,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             align={"stretch"}
                         >
                             <NavbarAdmin />
-                            <Flex align={"stretch"} minH={"200vh"} width={"25vw"} bgColor={"gray.100"} borderWidth={"2px"} borderRightColor={"gray.500"}></Flex>
-                            <Flex align={"stretch"} minH={"200vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
+                            <Flex align={"stretch"} minH={"130vh"} width={"25vw"} bgColor={"gray.100"} borderWidth={"2px"} borderRightColor={"gray.500"}></Flex>
+                            <Flex align={"stretch"} minH={"130vh"} width={"55vw"} bgColor={"gray.100"} flexDirection={"column"}>
                                 <Flex
                                     w={"90%"}
                                     h={"20vh"}
@@ -1146,10 +1146,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                     DEBUG{" "}
                   </Button> */}
                                     <Flex w={"100%"} mt={"2%"} px={"10%"} py={5} flexDirection={"column"}>
-                                        <Heading mb={6} fontSize={30}>
+                                        <Heading mb={6} fontSize={32}>
                                             Verify User Account
                                         </Heading>
-                                        <Heading fontSize={26}>
+                                        <Heading fontSize={26} color={"blue.600"}>
                                             <Text>Contact Information</Text>
                                         </Heading>
                                         <Flex w={"100%"} flexDir={"column"}>
@@ -1211,7 +1211,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                                                 </Flex>
                                             </Flex>
                                         </Flex>
-                                        <Heading fontSize={26} my={10}>
+                                        <Heading fontSize={26} my={10} color={"blue.600"}>
                                             <Text>Personal Documents</Text>
                                         </Heading>
                                         <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"} flexWrap="wrap">
@@ -1234,7 +1234,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                                                 >
                                                     <Img src={"/aadhaar.png"} height={10} mr={5} />
                                                     <Flex flexDir={"column"}>
-                                                    <Text fontSize={20} fontWeight={"600"}>Aadhaar Card</Text>
+                                                        <Text fontSize={20} fontWeight={"600"}>Aadhaar Card</Text>
                                                     </Flex>
                                                 </Center>
                                             </NextLink>
@@ -1320,6 +1320,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                                                     borderColor={"#43B0F1"}
                                                     shadow={"sm"}
                                                     cursor={"pointer"}
+                                                    mt={5}
                                                 >
                                                     <Img src={"/sign.png"} height={10} mr={5} opacity={"80%"} />
                                                     <Flex flexDir={"column"}>
@@ -1328,11 +1329,31 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                                                 </Center>
                                             </NextLink>
                                         </Flex>
+                                        <Flex w={"100%"} justifyContent={"center"} my={20}>
+                                            <NextLink href="/campaign/new">
+                                                <Button
+                                                    display={{ sm: "inline-flex" }}
+                                                    w={"200px"}
+                                                    p={5}
+                                                    fontSize={"md"}
+                                                    fontWeight={600}
+                                                    color={useColorModeValue("white", "#252525")}
+                                                    borderRadius={"20"}
+                                                    bg={"#43B0F1"}
+                                                    _hover={{
+                                                        bg: "#0065A1",
+                                                        color: "#ffffff",
+                                                    }}
+                                                >
+                                                    Verify
+                                                </Button>
+                                            </NextLink>
+                                        </Flex>
                                     </Flex>
                                 </Flex>
                             </Flex>
                             <Flex
-                                minH={"200vh"}
+                                minH={"130vh"}
                                 width={"25vw"}
                                 bgColor={"gray.100"}
                                 borderLeftColor={"gray.500"}
