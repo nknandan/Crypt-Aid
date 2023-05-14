@@ -484,7 +484,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           </Flex>
                         </Center>
                       </NextLink>
-                      <NextLink href="/">
+                      <NextLink href={urlPAN}>
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
