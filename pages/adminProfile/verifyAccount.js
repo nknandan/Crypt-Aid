@@ -42,6 +42,7 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
 
 var cName2Id = {};
+var thisUser = {};
 
 // CampaignList : consists of campaigns from blockchain
 // CampaignList1 : consists of campaigns from database
@@ -153,7 +154,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   }
 
   useEffect(() => {
-    console.log(email);
+    for(var i=0; i<users.length; i++){
+      if(users[i].email == email)
+        thisUser = users[i];
+    }
     getDbCampaigns();
     getUser();
     getSummary();
@@ -328,7 +332,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                           color={"gray.600"}
                           justifyContent={"space-between"}
                         >
-                          nknandan@gmail.com
+                          {thisUser.email}
                           <Img height={7} src={"/mail.png"} />
                         </Flex>
                       </Flex>
@@ -348,7 +352,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             color={"gray.600"}
                             justifyContent={"space-between"}
                           >
-                            testuser3
+                            {thisUser.username}
                           </Flex>
                         </Flex>
                         <Flex flexDir={"column"} mt={10} w={"45%"}>
@@ -366,7 +370,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             color={"gray.600"}
                             justifyContent={"space-between"}
                           >
-                            5465425265
+                            {thisUser.phoneNumber}
                           </Flex>
                         </Flex>
                       </Flex>
