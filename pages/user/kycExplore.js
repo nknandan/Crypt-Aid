@@ -89,8 +89,8 @@ export default function Home({users}) {
       if(users[i].email == userEmail)
         thisUser = users[i];
     }
-    if(thisUser["pendingVerification"] == true)
-      setverificationPhase(3);
+    if(thisUser["verificationComplete"] == true) setverificationPhase(4);
+    else if(thisUser["pendingVerification"] == true) setverificationPhase(3);
     // handleNextPhase()
   }, []);
 
