@@ -341,22 +341,6 @@ export default function Home({ users }) {
               <Text fontWeight="semibold" fontSize={"26px"}>
                 Verification Progress
               </Text>
-              <div>
-                <Button
-                  onClick={() => {
-                    debug();
-                  }}
-                >
-                  DEBUG
-                </Button>
-                <Button
-                  onClick={() => {
-                    setverificationPhase(2);
-                  }}
-                >
-                  NEXT
-                </Button>
-              </div>
               <Text color="gray.500" fontSize="sm">
                 Step {verificationPhase} of 4
               </Text>
@@ -490,7 +474,7 @@ export default function Home({ users }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{}</FormErrorMessage>
+                            <FormErrorMessage>{ }</FormErrorMessage>
                           </InputGroup>
                           <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
                             Upload Aadhar Card
@@ -516,7 +500,7 @@ export default function Home({ users }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{}</FormErrorMessage>
+                            <FormErrorMessage>{ }</FormErrorMessage>
                           </InputGroup>
                           <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
                             Permanent Address Proof
@@ -542,7 +526,7 @@ export default function Home({ users }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{}</FormErrorMessage>
+                            <FormErrorMessage>{ }</FormErrorMessage>
                           </InputGroup>
                           <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
                             Upload Your Photograph
@@ -568,7 +552,7 @@ export default function Home({ users }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{}</FormErrorMessage>
+                            <FormErrorMessage>{ }</FormErrorMessage>
                           </InputGroup>
                           <FormLabel htmlFor="file" mt={5} fontWeight={"semibold"}>
                             Upload Your Signature
@@ -594,7 +578,7 @@ export default function Home({ users }) {
                               py="1.5"
                               w={"100%"}
                             />
-                            <FormErrorMessage>{}</FormErrorMessage>
+                            <FormErrorMessage>{ }</FormErrorMessage>
                           </InputGroup>
                         </FormControl>
                       </Box>
