@@ -23,7 +23,7 @@ import {
 import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3.js";
 import Campaign from "../../smart-contract/campaign";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, CheckCircleIcon } from "@chakra-ui/icons";
 import { FaHandshake } from "react-icons/fa";
 import { FcShare, FcDonate, FcMoneyTransfer } from "react-icons/fc";
 import { connectMongo } from "../../utils/connectMongo";
@@ -268,8 +268,8 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Button mt={10} bgColor={"blue.200"} onClick={multiFunct}>
             Submit
           </Button>
-          {!tempUser.verificationComplete ? 
-          (<><Text fontSize={24} fontWeight={"400"} mt={10}>
+          {!tempUser.verificationComplete ?
+            (<><Text fontSize={24} fontWeight={"400"} mt={10}>
               Account Verification
             </Text><NextLink href={{
               pathname: `/user/kycExplore`,
@@ -277,8 +277,8 @@ function SettingsPage({ setSettingsScreen, user }) {
                 <Button mt={3} bgColor={"blue.200"}>
                   Verify your account
                 </Button>
-              </NextLink></>) 
-          : console.log("H")}
+              </NextLink></>)
+            : console.log("H")}
         </Flex>
         <Flex w={"40%"} flexDir={"column"} pl={10}>
           <Text fontSize={24} fontWeight={"400"} mt={4}>
@@ -479,7 +479,7 @@ function LatestActivity({ dbCampaign, chainCampaign, campaigns, user }) {
 
 function ActiveCampaigns({ setActivePending, campaignList, campaignList1, campaigns, ethPrice }) {
   var ab;
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   return (
     <Flex w={"100%"} h={"20vh"} flexDir={"column"}>
       <Flex mb={3}>
@@ -689,9 +689,13 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               </Center>
               <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
                 <Flex flexDir={"column"}>
-                  <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"50%"}>
-                    {user.username ? user.username : obj.nickname}{tempUser.verificationComplete ? (<Text>(Verified)</Text>) : console.log("HII")}
-                  </Text>
+                  <Flex flexDir={"row"} mt={"50%"} alignItems={"center"}>
+                    <Text fontSize={30} fontWeight={800} color={"blue.800"} >
+                      {user.username ? user.username : obj.nickname}
+                    </Text>
+                    {tempUser.verificationComplete ? (<CheckCircleIcon color={"blue.500"} boxSize={6} ml={3} mt={1} />) : console.log("HII")}
+                  </Flex>
+
                   <Text fontSize={15} fontWeight={300}>
                     {obj.email}
                   </Text>
