@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useState, useEffect, useReducer } from "react";
 import NextLink from "next/link";
+import Link from "next/link";
+import Router, { withRouter } from "next/router";
 import styles from "../../styles/Home.module.css";
 import { Center, Grid, GridItem, textDecoration } from "@chakra-ui/react";
 import { getETHPrice, getWEIPriceInUSD } from "../../lib/getETHPrice";
@@ -448,6 +450,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       <Button
                         onClick={() => {
                           console.log(urlPAN);
+                          console.log(urlSign);
                         }}
                       >
                         DEBUG
@@ -457,7 +460,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       <Text>Personal Documents</Text>
                     </Heading>
                     <Flex flexDirection={"row"} width={"100%"} justifyContent={"space-evenly"} flexWrap="wrap">
-                      <NextLink href={"/"}>
+                      <a href={urlAadhar ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -481,8 +484,9 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
-                      <NextLink href="/">
+                      </a>
+                      {/* <NextLink href={urlAddress ?? "/"}> */}
+                      <a href={urlAddress ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -506,8 +510,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
-                      <NextLink href={urlPAN}>
+                      </a>
+                      {/* </NextLink> */}
+                      {/* <NextLink href={urlPAN ?? "/"} target="_blank"> */}
+                      <a href={urlPAN ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -530,8 +536,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
-                      <NextLink href="/">
+                      </a>
+                      {/* </NextLink> */}
+                      {/* <NextLink href={urlPhotograph ?? "/"}> */}
+                      <a href={urlPhotograph ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -554,8 +562,11 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
-                      <NextLink href="/">
+                      </a>
+                      {/* </NextLink> */}
+                      {/* <a target="_blank">
+                        <NextLink href={urlSign ?? "/"}> */}
+                      <a href={urlSign ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -579,29 +590,34 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
+                      </a>
+
+                      {/* </NextLink> */}
+                      {/* </a> */}
                     </Flex>
                     <Flex w={"100%"} justifyContent={"center"} my={20}>
-                      <Button
-                        display={{ sm: "inline-flex" }}
-                        w={"200px"}
-                        p={5}
-                        fontSize={"md"}
-                        fontWeight={600}
-                        // eslint-disable-next-line react-hooks/rules-of-hooks
-                        color={useColorModeValue("white", "#252525")}
-                        borderRadius={"20"}
-                        bg={"#43B0F1"}
-                        _hover={{
-                          bg: "#0065A1",
-                          color: "#ffffff",
-                        }}
-                        onClick={() => {
-                          verifyAcc();
-                        }}
-                      >
-                        Verify
-                      </Button>
+                      <NextLink href="/adminProfile">
+                        <Button
+                          display={{ sm: "inline-flex" }}
+                          w={"200px"}
+                          p={5}
+                          fontSize={"md"}
+                          fontWeight={600}
+                          // eslint-disable-next-line react-hooks/rules-of-hooks
+                          color={useColorModeValue("white", "#252525")}
+                          borderRadius={"20"}
+                          bg={"#43B0F1"}
+                          _hover={{
+                            bg: "#0065A1",
+                            color: "#ffffff",
+                          }}
+                          onClick={() => {
+                            verifyAcc();
+                          }}
+                        >
+                          Verify
+                        </Button>
+                      </NextLink>
                     </Flex>
                   </Flex>
                 </Flex>
