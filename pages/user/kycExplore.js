@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../styles/Home.module.css";
 import OTPModal from "../OTPModal";
 import {
@@ -43,27 +43,177 @@ import {
   Progress,
   Center,
 } from "@chakra-ui/react";
-
 import { PlusSquareIcon, CheckCircleIcon } from "@chakra-ui/icons";
+import { storage } from "../../firebase/clientApp";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { set } from "mongoose";
 
 var OTP;
+var userEmail;
 
 export default function Home({ campaigns }) {
+  const [verificationPhase, setverificationPhase] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationPhase, setverificationPhase] = useState(1);
+
+  const [PAN, setPAN] = useState(null);
+  const [aadhar, setAadhar] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [photograph, setPhotograph] = useState(null);
+  const [sign, setSign] = useState(null);
+
+  const [urlPAN, setUrlPAN] = useState(null);
+  const [urlAadhar, setUrlAadhar] = useState(null);
+  const [urlAddress, setUrlAddress] = useState(null);
+  const [urlPhotograph, setUrlPhotograph] = useState(null);
+  const [urlSign, setUrlSign] = useState(null);
+
+  useEffect(() => {
+    userEmail = localStorage.getItem("email");
+    // handleNextPhase()
+  }, []);
+
+  const handlePANChange = (e) => {
+    if (e.target.files[0]) {
+      setPAN(e.target.files[0]);
+    }
+  };
+  const handleAadharChange = (e) => {
+    if (e.target.files[0]) {
+      setAadhar(e.target.files[0]);
+    }
+  };
+  const handleAddressChange = (e) => {
+    if (e.target.files[0]) {
+      setAddress(e.target.files[0]);
+    }
+  };
+  const handlePhotographChange = (e) => {
+    if (e.target.files[0]) {
+      setPhotograph(e.target.files[0]);
+    }
+  };
+
+  const handleSignChange = (e) => {
+    if (e.target.files[0]) {
+      setSign(e.target.files[0]);
+    }
+  };
+
+  const handlePANSubmit = (event) => {
+    event.preventDefault();
+    const PANRef = storageRef(storage, userEmail + "/pan.pdf");
+    console.log(PANRef);
+    uploadBytes(PANRef, PAN)
+      .then(() => {
+        getDownloadURL(PANRef)
+          .then((url) => {
+            setUrlPAN(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setPAN(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+  const handleAadharSubmit = (event) => {
+    event.preventDefault();
+    const AadharRef = storageRef(storage, userEmail + "/aadhar.pdf");
+    console.log(AadharRef);
+    uploadBytes(AadharRef, aadhar)
+      .then(() => {
+        getDownloadURL(AadharRef)
+          .then((url) => {
+            setUrlAadhar(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setAadhar(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+  const handleAddressSubmit = (event) => {
+    event.preventDefault();
+    const AddressRef = storageRef(storage, userEmail + "/address.pdf");
+    console.log(AddressRef);
+    uploadBytes(AddressRef, address)
+      .then(() => {
+        getDownloadURL(AddressRef)
+          .then((url) => {
+            setUrlAddress(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setAddress(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+  const handlePhotographSubmit = (event) => {
+    event.preventDefault();
+    const PhotographRef = storageRef(storage, userEmail + "/photograph.jpg");
+    console.log(PhotographRef);
+    uploadBytes(PhotographRef, photograph)
+      .then(() => {
+        getDownloadURL(PhotographRef)
+          .then((url) => {
+            setUrlPhotograph(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setPhotograph(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+  const handleSignSubmit = (event) => {
+    event.preventDefault();
+    const SignRef = storageRef(storage, userEmail + "/sign.jpg");
+    console.log(SignRef);
+    uploadBytes(SignRef, sign)
+      .then(() => {
+        getDownloadURL(SignRef)
+          .then((url) => {
+            setUrlSign(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setSign(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   const handleNextPhase = () => {
     setverificationPhase(verificationPhase + 1);
   };
+  function debug() {
+    console.log(PAN);
+    console.log(typeof userEmail);
+    console.log(storage);
+    console.log(urlPAN);
+  }
 
   // Handle OTP verification logic here
-  const handleVerify = async (otp) => {
+  const handleVerifyOTP = async (otp) => {
     if (OTP == otp) {
       alert("OTP Verified");
       setIsModalOpen(false);
       handleNextPhase();
       // Add this verified phoneNumber to the currently logged In User's Database.
+      // "phoneNumber" in user's database.
     } else {
       alert("Incorrect OTP. Try again.");
     }
@@ -80,6 +230,7 @@ export default function Home({ campaigns }) {
     const apiResponse = await res.json();
     console.log(apiResponse);
     OTP = apiResponse.otp;
+    // res.status(201).json({ message: "SUCCESS" });
   };
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -96,23 +247,6 @@ export default function Home({ campaigns }) {
 
     setSelectedFile(file);
     setFileError(null);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // create a FormData object to send file data
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    // make an API call to upload the file
-    fetch("/api/upload-kyc", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
   };
 
   return (
@@ -135,6 +269,22 @@ export default function Home({ campaigns }) {
               <Text fontWeight="semibold" fontSize={"26px"}>
                 Verification Progress
               </Text>
+              <div>
+                <Button
+                  onClick={() => {
+                    debug();
+                  }}
+                >
+                  DEBUG
+                </Button>
+                <Button
+                  onClick={() => {
+                    setverificationPhase(2);
+                  }}
+                >
+                  NEXT
+                </Button>
+              </div>
               <Text color="gray.500" fontSize="sm">
                 Step {verificationPhase} of 4
               </Text>
@@ -184,6 +334,7 @@ export default function Home({ campaigns }) {
               </Box>
             </Stack> */}
           </Box>
+
           {verificationPhase == 1 ? (
             <Flex mt={10} justifyContent={"space-between"} alignItems={"center"}>
               <Img height={"400px"} objectFit={"contain"} src={"/kyc.png"} borderRadius={20} />
@@ -218,7 +369,7 @@ export default function Home({ campaigns }) {
                       >
                         Send OTP
                       </Button>
-                      <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerify} />
+                      <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerifyOTP} />
                     </Stack>
                   </form>
                 </Box>
@@ -251,6 +402,7 @@ export default function Home({ campaigns }) {
                             <Input
                               variant="filled"
                               type="file"
+                              onChange={handlePANChange}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -276,6 +428,7 @@ export default function Home({ campaigns }) {
                             <Input
                               variant="filled"
                               type="file"
+                              onChange={handleAadharChange}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -301,6 +454,7 @@ export default function Home({ campaigns }) {
                             <Input
                               variant="filled"
                               type="file"
+                              onChange={handleAddressChange}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -326,6 +480,7 @@ export default function Home({ campaigns }) {
                             <Input
                               variant="filled"
                               type="file"
+                              onChange={handlePhotographChange}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -351,6 +506,7 @@ export default function Home({ campaigns }) {
                             <Input
                               variant="filled"
                               type="file"
+                              onChange={handleSignChange}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -378,13 +534,18 @@ export default function Home({ campaigns }) {
                           bg: "#0065A1",
                           color: "white",
                         }}
-                        onClick={() => {
+                        onClick={(e) => {
+                          handlePANSubmit(e);
+                          handleAadharSubmit(e);
+                          handleAddressSubmit(e);
+                          handlePhotographSubmit(e);
+                          handleSignSubmit(e);
                           handleNextPhase();
                         }}
                       >
                         Upload
                       </Button>
-                      <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerify} />
+                      <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerifyOTP} />
                     </Stack>
                   </form>
                 </Box>
