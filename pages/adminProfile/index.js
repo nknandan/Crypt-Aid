@@ -402,7 +402,7 @@ function PendingCard({
     redirect();
     // forceUpdate();
   }
-  useEffect(() => {}, [campaignList]);
+  useEffect(() => { }, [campaignList]);
 
   const redirect = () => {
     router.reload("/");
@@ -512,11 +512,11 @@ function PendingCard({
 }
 
 function UserCard({ name, email }) {
-  
+
 
   return (
     <div>
-      <NextLink href={{pathname: "adminProfile/verifyAccount", query: {email: email}}}>
+      <NextLink href={{ pathname: "adminProfile/verifyAccount", query: { email: email } }}>
         <Flex
           cursor={"pointer"}
           p={4}
@@ -546,6 +546,9 @@ function UserCard({ name, email }) {
 }
 
 function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignList1, campaigns, ethPrice, dbCamp, users }) {
+
+  const hasProperty = users.some((user) => user["pendingVerification"]);
+
   return (
     <Flex w={"100%"} flexDir={"column"}>
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
@@ -554,7 +557,7 @@ function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignLi
         </Heading>
       </Flex>
       <Flex>
-        <SimpleGrid
+        {hasProperty ? (<SimpleGrid
           columns={{ base: 1, md: 1, lg: 2 }}
           py={8}
           spacingX={10}
@@ -564,7 +567,7 @@ function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignLi
           w={"100%"}
         >
           {users.map((el, i) => {
-            if(el["pendingVerification"] == true){
+            if (el["pendingVerification"] == true) {
               return (
                 <div key={i}>
                   <UserCard
@@ -575,7 +578,9 @@ function VerifyAccounts({ setApprovedPendingTerminated, campaignList, campaignLi
               );
             }
           })}
-        </SimpleGrid>
+        </SimpleGrid>) :
+          (<Text mt={2}>No accounts pending for verification</Text>)}
+
       </Flex>
     </Flex>
   );
