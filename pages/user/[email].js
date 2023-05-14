@@ -33,6 +33,7 @@ import { useRouter } from "next/router";
 import CampaignModel from "../../models/campaignModel";
 
 var cName2Id = {};
+var tempUser = {}
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(context) {
@@ -267,16 +268,17 @@ function SettingsPage({ setSettingsScreen, user }) {
           <Button mt={10} bgColor={"blue.200"} onClick={multiFunct}>
             Submit
           </Button>
-          <Text fontSize={24} fontWeight={"400"} mt={10}>
-            Account Verification
-          </Text>
-          <NextLink href={{
-            pathname: `/user/kycExplore`,
-          }}>
-            <Button mt={3} bgColor={"blue.200"}>
-              Verify your account
-            </Button>
-          </NextLink>
+          {!tempUser.verificationComplete ? 
+          (<><Text fontSize={24} fontWeight={"400"} mt={10}>
+              Account Verification
+            </Text><NextLink href={{
+              pathname: `/user/kycExplore`,
+            }}>
+                <Button mt={3} bgColor={"blue.200"}>
+                  Verify your account
+                </Button>
+              </NextLink></>) 
+          : console.log("H")}
         </Flex>
         <Flex w={"40%"} flexDir={"column"} pl={10}>
           <Text fontSize={24} fontWeight={"400"} mt={4}>
@@ -617,6 +619,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
       setObj(o);
       for (var i = 0; i < users.length; i++) {
         if (users[i].email == u) {
+          tempUser = users[i];
           setUser(users[i]);
           setDonatedAmount(users[i].donatedAmount);
           setNoCreatedCampigns(users[i].createdCampaigns.length);
@@ -687,7 +690,7 @@ export default function UserProfile({ campaigns, users, dbCamp }) {
               <Flex w={"79%"} justifyContent={"space-between"} pr={"10%"} alignItems={"center"}>
                 <Flex flexDir={"column"}>
                   <Text fontSize={30} fontWeight={800} color={"blue.800"} mt={"50%"}>
-                    {user.username ? user.username : obj.nickname}
+                    {user.username ? user.username : obj.nickname}{tempUser.verificationComplete ? (<Text>(Verified)</Text>) : console.log("HII")}
                   </Text>
                   <Text fontSize={15} fontWeight={300}>
                     {obj.email}
