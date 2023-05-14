@@ -89,6 +89,8 @@ export default function Home({users}) {
       if(users[i].email == userEmail)
         thisUser = users[i];
     }
+    if(thisUser["pendingVerification"] == true)
+      setverificationPhase(3);
     // handleNextPhase()
   }, []);
 
@@ -242,6 +244,22 @@ export default function Home({users}) {
   };
 
   const handleNextPhase = () => {
+    if(thisUser["pendingVerification"] == undefined) thisUser["pendingVerification"] = true
+    else thisUser["pendingVerification"] = true;
+    if(thisUser["verificationComplete"] == undefined) thisUser["verificationComplete"] = false;
+    else thisUser["verificationComplete"] = false;
+    try {
+      fetch("/api/user3", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisUser }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
     setverificationPhase(verificationPhase + 1);
   };
   function debug() {
