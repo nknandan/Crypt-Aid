@@ -83,6 +83,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
   const router = useRouter();
   const {email} = router.query;
 
+  var emp = "aaa";
+
   async function getDbCampaigns() {
     let res = await fetch("/api/campaign/create", {
       method: "GET",
