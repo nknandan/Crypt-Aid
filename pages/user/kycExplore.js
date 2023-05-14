@@ -61,11 +61,12 @@ export default function Home({ campaigns }) {
   const handleVerify = async (otp) => {
     if (OTP == otp) {
       alert("OTP Verified");
+      setIsModalOpen(false);
+      handleNextPhase();
       // Add this verified phoneNumber to the currently logged In User's Database.
     } else {
       alert("Incorrect OTP. Try again.");
     }
-    setIsModalOpen(false);
   };
 
   const sendOTP = async () => {
@@ -79,7 +80,6 @@ export default function Home({ campaigns }) {
     const apiResponse = await res.json();
     console.log(apiResponse);
     OTP = apiResponse.otp;
-    handleNextPhase();
   };
 
   const [selectedFile, setSelectedFile] = useState(null);
