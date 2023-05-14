@@ -652,8 +652,91 @@ export default function CampaignSingle({
                     {upVotes - downVotes}
                   </Text>
                 </Flex>
-                <div>
-                  <TwitterShareButton
+              </Flex>
+              <Flex
+                minH={"50px"}
+                mt={"40px"}
+                justifyContent={"space-between"}
+                bgColor={"#ededed"}
+                alignItems={"center"}
+                borderRadius={"20px"}
+              >
+                <Flex
+                  flexDir={"column"}
+                  bgColor={"lightcyan"}
+                  h={"100%"}
+                  maxW={"60%"}
+                  minW={"60%"}
+                  borderRadius={"20px"}
+                  borderRightRadius={"20px"}
+                  mr={"10px"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  px={"10px"}
+                  pl={"5px"}
+                >
+                  <Text fontSize={"18px"} fontWeight={"600"}>
+                    Tell your friends, family and neighbours.
+                  </Text>
+                  <Text color={"darkcyan"} fontSize={"20px"} fontWeight={"800"}>
+                    Share it to the world !
+                  </Text>
+                </Flex>
+                <Flex
+                  bgColor={"#ededed"}
+                  h={"100%"}
+                  maxW={"40%"}
+                  minW={"40%"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  borderRadius={"20px"}
+                  borderLeftRadius={"20px"}
+                >
+                  <Flex>
+                    <TwitterShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " +
+                        name +
+                        " crowdfunding campaign page to make a donation to the cause. \n\n" +
+                        description +
+                        "\n\n#CryptAid #" +
+                        name
+                      }
+                      // className="Demo__some-network__share-button"
+                    >
+                      <TwitterIcon size={32} round />
+                    </TwitterShareButton>
+                  </Flex>
+                  <Flex>
+                    <EmailShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      subject={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      body={description}
+                      className="Demo__some-network__share-button"
+                    >
+                      <EmailIcon size={32} round />
+                    </EmailShareButton>
+                  </Flex>
+                  <Flex mr={"10px"}>
+                    <RedditShareButton
+                      url={`http://localhost:3002/campaign/${id}`}
+                      title={
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                      }
+                      windowWidth={660}
+                      windowHeight={460}
+                      className="Demo__some-network__share-button"
+                    >
+                      <RedditIcon size={32} round />
+                    </RedditShareButton>
+                  </Flex>
+                </Flex>
+                {/* <div> */}
+                {/* <FacebookShareButton
+
                     url={`http://localhost:3002/campaign/${id}`}
                     title={
                       "Kindly visit the " +
@@ -664,6 +747,7 @@ export default function CampaignSingle({
                       name
                     }
                   >
+
                     <TwitterIcon size={32} round />
                   </TwitterShareButton>
                 </div>
@@ -692,6 +776,32 @@ export default function CampaignSingle({
                     <RedditIcon size={32} round />
                   </RedditShareButton>
                 </div>
+
+                    <FacebookIcon size={38} round />
+                  </FacebookShareButton> */}
+                {/* </div>
+                <div> */}
+                {/* <FacebookMessengerShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    appId="521270401588372"
+                    className="Demo__some-network__share-button"
+                  >
+                    <FacebookMessengerIcon size={32} round />
+                  </FacebookMessengerShareButton> */}
+                {/* </div> */}
+                {/* <div>
+                  <LinkedinShareButton
+                    url={`http://localhost:3002/campaign/${id}`}
+                    className="Demo__some-network__share-button"
+                    title={
+                      "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                    }
+                    description={description}
+                    source={"https://www.cryptaid.com/"}
+                  >
+                    <LinkedinIcon size={32} round />
+                  </LinkedinShareButton>
+                </div> */}
               </Flex>
             </Flex>
           </Flex>
