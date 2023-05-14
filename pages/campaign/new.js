@@ -33,6 +33,8 @@ import factory from "../../smart-contract/factory";
 import web3 from "../../smart-contract/web3";
 import axios from "axios";
 
+var tempUser = {};
+
 export default function NewCampaign() {
   const {
     handleSubmit,
@@ -105,7 +107,7 @@ export default function NewCampaign() {
 
       for (var k = 0; k < dbUsers.users.length; k++) {
         if (dbUsers.users[k].email == o.email) {
-          var tempUser = dbUsers.users[k];
+          tempUser = dbUsers.users[k];
         }
       }
       if (tempUser["createdCampaigns"] == undefined) tempUser["createdCampaigns"] = [data.campaignName];
