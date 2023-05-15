@@ -241,6 +241,10 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
     }
   }
 
+  const redirect = () => {
+    router.reload("/adminProfile");
+  };
+
   async function rejectAcc() {
     thisUser["pendingVerification"] = false;
     thisUser["verificationComplete"] = false;
@@ -503,7 +507,7 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                         </Center>
                       </NextLink>
                       {/* <NextLink href={urlAddress ?? "/"}> */}
-                      <NextLink href={urlAddress ?? "/"} target="_blank" rel="noreferrer">
+                      <Link href={urlAddress ?? "/"} target="_blank" rel="noreferrer">
                         <Center
                           bgColor={"gray.200"}
                           borderRadius={10}
@@ -527,7 +531,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                             </Text>
                           </Flex>
                         </Center>
-                      </NextLink>
+                        
+                      </Link>
                       {/* </NextLink> */}
                       {/* <NextLink href={urlPAN ?? "/"} target="_blank"> */}
                       <NextLink href={urlPAN ?? "/"} target="_blank" rel="noreferrer">
@@ -612,7 +617,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                       {/* </NextLink> */}
                       {/* </a> */}
                     </Flex>
-                    <Flex w={"100%"} justifyContent={"center"} my={20} justifyContent={"space-evenly"}>
+                    {/* justifyContent={"space-evenly"}          BELOW */}
+                    <Flex w={"100%"} justifyContent={"center"} my={20} >
                       <Button
                         display={{ sm: "inline-flex" }}
                         w={"200px"}
@@ -629,7 +635,8 @@ export default function VerifyAccount({ campaigns, users, dbCamp }) {
                         }}
                         onClick={() => {
                           verifyAcc();
-                          router.push("/adminProfile/");
+                          // router.push("/adminProfile/");
+                          redirect()
                         }}
                       >
                         Verify

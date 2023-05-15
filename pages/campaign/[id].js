@@ -699,8 +699,8 @@ export default function CampaignSingle({
                         "Kindly visit the " +
                         name +
                         " crowdfunding campaign page to make a donation to the cause. \n\n" +
-                        description +
-                        "\n\n#CryptAid #" +
+                        
+                        "\n#CryptAid #" +
                         name
                       }
                       // className="Demo__some-network__share-button"
@@ -712,7 +712,7 @@ export default function CampaignSingle({
                     <EmailShareButton
                       url={`http://localhost:3002/campaign/${id}`}
                       subject={
-                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n"
+                        "Kindly visit the " + name + " crowdfunding campaign page to make a donation to the cause. \n\n\n\n"
                       }
                       body={description}
                       className="Demo__some-network__share-button"
@@ -1044,7 +1044,7 @@ export default function CampaignSingle({
             />
           </SimpleGrid>
           <CommentInbox />
-          <Flex w={"100%"} justifyContent={"end"}>
+          {/* <Flex w={"100%"} justifyContent={"end"}>
             {isFlagged ? (
               <Text mt={2} color="gray.500">
                 This campaign has been flagged and is pending review by administrators.
@@ -1054,7 +1054,7 @@ export default function CampaignSingle({
                 Flag Campaign
               </Button>
             )}
-          </Flex>
+          </Flex> */}
           <RecommendedCampaigns name={name} description={description} />
         </Flex>
       </main>

@@ -164,23 +164,23 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
           <Box>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
               <Box display={"flex"} flexDirection={"row"}>
-                {/* <Box
+                 {/* <Box
                   fontWeight={"600"}
                   fontSize={"14px"}
                   marginRight={"10px"}
                   color={useColorModeValue("gray.600", "gray.400")}
                 >
                   c/CommunityName
-                </Box>{" "} */}
+                </Box> */}
                 <Box color={useColorModeValue("gray.600", "gray.400")} fontSize={"14px"}>
-                  7 hours ago by {username} ✅
+                  created by {username} ✅
                 </Box>
               </Box>
               <Box display={"flex"} flexDirection={"row"} color={useColorModeValue("gray.600", "gray.400")}>
-                <Text fontWeight={"bold"} paddingRight={"5px"}>
+                {/* <Text fontWeight={"bold"} paddingRight={"5px"}>
                   19
                 </Text>
-                <Text>days left</Text>
+                <Text>days left</Text> */}
               </Box>
             </Box>
 

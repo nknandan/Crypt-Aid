@@ -199,15 +199,15 @@ function CampaignCardNew({ name, description, creatorId, imageURL, id, balance, 
                   c/CommunityName
                 </Box>{" "} */}
                 <Box color={"gray.600"} fontSize={"14px"}>
-                  6 hours ago by {username} ✅
+                  created by {username} ✅
                 </Box>
               </Box>
-              <Box display={"flex"} flexDirection={"row"}>
+              {/* <Box display={"flex"} flexDirection={"row"}>
                 <Text fontWeight={"bold"} paddingRight={"5px"}>
                   19
                 </Text>
                 <Text>days left</Text>
-              </Box>
+              </Box> */}
             </Box>
 
             <Box fontSize="2xl" fontWeight="semibold" as="h4" lineHeight="tight">
@@ -301,7 +301,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
             </Heading>
             <Grid templateColumns="repeat(2, 1fr)">
               <GridItem width="20" h="5" bg="white.500">
-                <Button
+                {/* <Button
                   colorScheme="blue"
                   variant="ghost"
                   isActive={newButton}
@@ -313,10 +313,10 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                   _hover={{ bg: "gray.300" }}
                 >
                   <SunIcon /> New
-                </Button>
+                </Button> */}
               </GridItem>
               <GridItem width="23" h="5" bg="white.500">
-                <Button
+                {/* <Button
                   colorScheme="blue"
                   variant="ghost"
                   isActive={trendingButton}
@@ -328,7 +328,7 @@ export default function Home({ campaigns, dbUsers, dbCamp }) {
                   _hover={{ bg: "gray.300" }}
                 >
                   <Icon as={IoIosPodium} /> Trending
-                </Button>
+                </Button> */}
               </GridItem>
               {/* <GridItem width="23" h="5" bg="white.500">
                 <Button colorScheme="blue" variant="ghost" onClick={() => { setNewButton(0); setPopularButton(1); setTrendingButton(0) }}>

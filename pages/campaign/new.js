@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import Head from "next/head";
 import { useAsync } from "react-use";
 import { useRouter } from "next/router";
@@ -51,14 +51,45 @@ export default function NewCampaign() {
   const [minContriInUSD, setMinContriInUSD] = useState();
   const [targetInUSD, setTargetInUSD] = useState();
   const [ETHPrice, setETHPrice] = useState(0);
+  const [currUser, setCurrUser] = useState({});
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+
   useAsync(async () => {
     try {
-      const result = await getETHPrice();
+      // const result = await getETHPrice();
+      const result = 1756.48;
       setETHPrice(result);
     } catch (error) {
       console.log(error);
     }
   }, []);
+
+useEffect(  () => {
+
+  async function fetchData(){
+    const o = JSON.parse(localStorage.getItem("user"));
+    let res = await fetch("/api/user2", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let dbUsers = await res.json();
+  
+    for (var k = 0; k < dbUsers.users.length; k++) {
+      if (dbUsers.users[k].email == o.email) {
+        tempUser = dbUsers.users[k];
+      }
+    }
+    setCurrUser(tempUser);
+  }
+  fetchData();
+
+  console.log(tempUser);
+  forceUpdate();
+}, [currUser]);
+
+
   async function onSubmit(data) {
     const accounts = await web3.eth.getAccounts();
     await factory.methods
@@ -147,7 +178,7 @@ export default function NewCampaign() {
       </Head>
       <main>
         <Flex direction={"row"} justifyContent={"space-evenly"}>
-          {(tempUser["verificationComplete"] == undefined || tempUser["verificationComplete"] == false) ? (
+          {(tempUser["verificationComplete"] != true || currUser["verificationComplete"] != true) ? (
             <Flex direction={"row"} justifyContent={"space-evenly"}>
               <Box>
                 <Text fontSize={"lg"} color={"#1CB5E0"} mb={"13vh"}>
@@ -160,6 +191,7 @@ export default function NewCampaign() {
                 <Flex>
                   <Heading fontSize={"4xl"}>Complete your KYC Verification first</Heading>
                 </Flex>
+                {/* // eslint-disable-next-line react-hooks/rules-of-hooks */}
                 <Box rounded={"2xl"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8} mt={10}>
                   <Text>Head over to
                     <Link href="/user/kycExplore/" isExternal ml={"0.5rem"} color={"blue.700"}>

@@ -787,14 +787,17 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
   const [settingsScreen, setSettingsScreen] = useState(false);
   const [campaignList, setCampaignList] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
-  const [approvedNumber, setApprovedNumber] = useState();
-  const [notApprovedNumber, setNotApprovedNumber] = useState();
+  const [approvedNumber, setApprovedNumber] = useState(0);
+  const [notApprovedNumber, setNotApprovedNumber] = useState(0);
+  const [verifiedNumber, setVerifiedNumber] = useState(0);
+  const [notVerifiedNumber, setNotVerifiedNumber] = useState(0);
   const [adminLogIn, setAdminLogIn] = useState(1);
   const [invalidAdminLogIn, setInvalidAdminLogIn] = useState(0);
   const [adminEnteredMail, setAdminEnteredMail] = useState("");
   const [adminEnteredPass, setAdminEnteredPass] = useState("");
   const adminmails = ["admin1", "admin2", "admin3", "admin4"];
   const adminpass = ["admin1pass", "admin2pass", "admin3pass", "admin4pass"];
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   // Dummy to avoid log of errors in Console.
   const [obj, setObj] = useState({});
   const [user, setUser] = useState({});
@@ -857,7 +860,19 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     var approvedNumberTemp = totalNumberTemp - notApprovedNumberTemp;
     setApprovedNumber(approvedNumberTemp);
     setNotApprovedNumber(notApprovedNumberTemp);
-  }
+
+    const totalNumberUsers = users.length;
+    var notVerifiedNumberUsers = 0;
+    var verifiedNumberUsers = 0;
+    for(let i=0;i<users.length;i++){
+      if(users[i].verificationComplete == true) 
+      verifiedNumberUsers++
+      if(users[i].pendingVerification == true && users[i].verificationComplete != true)
+      notVerifiedNumberUsers ++;
+    }
+    setVerifiedNumber(verifiedNumberUsers);
+    setNotVerifiedNumber(notVerifiedNumberUsers);
+}
 
   function checkAdminCredentials() {
     if (adminmails.includes(adminEnteredMail) && adminpass.includes(adminEnteredPass)) {
@@ -877,6 +892,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
     if (localStorage.getItem("adminAuth") === "true") {
       setAdminLogIn(0);
     }
+    forceUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1090,7 +1106,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         <Flex flexDir={"column"}>
                           <Text fontSize={16}>Verifications Pending</Text>
                           <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                            {approvedNumber}
+                            {notVerifiedNumber}
                           </Text>
                         </Flex>
                       </Center>
@@ -1112,7 +1128,7 @@ export default function AdminProfile({ campaigns, users, dbCamp }) {
                         <Flex flexDir={"column"}>
                           <Text fontSize={16}>Total Verified Accounts</Text>
                           <Text fontSize={26} fontWeight={600} color={"blue.500"}>
-                            {approvedNumber}
+                            {verifiedNumber}
                           </Text>
                         </Flex>
                       </Center>

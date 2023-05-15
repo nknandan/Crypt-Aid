@@ -52,7 +52,7 @@ const PDFFile = ({ donName, donAm, donDate, campName, creName }) => {
         <Text style={styles.header} fixed>
           {"\n\n"}CryptAid
         </Text>
-        <Text
+        {/* <Text
           style={{
             margin: 22,
             marginBottom: 54,
@@ -63,7 +63,7 @@ const PDFFile = ({ donName, donAm, donDate, campName, creName }) => {
           }}
         >
           Donation Receipt
-        </Text>
+        </Text> */}
         <Text
           style={{
             margin: 12,
@@ -86,7 +86,7 @@ const PDFFile = ({ donName, donAm, donDate, campName, creName }) => {
           This receipt is an attestation that we have gratefully received your generous contribution to the campaign{" "}
           {campName}.
         </Text>
-        <Text
+        {/* <Text
           style={{
             fontSize: 22,
             fontWeight: 400,
@@ -95,7 +95,7 @@ const PDFFile = ({ donName, donAm, donDate, campName, creName }) => {
           }}
         >
           Receipt Number : {randomnum}
-        </Text>
+        </Text> */}
         <Text
           style={{
             fontSize: 22,

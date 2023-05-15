@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "../../styles/Home.module.css";
 import OTPModal from "../OTPModal";
 import {
@@ -83,6 +83,12 @@ export default function Home({ users }) {
   const [urlPhotograph, setUrlPhotograph] = useState(null);
   const [urlSign, setUrlSign] = useState(null);
 
+  const PANRef = useRef(null);
+  const aadharRef = useRef(null);
+  const addressRef = useRef(null);
+  const photographRef = useRef(null);
+  const signRef = useRef(null);
+
   useEffect(() => {
     userEmail = localStorage.getItem("email");
     for (var i = 0; i < users.length; i++) {
@@ -90,6 +96,7 @@ export default function Home({ users }) {
     }
     if (thisUser["verificationComplete"] == true) setverificationPhase(4);
     else if (thisUser["pendingVerification"] == true) setverificationPhase(3);
+    else if (thisUser["phoneNumber"] !== undefined ) setverificationPhase(2);
     // handleNextPhase()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -99,6 +106,7 @@ export default function Home({ users }) {
       if (e.target.files[0].type == "application/pdf") setPAN(e.target.files[0]);
       else {
         alert("Upload PDF File Only.");
+        PANRef.current.value = null;
         return;
       }
     }
@@ -108,6 +116,7 @@ export default function Home({ users }) {
       if (e.target.files[0].type == "application/pdf") setAadhar(e.target.files[0]);
       else {
         alert("Upload PDF File Only.");
+        aadhar.current.value = null;
         return;
       }
     }
@@ -117,6 +126,7 @@ export default function Home({ users }) {
       if (e.target.files[0].type == "application/pdf") setAddress(e.target.files[0]);
       else {
         alert("Upload PDF File Only.");
+        addressRef.current.value = null;
         return;
       }
     }
@@ -125,17 +135,20 @@ export default function Home({ users }) {
     if (e.target.files[0]) {
       if (e.target.files[0].type == "image/jpeg") setPhotograph(e.target.files[0]);
       else {
+        
         alert("Upload JPEG File Only.");
+
+        photographRef.current.value = null;
         return;
       }
     }
   };
-
   const handleSignChange = (e) => {
     if (e.target.files[0]) {
       if (e.target.files[0].type == "image/jpeg") setSign(e.target.files[0]);
       else {
         alert("Upload JPEG File Only.");
+        signRef.current.value = null;
         return;
       }
     }
@@ -226,16 +239,22 @@ export default function Home({ users }) {
         getDownloadURL(SignRef)
           .then((url) => {
             setUrlSign(url);
+            
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
           });
         setSign(null);
+        handleNextPhase();
       })
       .catch((error) => {
         console.log(error.message);
       });
   };
+
+  const handleNextPhaseOTP = () => {
+    setverificationPhase(verificationPhase + 1);
+  }
 
   const handleNextPhase = () => {
     if (thisUser["pendingVerification"] == undefined) thisUser["pendingVerification"] = true;
@@ -268,7 +287,7 @@ export default function Home({ users }) {
     if (OTP == otp) {
       alert("OTP Verified");
       setIsModalOpen(false);
-      handleNextPhase();
+      handleNextPhaseOTP();
       if (thisUser["phoneNumber"] == undefined) thisUser["phoneNumber"] = phoneNumber;
       else thisUser["phoneNumber"] = phoneNumber;
       console.log(thisUser);
@@ -458,6 +477,7 @@ export default function Home({ users }) {
                               <PlusSquareIcon color="black" />
                             </InputLeftElement>
                             <Input
+                            ref={PANRef}
                               variant="filled"
                               type="file"
                               onChange={handlePANChange}
@@ -486,6 +506,7 @@ export default function Home({ users }) {
                             <Input
                               variant="filled"
                               type="file"
+                              ref={aadharRef}
                               onChange={handleAadharChange}
                               id="file"
                               sx={{
@@ -512,6 +533,7 @@ export default function Home({ users }) {
                             <Input
                               variant="filled"
                               type="file"
+                              ref={addressRef}
                               onChange={handleAddressChange}
                               id="file"
                               sx={{
@@ -539,6 +561,7 @@ export default function Home({ users }) {
                               variant="filled"
                               type="file"
                               onChange={handlePhotographChange}
+                              ref={photographRef}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -565,6 +588,7 @@ export default function Home({ users }) {
                               variant="filled"
                               type="file"
                               onChange={handleSignChange}
+                              ref={signRef}
                               id="file"
                               sx={{
                                 display: "flex",
@@ -598,12 +622,11 @@ export default function Home({ users }) {
                           handleAddressSubmit(e);
                           handlePhotographSubmit(e);
                           handleSignSubmit(e);
-                          handleNextPhase();
                         }}
                       >
                         Upload
                       </Button>
-                      <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerifyOTP} />
+                      {/* <OTPModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onVerify={handleVerifyOTP} /> */}
                     </Stack>
                   </form>
                 </Box>
@@ -624,7 +647,7 @@ export default function Home({ users }) {
                   <Box p={6}>
                     <Center mb={4}>
                       <Text fontSize="xl" fontWeight="bold">
-                        Waiting for verification
+                        Your KYC verification is expected to be done within 72 hours.
                       </Text>
                     </Center>
                     <Center mb={4}>
