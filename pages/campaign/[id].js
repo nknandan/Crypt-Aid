@@ -900,7 +900,7 @@ export default function CampaignSingle({
                     View Withdrawal Requests
                   </Button>}
                 </NextLink>
-                <Text>No. Of Pending Requests: {pendingCount}</Text>
+                {/* <Text>No. Of Pending Requests: {pendingCount}</Text> */}
 
                 <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                   <AlertDialogOverlay>

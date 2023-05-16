@@ -875,7 +875,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                 <></>
               )}
 
-              <Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
+              {/* <Flex w={"100%"} bgColor={"gray.200"} p={2} alignItems={"center"} mt={4} borderRadius={8}>
                 <Button
                   colorScheme="blue"
                   variant="ghost"
@@ -905,7 +905,7 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                 >
                   <Icon as={IoIosPodium} /> <Text ml={2}>Trending</Text>
                 </Button>
-              </Flex>
+              </Flex> */}
 
               <Flex w={"100%"} overflowX={"hidden"}>
                 <Feed posts={posts} campaignList={ccampaignss} />
@@ -917,9 +917,9 @@ export default function CommunitySingle({ campaigns, dbComm, users, dbCamps }) {
                   About community
                 </Text>
                 <Text mt={2}>{tempComm.description}</Text>
-                <Text color={"gray.600"} mt={2} fontWeight={200}>
+                {/* <Text color={"gray.600"} mt={2} fontWeight={200}>
                   Created Jan 25, 2012
-                </Text>
+                </Text> */}
                 <Box w={"100%"} bgColor={"gray.300"} h={"1px"} mt={1}></Box>
                 <Flex w={"100%"} justifyContent={"space-evenly"}>
                   <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"} py={3}>
