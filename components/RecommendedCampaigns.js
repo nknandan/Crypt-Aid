@@ -1,15 +1,15 @@
 import { Box, Flex, Text, SimpleGrid, Heading, Img, Spinner, Center } from "@chakra-ui/react";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import Campaign from "../smart-contract/campaign";
 import factory from "../smart-contract/factory";
-import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../lib/getETHPrice";
+import { getETHPrice } from "../lib/getETHPrice";
 import web3 from "../smart-contract/web3";
 
 var cName2Id = {};
 
-function RecommendedCampaignsCard({ name, description, approvedPending, imageURL, id, balance, target, ethPrice }) {
+function RecommendedCampaignsCard({ name, description, imageURL, id, target }) {
   return (
     <NextLink href={`/campaign/${id}`}>
       <Box
@@ -79,12 +79,11 @@ function RecommendedCampaignsCard({ name, description, approvedPending, imageURL
 
 export default function RecommendedCampaigns({ name, description }) {
   const [campaignList, setCampaignList] = useState([]);
-  const [sortedRecomm, setSortedRecomm] = useState([]);
   const [dataDispNames, setDataDispNames] = useState([]);
   const [ethPrice, updateEthPrice] = useState(null);
   const [loadingRecom, setLoadingRecom] = useState(1);
 
-  const fetchRecommendedCampaigns = async (summary) => {
+  const fetchRecommendedCampaigns = async () => {
     try {
       let dispTemparr = [];
       fetch("/api/campaign/recomm", {
@@ -98,11 +97,8 @@ export default function RecommendedCampaigns({ name, description }) {
           return response.json();
         })
         .then((data) => {
-          // console.log("NEXT");
-          // console.log(data);
           let reqArr = data["dsArr"];
           setLoadingRecom(0);
-          // console.log(reqArr);
           let i = 0;
           for (let ele of reqArr) {
             if (i > 2) break;
@@ -110,7 +106,6 @@ export default function RecommendedCampaigns({ name, description }) {
             i++;
           }
           setDataDispNames(dispTemparr);
-          // console.log(dispTemparr);
         });
     } catch (err) {
       console.log(err);

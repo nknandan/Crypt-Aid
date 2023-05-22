@@ -61,7 +61,9 @@ import { redirect } from "next/dist/server/api-utils";
 import { connectMongo } from "../../utils/connectMongo";
 import User from "../../models/user";
 import CampaignModel from "../../models/campaignModel";
+import { connectToDatabase } from "../../lib/mongodb";
 import RecommendedCampaigns from "../../components/RecommendedCampaigns";
+import RecommendedCommunities from "../../components/RecommendedCommunities";
 
 import {
   TwitterShareButton,
@@ -85,6 +87,9 @@ export async function getServerSideProps({ params }) {
   await connectMongo();
   const users = await User.find();
   const dbCamp = await CampaignModel.find();
+  const { db } = await connectToDatabase();
+  await connectMongo();
+  const dbCommunities = await db.collection("communities").find().toArray();
 
   return {
     props: {
@@ -101,6 +106,7 @@ export async function getServerSideProps({ params }) {
       ETHPrice,
       users: JSON.parse(JSON.stringify(users)),
       dbCamp: JSON.parse(JSON.stringify(dbCamp)),
+      dbComm: JSON.parse(JSON.stringify(dbCommunities)),
     },
   };
 }
@@ -333,6 +339,7 @@ export default function CampaignSingle({
   ETHPrice,
   users,
   dbCamp,
+  dbComm,
 }) {
   const { handleSubmit, register, formState, reset, getValues } = useForm({
     mode: "onChange",
@@ -1056,6 +1063,9 @@ export default function CampaignSingle({
             )}
           </Flex> */}
           <RecommendedCampaigns name={name} description={description} />
+          <RecommendedCommunities name={name} description={description} dbComm={dbComm} dbUsers={users}/>
+
+          
         </Flex>
       </main>
     </div>
