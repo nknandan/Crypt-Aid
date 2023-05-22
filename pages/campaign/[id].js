@@ -76,6 +76,7 @@ import {
 import { TwitterIcon, FacebookIcon, FacebookMessengerIcon, LinkedinIcon, EmailIcon, RedditIcon } from "react-share";
 
 var thisCamp = {};
+var thisUser = {};
 var userEmail = "";
 
 export async function getServerSideProps({ params }) {
@@ -362,6 +363,11 @@ export default function CampaignSingle({
   const [downVotes, setDownVotes] = useState(0);
   const [requestsList, setRequestsList] = useState([]);
   const [pendingCount, setPendingCount] = useState();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
+  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
+  const [isFlagged, setIsFlagged] = useState(false);
   const campaign = Campaign(id);
 
   const toast = useToast();
@@ -408,6 +414,13 @@ export default function CampaignSingle({
     }
     setUpVotes(thisCamp.upVoters?.length);
     setDownVotes(thisCamp.downVoters?.length);
+
+    const u = localStorage.getItem("email");
+    for (var k = 0; k < users.length; k++) {
+      if (users[k].email == u) thisUser = users[k];
+    }
+    if(thisCamp["flaggedCampaign"] == undefined) setIsFlagged(false);
+    else setIsFlagged(thisCamp["flaggedCampaign"]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -568,20 +581,22 @@ export default function CampaignSingle({
     }
   }
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef();
-  const [showViewMoreComment, setShowViewMoreComment] = useState(1);
-  const [isFlagged, setIsFlagged] = useState(false);
-
   const handleFlag = () => {
     setIsFlagged(true);
-    toast({
-      title: "Campaign flagged!",
-      description: "This campaign has been flagged and will be reviewed by administrators.",
-      status: "warning",
-      duration: 5000,
-      isClosable: true,
-    });
+    if(thisCamp["flaggedCampaign"] == undefined) thisCamp["flaggedCampaign"] = true;
+    else thisCamp["flaggedCampaign"] = true;
+    try {
+      fetch("/api/campaign/withdraw", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ thisCamp }),
+      });
+    } catch (err) {
+      setError(err.message);
+      console.log(err);
+    }
   };
 
   return (
@@ -1051,7 +1066,7 @@ export default function CampaignSingle({
             />
           </SimpleGrid>
           <CommentInbox />
-          {/* <Flex w={"100%"} justifyContent={"end"}>
+          <Flex w={"100%"} justifyContent={"end"}>
             {isFlagged ? (
               <Text mt={2} color="gray.500">
                 This campaign has been flagged and is pending review by administrators.
@@ -1061,7 +1076,7 @@ export default function CampaignSingle({
                 Flag Campaign
               </Button>
             )}
-          </Flex> */}
+          </Flex>
           <RecommendedCampaigns name={name} description={description} />
           <RecommendedCommunities name={name} description={description} dbComm={dbComm} dbUsers={users}/>
 
