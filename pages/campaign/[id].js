@@ -368,6 +368,7 @@ export default function CampaignSingle({
   const cancelRef = React.useRef();
   const [showViewMoreComment, setShowViewMoreComment] = useState(1);
   const [isFlagged, setIsFlagged] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const campaign = Campaign(id);
 
   const toast = useToast();
@@ -421,13 +422,35 @@ export default function CampaignSingle({
     }
     if(thisCamp["flaggedCampaign"] == undefined) setIsFlagged(false);
     else setIsFlagged(thisCamp["flaggedCampaign"]);
+
+    if(thisCamp["campaignComplete"] == undefined) setIsComplete(false);
+    else setIsComplete(thisCamp["campaignComplete"]);
+    console.log(thisCamp["campaignComplete"]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function onSubmit(data) {
+    console.log(web3.utils.fromWei(thisCamp.targetAmount, "ether") - thisCamp.raisedAmount - data.value)
     if (data.value > web3.utils.fromWei(target, "ether") - thisCamp.raisedAmount) {
       setError("VALUE EXCEEDED");
       return;
+    }
+    if(web3.utils.fromWei(thisCamp.targetAmount, "ether") - thisCamp.raisedAmount - data.value == 0){
+      if(thisCamp["campaignComplete"] == undefined) thisCamp["campaignComplete"] = true;
+      else thisCamp["campaignComplete"] = true;
+      console.log(thisCamp);
+      try {
+        fetch("/api/campaign/complete", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ thisCamp }),
+        });
+      } catch (err) {
+        setError(err.message);
+        console.log(err);
+      }
     }
     setError("");
     try {
@@ -493,6 +516,8 @@ export default function CampaignSingle({
 
       if (tempObj.raisedAmount == undefined) tempObj.raisedAmount = parseFloat(data["value"]);
       else tempObj.raisedAmount = tempObj.raisedAmount + parseFloat(data["value"]);
+
+      console.log(tempObj);
 
       try {
         fetch("/api/campaign/update", {
@@ -636,6 +661,10 @@ export default function CampaignSingle({
               />
             </Container>
           ) : null}
+          <Alert status="warning" mt={4} bgColor={"yellow.100"}>
+          <AlertIcon color={"red"} />
+          <AlertDescription mr={2}>This campaign is now closed!!</AlertDescription>
+          </Alert>
           <Flex direction={"row"}>
             <Image src={image} alt={""} fit={"fill"} borderRadius={"20px"} maxW={"25vw"} maxH={"50vh"} />
             <Flex ml={"5vw"} justifyContent={"space-evenly"} direction={"column"}>
@@ -1013,7 +1042,15 @@ export default function CampaignSingle({
                         <AlertIcon color={"red"} />
                         <AlertDescription mr={2}>Please Sign In to continue</AlertDescription>
                       </Alert>
-                    ) : wallet.status === "connected" ? (
+                    ) : wallet.status === "connected" ? 
+                    thisCamp.campaignComplete ?
+                    (
+                      <Alert status="warning" mt={4} bgColor={"red.100"}>
+                      <AlertIcon color={"red"} />
+                      <AlertDescription mr={2}>Campaign not accepting any more contributions</AlertDescription>
+                    </Alert>
+                    ) : 
+                    (
                       <Button
                         mt={4}
                         w={"full"}
@@ -1029,12 +1066,14 @@ export default function CampaignSingle({
                       >
                         Contribute
                       </Button>
-                    ) : (
+                    )
+                    : (
                       <Alert status="warning" mt={4} bgColor={"red.100"}>
                         <AlertIcon color={"red"} />
                         <AlertDescription mr={2}>Please Connect Your Wallet to Contribute</AlertDescription>
                       </Alert>
                     )}
+                    
                   </Stack>
                 </form>
               </Box>

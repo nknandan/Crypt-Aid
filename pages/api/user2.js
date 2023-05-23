@@ -25,13 +25,13 @@ export default async function addUser(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      console.log(temp);
+      // console.log(temp);
       const em = temp.tempUser.email;
       const cc = temp.tempUser.createdCampaigns;
       const u = await db
         .collection("users")
         .updateOne({ email: em }, { $set: { createdCampaigns: cc } });
-      console.log(u);
+      // console.log(u);
       res.json({ u });
     } catch (error) {
       console.log(error);
@@ -41,7 +41,7 @@ export default async function addUser(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      console.log(temp);
+      // console.log(temp);
       const em = temp.tempUser.email;
       const dc = temp.tempUser.donatedCampaigns;
       const da = temp.tempUser.donatedAmount;
@@ -51,7 +51,7 @@ export default async function addUser(req, res) {
           { email: em },
           { $set: { donatedCampaigns: dc, donatedAmount: da } }
         );
-      console.log(u);
+      // console.log(u);
       res.json({ u });
     } catch (error) {
       console.log(error);

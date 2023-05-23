@@ -1,7 +1,6 @@
 import Campaign from "../../../models/campaignModel";
 import { connectMongo } from "../../../utils/connectMongo";
 import { connectToDatabase } from "../../../lib/mongodb";
-import { getETHPrice, getETHPriceInUSD, getWEIPriceInUSD } from "../../../lib/getETHPrice";
 
 export default async function addCampaign(req, res) {
   // GET
@@ -23,32 +22,27 @@ export default async function addCampaign(req, res) {
     try {
       const { db } = await connectToDatabase();
       const temp = req.body;
-      // console.log(temp);
-      const u = await db.collection("campaigns").insertOne(temp);
-      // console.log(u);
+      const nm = temp.thisCamp.name;
+      const cc = temp.thisCamp.campaignComplete;
+      console.log(temp);
+      const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { campaignComplete: cc } });
+      console.log(u);
       res.json({ u });
     } catch (error) {
       console.log(error);
       res.json({ error });
     }
   } else if (req.method == "PUT") {
-    try {
-      const { db } = await connectToDatabase();
-      const temp = req.body;
-      //   console.log(temp);
-      const mail = temp.tempObj.donatorEmail;
-      const donations = temp.tempObj.donations;
-      const ra = temp.tempObj.raisedAmount;
-      // console.log(mail);
-      const nm = temp.tempObj.name;
-      const u = await db
-        .collection("campaigns")
-        .updateOne({ name: nm }, { $set: { donatorEmail: mail, donations: donations, raisedAmount: ra,} });
-      // console.log(u);
-      res.json({ u });
-    } catch (error) {
-      console.log(error);
-      res.json({ error });
-    }
+    // try {
+    //   const { db } = await connectToDatabase();
+    //   const temp = req.body;
+    //   const fc = temp.thisCamp.flaggedCampaign;
+    //   const nm = temp.thisCamp.name;
+    //   const u = await db.collection("campaigns").updateOne({ name: nm }, { $set: { flaggedCampaign: fc } });
+    //   res.json({ u });
+    // } catch (error) {
+    //   console.log(error);
+    //   res.json({ error });
+    // }
   }
 }
