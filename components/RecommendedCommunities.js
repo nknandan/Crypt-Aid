@@ -30,6 +30,7 @@ tempMod = moderators || [];
     // console.log(users);
     for (let i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == userEmail) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         tempUser = dbUsers[i];
       }
     }
