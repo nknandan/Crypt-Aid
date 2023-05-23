@@ -15,6 +15,8 @@ function CommunityCard({ name, description, imageURL, moderators, members, commC
   var tempUser = {};
   var tempMod = [];
 var tempMem = [];
+tempMod = moderators || [];
+  tempMem = members || [];
   useEffect(() => {
 
     if (members == undefined) setMemberNo(0);
@@ -31,8 +33,8 @@ var tempMem = [];
         tempUser = dbUsers[i];
       }
     }
-    tempMod = moderators || [];
-    tempMem = members || [];
+    // tempMod = moderators || [];
+    // tempMem = members || [];
     if (tempMem.includes(userEmail) || tempMod.includes(userEmail))
       setJoined(1);
     else
